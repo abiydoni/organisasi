@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Aplikasi Organisasi</title>
+    <!-- Tailwind CSS - Built CSS -->
+    <link href="/css/output.css?v=1.0" rel="stylesheet" type="text/css" />
+    <!-- Boxicons -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="h-full bg-gradient-to-br from-blue-500 to-purple-600 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center"
+  >
+    <div
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-4 md:p-8 w-full max-w-md mx-4"
+    >
+      <div class="text-center mb-6 md:mb-8">
+        <i
+          class="bx bx-group text-4xl md:text-6xl text-blue-600 dark:text-blue-400 mb-3 md:mb-4"
+        ></i>
+        <h1
+          class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white"
+        >
+          Aplikasi Organisasi
+        </h1>
+        <p class="text-sm md:text-base text-gray-600 dark:text-gray-400 mt-2">
+          Silakan login untuk melanjutkan
+        </p>
+      </div>
+
+      <form id="loginForm" class="space-y-4 md:space-y-6">
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            <i class="bx bx-user"></i> Username
+          </label>
+          <input
+            type="text"
+            name="username"
+            required
+            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            placeholder="Masukkan username"
+          />
+        </div>
+
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            <i class="bx bx-lock"></i> Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            required
+            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            placeholder="Masukkan password"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2"
+        >
+          <i class="bx bx-log-in"></i>
+          Login
+        </button>
+      </form>
+
+      <div
+        class="mt-4 md:mt-6 text-center text-xs md:text-sm text-gray-600 dark:text-gray-400"
+      >
+        <p>Default: <strong>admin</strong> / <strong>admin123</strong></p>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData);
+
+          try {
+            const response = await fetch("/auth/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              Swal.fire({
+                icon: "success",
+                title: "Berhasil!",
+                text: result.message,
+                timer: 1500,
+                showConfirmButton: false,
+              }).then(() => {
+                window.location.href = "/dashboard";
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Gagal!",
+                text: result.message,
+              });
+            }
+          } catch (error) {
+            Swal.fire({
+              icon: "error",
+              title: "Error!",
+              text: "Terjadi kesalahan saat login",
+            });
+          }
+        });
+    </script>
+  </body>
+</html>

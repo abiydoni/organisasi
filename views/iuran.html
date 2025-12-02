@@ -1,0 +1,370 @@
+<div class="space-y-4 md:space-y-6">
+  <div
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+  >
+    <div>
+      <h2
+        class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-1"
+      >
+        <i class="bx bx-money text-green-600 dark:text-green-400"></i> Iuran
+        Bulanan
+      </h2>
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Kelola pembayaran iuran bulanan
+      </p>
+    </div>
+    <button
+      onclick="openModal()"
+      class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg transition-all duration-300 text-sm md:text-base font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2 justify-center"
+    >
+      <i class="bx bx-plus text-lg"></i> <span>Tambah Iuran</span>
+    </button>
+  </div>
+
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
+  >
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              No
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Anggota
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Bulan/Tahun
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Jumlah
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Status
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="iuranTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        ></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  id="iuranModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-5 md:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700"
+  >
+    <h3
+      class="text-xl font-bold text-gray-800 dark:text-white mb-4"
+      id="modalTitle"
+    >
+      Tambah Iuran
+    </h3>
+    <form id="iuranForm" class="space-y-3 md:space-y-4">
+      <input type="hidden" id="iuranId" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Anggota *</label
+          >
+          <select
+            id="anggota_id"
+            required
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          >
+            <option value="">Pilih Anggota</option>
+          </select>
+        </div>
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Bulan *</label
+          >
+          <select
+            id="bulan"
+            required
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          >
+            <option value="">Pilih Bulan</option>
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+        </div>
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Tahun *</label
+          >
+          <input
+            type="number"
+            id="tahun"
+            required
+            min="2020"
+            max="2100"
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            value="${new Date().getFullYear()}"
+          />
+        </div>
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Jumlah (Rp) *</label
+          >
+          <input
+            type="number"
+            id="jumlah"
+            required
+            min="0"
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          />
+        </div>
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Tanggal Bayar</label
+          >
+          <input
+            type="date"
+            id="tanggal_bayar"
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          />
+        </div>
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Status</label
+          >
+          <select
+            id="status"
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          >
+            <option value="lunas">Lunas</option>
+            <option value="belum lunas">Belum Lunas</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Keterangan</label
+          >
+          <textarea
+            id="keterangan"
+            rows="2"
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          ></textarea>
+        </div>
+      </div>
+      <div class="flex justify-end gap-3">
+        <button
+          type="button"
+          onclick="closeModal()"
+          class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-200 font-medium"
+        >
+          Batal
+        </button>
+        <button
+          type="submit"
+          class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+        >
+          Simpan
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Load iuran and anggota data
+  const iuran = {{iuran}} || [];
+  const anggota = {{anggota}} || [];
+
+  function loadIuran() {
+    const tbody = document.getElementById("iuranTableBody");
+    const bulanNames = [
+      "",
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+
+    tbody.innerHTML = iuran
+      .map(
+        (item, index) => `
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
+                  index + 1
+                }</td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
+                  item.nama_anggota || "-"
+                }</td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
+                  bulanNames[item.bulan]
+                } ${item.tahun}</td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">Rp ${formatNumber(
+                  item.jumlah
+                )}</td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded ${
+                      item.status === "lunas"
+                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                        : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                    }">${item.status}</span>
+                </td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm">
+                    <button onclick="editIuran(${
+                      item.id
+                    })" class="text-blue-600 hover:text-blue-800 mr-3">
+                        <i class='bx bx-edit'></i>
+                    </button>
+                    <button onclick="deleteIuran(${
+                      item.id
+                    })" class="text-red-600 hover:text-red-800">
+                        <i class='bx bx-trash'></i>
+                    </button>
+                </td>
+            </tr>
+        `
+      )
+      .join("");
+  }
+
+  function formatNumber(num) {
+    return new Intl.NumberFormat("id-ID").format(num || 0);
+  }
+
+  function openModal(id = null) {
+    document.getElementById("iuranModal").classList.remove("hidden");
+    document.getElementById("iuranForm").reset();
+    document.getElementById("iuranId").value = id || "";
+    document.getElementById("modalTitle").textContent = id
+      ? "Edit Iuran"
+      : "Tambah Iuran";
+    document.getElementById("tahun").value = new Date().getFullYear();
+    document.getElementById("tanggal_bayar").value = new Date()
+      .toISOString()
+      .split("T")[0];
+
+    // Populate anggota dropdown
+    const select = document.getElementById("anggota_id");
+    select.innerHTML =
+      '<option value="">Pilih Anggota</option>' +
+      anggota.map((a) => `<option value="${a.id}">${a.nama}</option>`).join("");
+
+    if (id) {
+      const item = iuran.find((i) => i.id === id);
+      if (item) {
+        document.getElementById("anggota_id").value = item.anggota_id;
+        document.getElementById("bulan").value = item.bulan;
+        document.getElementById("tahun").value = item.tahun;
+        document.getElementById("jumlah").value = item.jumlah;
+        document.getElementById("tanggal_bayar").value =
+          item.tanggal_bayar || "";
+        document.getElementById("status").value = item.status;
+        document.getElementById("keterangan").value = item.keterangan || "";
+      }
+    }
+  }
+
+  function closeModal() {
+    document.getElementById("iuranModal").classList.add("hidden");
+  }
+
+  function editIuran(id) {
+    openModal(id);
+  }
+
+  async function deleteIuran(id) {
+    const result = await Swal.fire({
+      title: "Yakin?",
+      text: "Data akan dihapus permanen",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+    });
+
+    if (result.isConfirmed) {
+      const response = await API.delete(`/iuran/delete/${id}`);
+      if (response.success) {
+        Swal.fire("Terhapus!", response.message, "success");
+        location.reload();
+      } else {
+        Swal.fire("Error!", response.message, "error");
+      }
+    }
+  }
+
+  document.getElementById("iuranForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("iuranId").value;
+    const data = {
+      anggota_id: document.getElementById("anggota_id").value,
+      bulan: document.getElementById("bulan").value,
+      tahun: document.getElementById("tahun").value,
+      jumlah: document.getElementById("jumlah").value,
+      tanggal_bayar: document.getElementById("tanggal_bayar").value,
+      status: document.getElementById("status").value,
+      keterangan: document.getElementById("keterangan").value,
+    };
+
+    const url = id ? `/iuran/update/${id}` : "/iuran/create";
+    const method = id ? "put" : "post";
+
+    const response = await API[method](url, data);
+    if (response.success) {
+      Swal.fire("Berhasil!", response.message, "success");
+      closeModal();
+      location.reload();
+    } else {
+      Swal.fire("Error!", response.message, "error");
+    }
+  });
+
+  loadIuran();
+</script>

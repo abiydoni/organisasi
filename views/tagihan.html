@@ -1,0 +1,474 @@
+<div class="space-y-4 md:space-y-6">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 md:p-6">
+    <div
+      class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-6 no-print"
+    >
+      <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
+        <i class="bx bx-receipt"></i> Tagihan Iuran Saya
+      </h2>
+      <div class="flex gap-2 w-full sm:w-auto">
+        <button
+          onclick="window.print()"
+          class="flex-1 sm:flex-none px-3 md:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition text-sm md:text-base"
+        >
+          <i class="bx bx-printer"></i> <span class="ml-1">Print</span>
+        </button>
+        <button
+          onclick="exportToPDF()"
+          class="flex-1 sm:flex-none px-3 md:px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition text-sm md:text-base"
+        >
+          <i class="bx bx-file"></i> <span class="ml-1">PDF</span>
+        </button>
+      </div>
+    </div>
+    <div class="print-only hidden print:block mb-4">
+      <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
+        Tagihan Iuran
+      </h2>
+    </div>
+
+    <!-- Header untuk Print -->
+    <div
+      id="printHeader"
+      class="mb-4 md:mb-6 border-b-2 border-gray-300 dark:border-gray-600 pb-3 md:pb-4"
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <h1
+            class="text-3xl font-bold text-gray-800 dark:text-white"
+            id="orgNama"
+          >
+            -
+          </h1>
+          <p class="text-gray-600 dark:text-gray-400" id="orgAlamat">-</p>
+          <p class="text-gray-600 dark:text-gray-400">
+            Telp: <span id="orgTelepon">-</span> | Email:
+            <span id="orgEmail">-</span>
+          </p>
+        </div>
+        <div id="orgLogo" class="hidden">
+          <img src="" alt="Logo" class="h-20" id="logoImg" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Anggota -->
+    <div class="mb-4 md:mb-6 bg-gray-50 dark:bg-gray-700 rounded-lg p-3 md:p-4">
+      <h3
+        class="text-base md:text-lg font-semibold text-gray-800 dark:text-white mb-2 md:mb-3"
+      >
+        Data Anggota
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+        <div>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Nama</p>
+          <p
+            class="font-semibold text-gray-800 dark:text-white"
+            id="anggotaNama"
+          >
+            -
+          </p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 dark:text-gray-400">NIK</p>
+          <p
+            class="font-semibold text-gray-800 dark:text-white"
+            id="anggotaNIK"
+          >
+            -
+          </p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Alamat</p>
+          <p
+            class="font-semibold text-gray-800 dark:text-white"
+            id="anggotaAlamat"
+          >
+            -
+          </p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Telepon</p>
+          <p
+            class="font-semibold text-gray-800 dark:text-white"
+            id="anggotaTelepon"
+          >
+            -
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabel Tagihan -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th
+                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                No
+              </th>
+              <th
+                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Bulan/Tahun
+              </th>
+              <th
+                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Jumlah
+              </th>
+              <th
+                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Tanggal Bayar
+              </th>
+              <th
+                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Status
+              </th>
+              <th
+                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Keterangan
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            id="tagihanTableBody"
+            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+          ></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div
+      class="mt-4 md:mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+    >
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 md:p-4">
+        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+          Total Tagihan
+        </p>
+        <p
+          id="totalTagihan"
+          class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white"
+        >
+          Rp 0
+        </p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 md:p-4">
+        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+          Sudah Lunas
+        </p>
+        <p
+          id="totalLunas"
+          class="text-xl md:text-2xl font-bold text-green-600 dark:text-green-400"
+        >
+          Rp 0
+        </p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 md:p-4">
+        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+          Belum Lunas
+        </p>
+        <p
+          id="totalBelumLunas"
+          class="text-xl md:text-2xl font-bold text-red-600 dark:text-red-400"
+        >
+          Rp 0
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Print Styles -->
+<style>
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    .space-y-6,
+    .space-y-6 * {
+      visibility: visible;
+    }
+    .space-y-6 {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+    .no-print {
+      display: none !important;
+    }
+    button {
+      display: none !important;
+    }
+    .bg-white,
+    .bg-gray-50,
+    .bg-gray-800,
+    .bg-gray-700 {
+      background: white !important;
+      color: black !important;
+    }
+    .border-gray-300,
+    .border-gray-600,
+    .border-gray-700 {
+      border-color: #000 !important;
+    }
+    .text-gray-800,
+    .text-gray-700,
+    .text-gray-600,
+    .text-gray-400,
+    .text-gray-200,
+    .text-gray-300 {
+      color: black !important;
+    }
+    .text-white {
+      color: black !important;
+    }
+  }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  // Load data
+  const iuran = {{iuran}} || [];
+  const anggota = {{anggota}} || {};
+  const organisasi = {{organisasi}} || {};
+
+  // Load organisasi data
+  if (organisasi.nama) {
+    document.getElementById("orgNama").textContent = organisasi.nama;
+    document.getElementById("orgAlamat").textContent = organisasi.alamat || "-";
+    document.getElementById("orgTelepon").textContent =
+      organisasi.telepon || "-";
+    document.getElementById("orgEmail").textContent = organisasi.email || "-";
+    if (organisasi.logo) {
+      document.getElementById("orgLogo").classList.remove("hidden");
+      document.getElementById("logoImg").src = organisasi.logo;
+    }
+  }
+
+  // Load anggota data
+  if (anggota.nama) {
+    document.getElementById("anggotaNama").textContent = anggota.nama;
+    document.getElementById("anggotaNIK").textContent = anggota.nik || "-";
+    document.getElementById("anggotaAlamat").textContent =
+      anggota.alamat || "-";
+    document.getElementById("anggotaTelepon").textContent =
+      anggota.telepon || "-";
+  }
+
+  function loadTagihan() {
+    const tbody = document.getElementById("tagihanTableBody");
+    const bulanNames = [
+      "",
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+
+    let totalTagihan = 0;
+    let totalLunas = 0;
+    let totalBelumLunas = 0;
+
+    tbody.innerHTML = iuran
+      .map((item, index) => {
+        totalTagihan += parseInt(item.jumlah) || 0;
+        if (item.status === "lunas") {
+          totalLunas += parseInt(item.jumlah) || 0;
+        } else {
+          totalBelumLunas += parseInt(item.jumlah) || 0;
+        }
+
+        return `
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
+                  index + 1
+                }</td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
+                  bulanNames[item.bulan]
+                } ${item.tahun}</td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-semibold text-gray-800 dark:text-gray-200">Rp ${formatNumber(
+                  item.jumlah
+                )}</td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
+                  item.tanggal_bayar ? formatDate(item.tanggal_bayar) : "-"
+                }</td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded ${
+                      item.status === "lunas"
+                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                        : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                    }">${item.status}</span>
+                </td>
+                <td class="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-gray-800 dark:text-gray-200">${
+                  item.keterangan || "-"
+                }</td>
+            </tr>
+        `;
+      })
+      .join("");
+
+    // Update summary
+    document.getElementById("totalTagihan").textContent =
+      formatRupiah(totalTagihan);
+    document.getElementById("totalLunas").textContent =
+      formatRupiah(totalLunas);
+    document.getElementById("totalBelumLunas").textContent =
+      formatRupiah(totalBelumLunas);
+  }
+
+  function formatNumber(num) {
+    return new Intl.NumberFormat("id-ID").format(num || 0);
+  }
+
+  function formatRupiah(angka) {
+    return "Rp " + formatNumber(angka);
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return "-";
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("id-ID");
+  }
+
+  function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Header
+    doc.setFontSize(18);
+    doc.text(organisasi.nama || "Organisasi", 14, 20);
+    doc.setFontSize(10);
+    doc.text(organisasi.alamat || "", 14, 28);
+    doc.text(
+      `Telp: ${organisasi.telepon || "-"} | Email: ${organisasi.email || "-"}`,
+      14,
+      34
+    );
+
+    // Data Anggota
+    doc.setFontSize(14);
+    doc.text("Data Anggota", 14, 45);
+    doc.setFontSize(10);
+    doc.text(`Nama: ${anggota.nama || "-"}`, 14, 52);
+    doc.text(`NIK: ${anggota.nik || "-"}`, 14, 58);
+    doc.text(`Alamat: ${anggota.alamat || "-"}`, 14, 64);
+    doc.text(`Telepon: ${anggota.telepon || "-"}`, 14, 70);
+
+    // Table Header
+    let y = 80;
+    doc.setFontSize(12);
+    doc.text("Tagihan Iuran", 14, y);
+    y += 10;
+
+    // Table
+    doc.setFontSize(9);
+    const bulanNames = [
+      "",
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+
+    // Table headers
+    doc.setFont(undefined, "bold");
+    doc.text("No", 14, y);
+    doc.text("Bulan/Tahun", 25, y);
+    doc.text("Jumlah", 70, y);
+    doc.text("Tanggal Bayar", 100, y);
+    doc.text("Status", 140, y);
+    doc.text("Keterangan", 160, y);
+    y += 5;
+    doc.line(14, y, 200, y);
+    y += 5;
+
+    // Table rows
+    doc.setFont(undefined, "normal");
+    iuran.forEach((item, index) => {
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+      doc.text((index + 1).toString(), 14, y);
+      doc.text(`${bulanNames[item.bulan]} ${item.tahun}`, 25, y);
+      doc.text(formatRupiah(item.jumlah), 70, y);
+      doc.text(
+        item.tanggal_bayar ? formatDate(item.tanggal_bayar) : "-",
+        100,
+        y
+      );
+      doc.text(item.status || "-", 140, y);
+      doc.text(item.keterangan || "-", 160, y);
+      y += 6;
+    });
+
+    // Summary
+    y += 5;
+    doc.line(14, y, 200, y);
+    y += 5;
+    doc.setFont(undefined, "bold");
+    const totalTagihan = iuran.reduce(
+      (sum, item) => sum + (parseInt(item.jumlah) || 0),
+      0
+    );
+    const totalLunas = iuran
+      .filter((item) => item.status === "lunas")
+      .reduce((sum, item) => sum + (parseInt(item.jumlah) || 0), 0);
+    const totalBelumLunas = totalTagihan - totalLunas;
+
+    doc.text("Total Tagihan:", 100, y);
+    doc.text(formatRupiah(totalTagihan), 140, y);
+    y += 6;
+    doc.text("Sudah Lunas:", 100, y);
+    doc.text(formatRupiah(totalLunas), 140, y);
+    y += 6;
+    doc.text("Belum Lunas:", 100, y);
+    doc.text(formatRupiah(totalBelumLunas), 140, y);
+
+    // Footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.text(
+        `Halaman ${i} dari ${pageCount}`,
+        14,
+        doc.internal.pageSize.height - 10
+      );
+      doc.text(
+        `Dicetak pada: ${new Date().toLocaleString("id-ID")}`,
+        100,
+        doc.internal.pageSize.height - 10
+      );
+    }
+
+    doc.save(`Tagihan_Iuran_${anggota.nama}_${new Date().getTime()}.pdf`);
+  }
+
+  loadTagihan();
+</script>

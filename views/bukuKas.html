@@ -1,0 +1,422 @@
+<div class="space-y-4 md:space-y-6">
+  <div
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+  >
+    <div>
+      <h2
+        class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-1"
+      >
+        <i class="bx bx-book text-yellow-600 dark:text-yellow-400"></i> Buku Kas
+      </h2>
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Kelola transaksi keuangan organisasi
+      </p>
+    </div>
+    <button
+      onclick="openModal()"
+      class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white rounded-lg transition-all duration-300 text-sm md:text-base font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2 justify-center"
+    >
+      <i class="bx bx-plus text-lg"></i> <span>Tambah Transaksi</span>
+    </button>
+  </div>
+
+  <!-- Statistics -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border-l-4 border-green-500 transform hover:-translate-y-1"
+    >
+      <p class="text-gray-600 dark:text-gray-400 text-xs md:text-sm">
+        Total Debet
+      </p>
+      <p
+        id="stat-debet"
+        class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mt-2"
+      >
+        Rp 0
+      </p>
+    </div>
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border-l-4 border-red-500 transform hover:-translate-y-1"
+    >
+      <p
+        class="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-medium uppercase tracking-wide mb-1"
+      >
+        Total Kredit
+      </p>
+      <p
+        id="stat-kredit"
+        class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mt-2"
+      >
+        Rp 0
+      </p>
+    </div>
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border-l-4 border-blue-500 transform hover:-translate-y-1"
+    >
+      <p
+        class="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-medium uppercase tracking-wide mb-1"
+      >
+        Saldo
+      </p>
+      <p
+        id="stat-saldo"
+        class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mt-2"
+      >
+        Rp 0
+      </p>
+    </div>
+  </div>
+
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
+  >
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              No
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Tanggal
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Keterangan
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Kategori
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Debet
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Kredit
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Saldo
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="bukuKasTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        ></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  id="bukuKasModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-5 md:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700"
+  >
+    <h3
+      class="text-xl font-bold text-gray-800 dark:text-white mb-4"
+      id="modalTitle"
+    >
+      Tambah Transaksi
+    </h3>
+    <form id="bukuKasForm" class="space-y-3 md:space-y-4">
+      <input type="hidden" id="bukuKasId" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Tanggal *</label
+          >
+          <input
+            type="date"
+            id="tanggal"
+            required
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          />
+        </div>
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Kategori</label
+          >
+          <input
+            type="text"
+            id="kategori"
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            placeholder="Contoh: iuran, operasional, dll"
+          />
+        </div>
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Debet (Rp)</label
+          >
+          <input
+            type="number"
+            id="debet"
+            min="0"
+            value="0"
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            oninput="validateAmounts()"
+          />
+        </div>
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Kredit (Rp)</label
+          >
+          <input
+            type="number"
+            id="kredit"
+            min="0"
+            value="0"
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            oninput="validateAmounts()"
+          />
+        </div>
+        <div class="md:col-span-2">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Keterangan</label
+          >
+          <textarea
+            id="keterangan"
+            rows="2"
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          ></textarea>
+        </div>
+      </div>
+      <div class="flex justify-end gap-3">
+        <button
+          type="button"
+          onclick="closeModal()"
+          class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-200 font-medium"
+        >
+          Batal
+        </button>
+        <button
+          type="submit"
+          class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+        >
+          Simpan
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Load bukuKas and stats data
+  const bukuKas = {{bukuKas}} || [];
+  const stats = {{stats}} || {};
+
+  function loadBukuKas() {
+    const tbody = document.getElementById("bukuKasTableBody");
+    tbody.innerHTML = bukuKas
+      .map(
+        (item, index) => `
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
+                  index + 1
+                }</td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${formatDate(
+                  item.tanggal
+                )}</td>
+                <td class="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-gray-800 dark:text-gray-200">${
+                  item.keterangan || "-"
+                }</td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
+                  item.kategori || "-"
+                }</td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-semibold text-green-600 dark:text-green-400">
+                    ${item.debet > 0 ? "Rp " + formatNumber(item.debet) : "-"}
+                </td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-semibold text-red-600 dark:text-red-400">
+                    ${item.kredit > 0 ? "Rp " + formatNumber(item.kredit) : "-"}
+                </td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-bold text-blue-600 dark:text-blue-400">
+                    Rp ${formatNumber(item.saldo || 0)}
+                </td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm">
+                    <button onclick="editBukuKas(${
+                      item.id
+                    })" class="text-blue-600 hover:text-blue-800 mr-3">
+                        <i class='bx bx-edit'></i>
+                    </button>
+                    <button onclick="deleteBukuKas(${
+                      item.id
+                    })" class="text-red-600 hover:text-red-800">
+                        <i class='bx bx-trash'></i>
+                    </button>
+                </td>
+            </tr>
+        `
+      )
+      .join("");
+
+    // Update stats
+    document.getElementById("stat-debet").textContent = formatRupiah(
+      stats.totalDebet || 0
+    );
+    document.getElementById("stat-kredit").textContent = formatRupiah(
+      stats.totalKredit || 0
+    );
+    document.getElementById("stat-saldo").textContent = formatRupiah(
+      stats.saldo || 0
+    );
+  }
+
+  function formatNumber(num) {
+    return new Intl.NumberFormat("id-ID").format(num || 0);
+  }
+
+  function formatRupiah(angka) {
+    return "Rp " + formatNumber(angka);
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return "-";
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("id-ID");
+  }
+
+  function validateAmounts() {
+    const debet = parseInt(document.getElementById("debet").value) || 0;
+    const kredit = parseInt(document.getElementById("kredit").value) || 0;
+
+    if (debet > 0 && kredit > 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Perhatian!",
+        text: "Debet dan Kredit tidak boleh diisi bersamaan. Pilih salah satu.",
+        timer: 2000,
+      });
+    }
+  }
+
+  function openModal(id = null) {
+    document.getElementById("bukuKasModal").classList.remove("hidden");
+    document.getElementById("bukuKasForm").reset();
+    document.getElementById("bukuKasId").value = id || "";
+    document.getElementById("modalTitle").textContent = id
+      ? "Edit Transaksi"
+      : "Tambah Transaksi";
+    document.getElementById("tanggal").value = new Date()
+      .toISOString()
+      .split("T")[0];
+    document.getElementById("debet").value = "0";
+    document.getElementById("kredit").value = "0";
+
+    if (id) {
+      const item = bukuKas.find((b) => b.id === id);
+      if (item) {
+        document.getElementById("tanggal").value = item.tanggal || "";
+        document.getElementById("kategori").value = item.kategori || "";
+        document.getElementById("debet").value = item.debet || 0;
+        document.getElementById("kredit").value = item.kredit || 0;
+        document.getElementById("keterangan").value = item.keterangan || "";
+      }
+    }
+  }
+
+  function closeModal() {
+    document.getElementById("bukuKasModal").classList.add("hidden");
+  }
+
+  function editBukuKas(id) {
+    openModal(id);
+  }
+
+  async function deleteBukuKas(id) {
+    const result = await Swal.fire({
+      title: "Yakin?",
+      text: "Data akan dihapus permanen",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+    });
+
+    if (result.isConfirmed) {
+      const response = await API.delete(`/buku-kas/delete/${id}`);
+      if (response.success) {
+        Swal.fire("Terhapus!", response.message, "success");
+        location.reload();
+      } else {
+        Swal.fire("Error!", response.message, "error");
+      }
+    }
+  }
+
+  document
+    .getElementById("bukuKasForm")
+    .addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = document.getElementById("bukuKasId").value;
+      const debet = parseInt(document.getElementById("debet").value) || 0;
+      const kredit = parseInt(document.getElementById("kredit").value) || 0;
+
+      if (debet === 0 && kredit === 0) {
+        Swal.fire({
+          icon: "error",
+          title: "Error!",
+          text: "Debet atau Kredit harus diisi minimal salah satu",
+        });
+        return;
+      }
+
+      if (debet > 0 && kredit > 0) {
+        Swal.fire({
+          icon: "error",
+          title: "Error!",
+          text: "Debet dan Kredit tidak boleh diisi bersamaan",
+        });
+        return;
+      }
+
+      const data = {
+        tanggal: document.getElementById("tanggal").value,
+        kategori: document.getElementById("kategori").value,
+        debet: debet,
+        kredit: kredit,
+        keterangan: document.getElementById("keterangan").value,
+      };
+
+      const url = id ? `/buku-kas/update/${id}` : "/buku-kas/create";
+      const method = id ? "put" : "post";
+
+      const response = await API[method](url, data);
+      if (response.success) {
+        Swal.fire("Berhasil!", response.message, "success");
+        closeModal();
+        location.reload();
+      } else {
+        Swal.fire("Error!", response.message, "error");
+      }
+    });
+
+  loadBukuKas();
+</script>

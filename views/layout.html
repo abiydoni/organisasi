@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}} - Aplikasi Organisasi</title>
+    <!-- Tailwind CSS - Built CSS (more reliable than CDN for dynamic content) -->
+    <link href="/css/output.css?v=1.0" rel="stylesheet" type="text/css" />
+    <!-- Boxicons -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <!-- Theme Script -->
+    <script src="/js/theme.js"></script>
+  </head>
+  <body class="h-full bg-gray-50 dark:bg-gray-900">
+    <!-- Mobile Menu Overlay -->
+    <div
+      id="mobileMenuOverlay"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+      onclick="toggleMobileMenu()"
+    ></div>
+
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      class="fixed top-0 left-0 z-40 w-64 h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-r border-gray-200 dark:border-gray-700 shadow-xl transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"
+    >
+      <div class="h-full px-3 py-4 overflow-y-auto">
+        <div
+          class="flex items-center justify-between mb-8 px-3 pb-4 border-b border-gray-200 dark:border-gray-700"
+        >
+          <div class="flex items-center">
+            <div
+              id="sidebarLogo"
+              class="bg-gradient-to-br from-blue-500 to-blue-600 p-2 rounded-lg mr-3 shadow-md"
+            >
+              <i class="bx bx-group text-2xl text-white"></i>
+            </div>
+            <span
+              id="sidebarNama"
+              class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+              >Organisasi</span
+            >
+          </div>
+          <button
+            onclick="toggleMobileMenu()"
+            class="lg:hidden text-gray-700 dark:text-gray-300"
+          >
+            <i class="bx bx-x text-2xl"></i>
+          </button>
+        </div>
+
+        <ul class="space-y-2">
+          <li>
+            <a
+              href="/dashboard"
+              onclick="closeMobileMenu()"
+              class="flex items-center px-3 py-2.5 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 {{#if active.dashboard}}bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 text-blue-600 dark:text-blue-400 font-semibold shadow-sm{{/if}}"
+            >
+              <i class="bx bx-home text-xl mr-3"></i>
+              Dashboard
+            </a>
+          </li>
+          {{#if active.isAdmin}}
+          <li>
+            <a
+              href="/organisasi"
+              onclick="closeMobileMenu()"
+              class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 {{#if active.organisasi}}bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400{{/if}}"
+            >
+              <i class="bx bx-building text-xl mr-3"></i>
+              Data Organisasi
+            </a>
+          </li>
+          <li>
+            <a
+              href="/user"
+              onclick="closeMobileMenu()"
+              class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 {{#if active.user}}bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400{{/if}}"
+            >
+              <i class="bx bx-user-circle text-xl mr-3"></i>
+              Data User
+            </a>
+          </li>
+          <li>
+            <a
+              href="/anggota"
+              onclick="closeMobileMenu()"
+              class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 {{#if active.anggota}}bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400{{/if}}"
+            >
+              <i class="bx bx-group text-xl mr-3"></i>
+              Data Anggota
+            </a>
+          </li>
+          <li>
+            <a
+              href="/iuran"
+              onclick="closeMobileMenu()"
+              class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 {{#if active.iuran}}bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400{{/if}}"
+            >
+              <i class="bx bx-money text-xl mr-3"></i>
+              Iuran Bulanan
+            </a>
+          </li>
+          <li>
+            <a
+              href="/buku-kas"
+              onclick="closeMobileMenu()"
+              class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 {{#if active.bukuKas}}bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400{{/if}}"
+            >
+              <i class="bx bx-book text-xl mr-3"></i>
+              Buku Kas
+            </a>
+          </li>
+          {{else}}
+          <li>
+            <a
+              href="/tagihan"
+              onclick="closeMobileMenu()"
+              class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 {{#if active.tagihan}}bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400{{/if}}"
+            >
+              <i class="bx bx-receipt text-xl mr-3"></i>
+              Tagihan Saya
+            </a>
+          </li>
+          {{/if}}
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64">
+      <!-- Top Navbar -->
+      <nav
+        class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 shadow-sm"
+      >
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <button
+              onclick="toggleMobileMenu()"
+              class="lg:hidden text-gray-700 dark:text-gray-300 p-2"
+            >
+              <i class="bx bx-menu text-2xl"></i>
+            </button>
+            <h2
+              class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white"
+            >
+              {{title}}
+            </h2>
+          </div>
+          <div class="flex items-center gap-2 md:gap-4">
+            <button
+              onclick="toggleTheme()"
+              class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <i
+                id="theme-icon"
+                class="bx bx-moon text-xl md:text-2xl text-gray-700 dark:text-gray-300"
+              ></i>
+            </button>
+            <div class="hidden md:flex items-center gap-2">
+              <i
+                class="bx bx-user text-xl text-gray-700 dark:text-gray-300"
+              ></i>
+              <span
+                class="text-gray-700 dark:text-gray-300 text-sm md:text-base"
+                >{{user.nama}}</span
+              >
+            </div>
+            <a
+              href="/auth/logout"
+              class="px-4 md:px-5 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg transition-all duration-200 text-sm md:text-base font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2"
+            >
+              <i class="bx bx-log-out"></i>
+              <span class="hidden md:inline">Logout</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Page Content -->
+      <main class="p-3 md:p-6">{{content}}</main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/responsive.js"></script>
+    <script>
+      // Load organisasi data for sidebar - inject langsung seperti di dashboard
+      const organisasi = {{organisasi}} || {};
+
+      // Update sidebar logo and name - hanya update sekali saat page load
+      // Gunakan IIFE dan flag untuk mencegah duplikasi
+      (function updateSidebar() {
+        if (!organisasi || Object.keys(organisasi).length === 0) return;
+
+        const sidebarLogo = document.getElementById("sidebarLogo");
+        const sidebarNama = document.getElementById("sidebarNama");
+
+        if (!sidebarLogo || !sidebarNama) return;
+
+        // Update logo - hanya jika ada logo
+        if (organisasi.logo) {
+          // Update container styling untuk logo - tanpa background dan border
+          sidebarLogo.className = "mr-3 flex items-center justify-center";
+          const img = document.createElement("img");
+          img.src = organisasi.logo;
+          img.alt = organisasi.nama || "Logo";
+          img.className = "w-10 h-10 rounded object-contain";
+          // Handle error jika gambar tidak ditemukan (404)
+          img.onerror = function() {
+            // Jika logo tidak ditemukan, tampilkan default icon
+            sidebarLogo.className = "bg-gradient-to-br from-blue-500 to-blue-600 p-2 rounded-lg mr-3 shadow-md";
+            sidebarLogo.innerHTML = `<i class="bx bx-group text-2xl text-white"></i>`;
+          };
+          sidebarLogo.innerHTML = "";
+          sidebarLogo.appendChild(img);
+        }
+
+        // Update nama - hanya jika ada nama dan masih default "Organisasi"
+        if (organisasi.nama) {
+          const currentText = sidebarNama.textContent.trim();
+          // Hanya update jika masih default atau berbeda
+          if (currentText === "Organisasi" || currentText !== organisasi.nama) {
+            sidebarNama.textContent = organisasi.nama;
+          }
+        }
+      })();
+
+      function toggleMobileMenu() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("mobileMenuOverlay");
+        sidebar.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+      }
+
+      function closeMobileMenu() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("mobileMenuOverlay");
+        sidebar.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+      }
+
+      // Close menu on window resize if > lg
+      window.addEventListener("resize", function () {
+        if (window.innerWidth >= 1024) {
+          closeMobileMenu();
+        }
+      });
+    </script>
+  </body>
+</html>

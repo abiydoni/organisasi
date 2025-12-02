@@ -1,0 +1,285 @@
+<div class="space-y-4 md:space-y-6">
+  <div
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+  >
+    <div>
+      <h2
+        class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-1"
+      >
+        <i class="bx bx-user-circle text-blue-600 dark:text-blue-400"></i> Data
+        User
+      </h2>
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Kelola data pengguna sistem
+      </p>
+    </div>
+    <button
+      onclick="openModal()"
+      class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all duration-300 text-sm md:text-base font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2"
+    >
+      <i class="bx bx-plus text-lg"></i> <span>Tambah User</span>
+    </button>
+  </div>
+
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              No
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Username
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Nama
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Role
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="userTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  id="userModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg p-4 md:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+  >
+    <h3
+      class="text-xl font-bold text-gray-800 dark:text-white mb-4"
+      id="modalTitle"
+    >
+      Tambah User
+    </h3>
+    <form id="userForm" class="space-y-3 md:space-y-4">
+      <input type="hidden" id="userId" />
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Username *</label
+        >
+        <input
+          type="text"
+          id="username"
+          required
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+        />
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Password <span id="passwordLabel">*</span></label
+        >
+        <input
+          type="password"
+          id="password"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+        />
+        <p class="text-xs text-gray-500 mt-1" id="passwordHint">
+          Kosongkan jika tidak ingin mengubah password
+        </p>
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Nama *</label
+        >
+        <input
+          type="text"
+          id="nama"
+          required
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+        />
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Role *</label
+        >
+        <select
+          id="role"
+          required
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+        >
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="flex justify-end gap-3">
+        <button
+          type="button"
+          onclick="closeModal()"
+          class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-200 font-medium"
+        >
+          Batal
+        </button>
+        <button
+          type="submit"
+          class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+        >
+          Simpan
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Load users data
+  const users = {{users}} || [];
+  const isAdmin = "{{user.role}}" === "admin";
+
+  function loadUsers() {
+    const tbody = document.getElementById("userTableBody");
+    tbody.innerHTML = users
+      .map(
+        (user, index) => `
+          <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-medium">${
+                index + 1
+              }</td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold">${
+                user.username
+              }</td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
+                user.nama
+              }</td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                  <span class="px-3 py-1 text-xs font-semibold rounded-full ${
+                    user.role === "admin"
+                      ? "bg-gradient-to-r from-red-100 to-red-200 text-red-800 dark:from-red-900 dark:to-red-800 dark:text-red-200"
+                      : "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 dark:from-blue-900 dark:to-blue-800 dark:text-blue-200"
+                  }">${user.role}</span>
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm">
+                  ${
+                    isAdmin
+                      ? `
+                      <button onclick="editUser(${user.id})" class="inline-flex items-center justify-center w-8 h-8 text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg transition-all duration-200 mr-2">
+                          <i class='bx bx-edit text-lg'></i>
+                      </button>
+                      <button onclick="deleteUser(${user.id})" class="inline-flex items-center justify-center w-8 h-8 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200">
+                          <i class='bx bx-trash text-lg'></i>
+                      </button>
+                  `
+                      : "-"
+                  }
+              </td>
+          </tr>
+      `
+      )
+      .join("");
+  }
+
+  function openModal(id = null) {
+    if (!isAdmin) return;
+    document.getElementById("userModal").classList.remove("hidden");
+    document.getElementById("userForm").reset();
+    document.getElementById("userId").value = id || "";
+    document.getElementById("modalTitle").textContent = id
+      ? "Edit User"
+      : "Tambah User";
+    document.getElementById("passwordLabel").textContent = id ? "" : "*";
+    document.getElementById("passwordHint").style.display = id
+      ? "block"
+      : "none";
+    document.getElementById("password").required = !id;
+
+    if (id) {
+      const user = users.find((u) => u.id === id);
+      if (user) {
+        document.getElementById("username").value = user.username;
+        document.getElementById("nama").value = user.nama;
+        document.getElementById("role").value = user.role;
+      }
+    }
+  }
+
+  function closeModal() {
+    document.getElementById("userModal").classList.add("hidden");
+  }
+
+  function editUser(id) {
+    openModal(id);
+  }
+
+  async function deleteUser(id) {
+    const result = await Swal.fire({
+      title: "Yakin?",
+      text: "Data akan dihapus permanen",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+    });
+
+    if (result.isConfirmed) {
+      const response = await API.delete(`/user/delete/${id}`);
+      if (response.success) {
+        Swal.fire("Terhapus!", response.message, "success");
+        location.reload();
+      } else {
+        Swal.fire("Error!", response.message, "error");
+      }
+    }
+  }
+
+  document.getElementById("userForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("userId").value;
+    const data = {
+      username: document.getElementById("username").value,
+      nama: document.getElementById("nama").value,
+      role: document.getElementById("role").value,
+    };
+
+    const password = document.getElementById("password").value;
+    if (password) data.password = password;
+
+    const url = id ? `/user/update/${id}` : "/user/create";
+    const method = id ? "put" : "post";
+
+    const response = await API[method](url, data);
+    if (response.success) {
+      Swal.fire("Berhasil!", response.message, "success");
+      closeModal();
+      location.reload();
+    } else {
+      Swal.fire("Error!", response.message, "error");
+    }
+  });
+
+  loadUsers();
+</script>
