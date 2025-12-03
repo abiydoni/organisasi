@@ -1,0 +1,284 @@
+<div class="space-y-4 md:space-y-6">
+  <div
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+  >
+    <div>
+      <h2
+        class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-1"
+      >
+        <i class="bx bx-list-check text-blue-600 dark:text-blue-400"></i> Data
+        Tarif
+      </h2>
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Kelola data tarif organisasi
+      </p>
+    </div>
+    <button
+      onclick="openModal()"
+      class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all duration-300 text-sm md:text-base font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2"
+    >
+      <i class="bx bx-plus text-lg"></i> <span>Tambah Tarif</span>
+    </button>
+  </div>
+
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              No
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Nama Tarif
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Jumlah
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Keterangan
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Status
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="tarifTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  id="tarifModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg p-4 md:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+  >
+    <h3
+      class="text-xl font-bold text-gray-800 dark:text-white mb-4"
+      id="modalTitle"
+    >
+      Tambah Tarif
+    </h3>
+    <form id="tarifForm" class="space-y-3 md:space-y-4">
+      <input type="hidden" id="tarifId" />
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Nama Tarif *</label
+        >
+        <input
+          type="text"
+          id="nama"
+          required
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          placeholder="Contoh: Iuran Bulanan"
+        />
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Jumlah (Rp) *</label
+        >
+        <input
+          type="number"
+          id="jumlah"
+          required
+          min="0"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          placeholder="0"
+        />
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Keterangan</label
+        >
+        <textarea
+          id="keterangan"
+          rows="3"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          placeholder="Keterangan tarif..."
+        ></textarea>
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Status *</label
+        >
+        <select
+          id="status"
+          required
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+        >
+          <option value="aktif">Aktif</option>
+          <option value="tidak aktif">Tidak Aktif</option>
+        </select>
+      </div>
+      <div class="flex justify-end gap-3">
+        <button
+          type="button"
+          onclick="closeModal()"
+          class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-200 font-medium"
+        >
+          Batal
+        </button>
+        <button
+          type="submit"
+          class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+        >
+          Simpan
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Load tarif data
+  const tarif = {{tarif}} || [];
+
+  function loadTarif() {
+    const tbody = document.getElementById("tarifTableBody");
+    tbody.innerHTML = tarif
+      .map(
+        (item, index) => `
+          <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-medium">${
+                index + 1
+              }</td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold">${
+                item.nama
+              }</td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">
+                ${formatRupiah(item.jumlah)}
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-gray-800 dark:text-gray-200">
+                ${item.keterangan || "-"}
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                  <span class="px-3 py-1 text-xs font-semibold rounded-full ${
+                    item.status === "aktif"
+                      ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200"
+                      : "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 dark:from-gray-900 dark:to-gray-800 dark:text-gray-200"
+                  }">${item.status}</span>
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm">
+                  <button onclick="editTarif(${item.id})" class="inline-flex items-center justify-center w-8 h-8 text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg transition-all duration-200 mr-2" title="Edit">
+                      <i class='bx bx-edit text-lg'></i>
+                  </button>
+                  <button onclick="deleteTarif(${item.id})" class="inline-flex items-center justify-center w-8 h-8 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200" title="Hapus">
+                      <i class='bx bx-trash text-lg'></i>
+                  </button>
+              </td>
+          </tr>
+      `
+      )
+      .join("");
+  }
+
+  function formatRupiah(angka) {
+    return "Rp " + new Intl.NumberFormat("id-ID").format(angka);
+  }
+
+  function openModal(id = null) {
+    document.getElementById("tarifModal").classList.remove("hidden");
+    document.getElementById("tarifForm").reset();
+    document.getElementById("tarifId").value = id || "";
+    document.getElementById("modalTitle").textContent = id
+      ? "Edit Tarif"
+      : "Tambah Tarif";
+
+    if (id) {
+      const item = tarif.find((t) => t.id === id);
+      if (item) {
+        document.getElementById("nama").value = item.nama || "";
+        document.getElementById("jumlah").value = item.jumlah || "";
+        document.getElementById("keterangan").value = item.keterangan || "";
+        document.getElementById("status").value = item.status || "aktif";
+      }
+    }
+  }
+
+  function closeModal() {
+    document.getElementById("tarifModal").classList.add("hidden");
+  }
+
+  function editTarif(id) {
+    openModal(id);
+  }
+
+  async function deleteTarif(id) {
+    const result = await Swal.fire({
+      title: "Yakin?",
+      text: "Data akan dihapus permanen",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+    });
+
+    if (result.isConfirmed) {
+      const response = await API.delete(`/tarif/delete/${id}`);
+      if (response.success) {
+        Swal.fire("Terhapus!", response.message, "success");
+        location.reload();
+      } else {
+        Swal.fire("Error!", response.message, "error");
+      }
+    }
+  }
+
+  document.getElementById("tarifForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("tarifId").value;
+    const data = {
+      nama: document.getElementById("nama").value,
+      jumlah: parseInt(document.getElementById("jumlah").value),
+      keterangan: document.getElementById("keterangan").value,
+      status: document.getElementById("status").value,
+    };
+
+    const url = id ? `/tarif/update/${id}` : "/tarif/create";
+    const method = id ? "put" : "post";
+
+    const response = await API[method](url, data);
+    if (response.success) {
+      Swal.fire("Berhasil!", response.message, "success");
+      closeModal();
+      location.reload();
+    } else {
+      Swal.fire("Error!", response.message, "error");
+    }
+  });
+
+  loadTarif();
+</script>

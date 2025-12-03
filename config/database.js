@@ -114,6 +114,17 @@ function initializeDatabase() {
       saldo INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
+
+    // Tabel Tarif
+    db.run(`CREATE TABLE IF NOT EXISTS tarif (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nama TEXT NOT NULL,
+      jumlah INTEGER NOT NULL,
+      keterangan TEXT,
+      status TEXT DEFAULT 'aktif',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
   });
 }
 

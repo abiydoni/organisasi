@@ -34,6 +34,7 @@ const anggotaRoutes = require("./routes/anggota");
 const iuranRoutes = require("./routes/iuran");
 const bukuKasRoutes = require("./routes/bukuKas");
 const tagihanRoutes = require("./routes/tagihan");
+const tarifRoutes = require("./routes/tarif");
 
 // Routes
 app.use("/auth", authRoutes);
@@ -44,6 +45,7 @@ app.use("/anggota", anggotaRoutes);
 app.use("/iuran", iuranRoutes);
 app.use("/buku-kas", bukuKasRoutes);
 app.use("/tagihan", tagihanRoutes);
+app.use("/tarif", tarifRoutes);
 
 // Root route
 app.get("/", (req, res) => {

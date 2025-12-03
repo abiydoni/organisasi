@@ -355,8 +355,9 @@
   function loadRoleDropdown(editMode = false, targetUserId = null) {
     const roleSelect = document.getElementById("role");
     const roleHint = document.getElementById("roleHint");
-    if (!roleSelect) return;
+    if (!roleSelect) return null;
 
+    // Clear dulu
     roleSelect.innerHTML = "";
     roleSelect.disabled = false;
     roleHint.classList.remove("text-red-500");
@@ -409,8 +410,8 @@
       roleHint.classList.add("text-red-500");
     }
 
-    // Return target user role untuk digunakan setelah dropdown di-load
-    return targetUser ? targetUser.role : null;
+    // Return target user untuk digunakan setelah dropdown di-load
+    return targetUser;
   }
 
   function openModal(id = null) {
@@ -467,49 +468,64 @@
         loadRoleDropdown(true, id);
 
         // Set semua data setelah dropdown selesai di-load
-        // Gunakan fungsi helper untuk set data
         const setEditData = () => {
           // Pastikan dropdown sudah ter-load
-          if (roleSelect && roleSelect.options.length > 0) {
-            // Normalize role value (lowercase, trim)
-            const userRole = (user.role || "").toLowerCase().trim();
-
-            // Cari option yang sesuai (case-insensitive)
-            let foundOption = null;
-            for (let i = 0; i < roleSelect.options.length; i++) {
-              const optionValue = (roleSelect.options[i].value || "").toLowerCase().trim();
-              if (optionValue === userRole) {
-                foundOption = roleSelect.options[i];
-                break;
-              }
-            }
-
-            // Set role value
-            if (foundOption) {
-              roleSelect.value = foundOption.value;
-            } else {
-              // Jika tidak ditemukan, coba set langsung
-              roleSelect.value = user.role;
-            }
-
-            // Verifikasi role sudah ter-set dengan benar (case-insensitive)
-            const selectedValue = (roleSelect.value || "").toLowerCase().trim();
-            if (selectedValue === userRole) {
-              // Role sudah benar, sekarang set nama
-              toggleNamaInput(roleSelect.value); // Gunakan value yang terpilih
-              setNamaValue(roleSelect.value, user.nama || "");
-            } else {
-              // Jika belum sesuai, coba lagi
-              setTimeout(setEditData, 50);
-            }
-          } else {
-            // Dropdown belum ready, coba lagi
+          if (!roleSelect || roleSelect.options.length === 0) {
             setTimeout(setEditData, 50);
+            return;
+          }
+
+          // Ambil role dari database (normalize)
+          const dbRole = String(user.role || "").trim();
+          const dbRoleLower = dbRole.toLowerCase();
+
+          // Cari option yang cocok (case-insensitive)
+          let matchedValue = null;
+          for (let i = 0; i < roleSelect.options.length; i++) {
+            const opt = roleSelect.options[i];
+            const optValue = String(opt.value || "").trim();
+            if (optValue.toLowerCase() === dbRoleLower) {
+              matchedValue = optValue; // Gunakan value exact dari option
+              break;
+            }
+          }
+
+          // Set role value - JANGAN dispatch event karena akan trigger toggle yang tidak diinginkan
+          if (matchedValue) {
+            roleSelect.value = matchedValue;
+          } else if (dbRole) {
+            // Fallback: set langsung dari database
+            roleSelect.value = dbRole;
+          }
+
+          // Verifikasi value sudah ter-set dengan benar
+          const currentValue = String(roleSelect.value || "").trim();
+          const currentValueLower = currentValue.toLowerCase();
+
+          if (currentValueLower === dbRoleLower) {
+            // Role sudah benar, sekarang set nama (tanpa trigger change event)
+            toggleNamaInput(currentValue);
+            setNamaValue(currentValue, user.nama || "");
+          } else {
+            // Jika masih belum sesuai, coba lagi (max 5 kali)
+            if (!setEditData.retryCount) setEditData.retryCount = 0;
+            setEditData.retryCount++;
+            if (setEditData.retryCount < 5) {
+              setTimeout(setEditData, 100);
+            } else {
+              // Force set sebagai fallback terakhir
+              roleSelect.value = dbRole;
+              toggleNamaInput(dbRole);
+              setNamaValue(dbRole, user.nama || "");
+            }
           }
         };
 
-        // Mulai set data setelah DOM ready
-        setTimeout(setEditData, 150);
+        // Tunggu dropdown selesai di-load, lalu set data
+        // Gunakan requestAnimationFrame untuk memastikan DOM sudah ter-update
+        requestAnimationFrame(() => {
+          setTimeout(setEditData, 100);
+        });
       }
     } else {
       // Create mode
@@ -532,16 +548,18 @@
       }
     }
 
-    // Event listener untuk role change - hapus listener lama jika ada
-    const newRoleSelect = document.getElementById("role");
-    // Clone dan replace untuk menghapus semua event listener
-    const newSelect = newRoleSelect.cloneNode(true);
-    newRoleSelect.parentNode.replaceChild(newSelect, newRoleSelect);
+    // Event listener untuk role change - hanya untuk create mode
+    if (!id) {
+      const roleSelectForCreate = document.getElementById("role");
+      // Hapus listener lama jika ada dengan clone
+      const newSelect = roleSelectForCreate.cloneNode(true);
+      roleSelectForCreate.parentNode.replaceChild(newSelect, roleSelectForCreate);
 
-    // Tambahkan event listener baru
-    document.getElementById("role").addEventListener("change", function() {
-      toggleNamaInput(this.value);
-    });
+      // Tambahkan event listener baru hanya untuk create mode
+      document.getElementById("role").addEventListener("change", function() {
+        toggleNamaInput(this.value);
+      });
+    }
   }
 
   function closeModal() {
