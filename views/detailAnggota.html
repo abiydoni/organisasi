@@ -1,0 +1,671 @@
+<div class="space-y-4 md:space-y-6">
+  <!-- Header dengan tombol kembali -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <a
+        href="/anggota"
+        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+        title="Kembali"
+      >
+        <i class="bx bx-arrow-back text-2xl"></i>
+      </a>
+      <div>
+        <h2
+          class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-1"
+        >
+          <i class="bx bx-user text-blue-600 dark:text-blue-400"></i> Detail
+          Anggota
+        </h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          Informasi dan riwayat pembayaran anggota
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Informasi Anggota -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-5 md:p-6"
+  >
+    <h3
+      class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2"
+    >
+      <i class="bx bx-info-circle text-blue-600 dark:text-blue-400"></i>
+      Informasi Anggota
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Nama</p>
+        <p
+          class="text-base font-semibold text-gray-800 dark:text-white"
+          id="anggotaNama"
+        >
+          -
+        </p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">NIK</p>
+        <p class="text-base text-gray-800 dark:text-white" id="anggotaNik">-</p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Alamat</p>
+        <p class="text-base text-gray-800 dark:text-white" id="anggotaAlamat">
+          -
+        </p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Telepon</p>
+        <p class="text-base text-gray-800 dark:text-white" id="anggotaTelepon">
+          -
+        </p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Email</p>
+        <p class="text-base text-gray-800 dark:text-white" id="anggotaEmail">
+          -
+        </p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Status</p>
+        <span
+          id="anggotaStatus"
+          class="inline-block px-3 py-1 text-xs font-semibold rounded-full"
+        >
+          -
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Tahun dan Daftar Tarif -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+    <!-- Filter Tahun -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6"
+    >
+      <div class="flex flex-col gap-3">
+        <h3
+          class="text-lg md:text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2"
+        >
+          <i class="bx bx-calendar text-blue-600 dark:text-blue-400"></i>
+          Riwayat Pembayaran
+        </h3>
+        <div class="flex items-center gap-2">
+          <label class="text-sm text-gray-700 dark:text-gray-300">Tahun:</label>
+          <select
+            id="tahunFilter"
+            class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          >
+            <!-- Options akan diisi oleh JavaScript -->
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daftar Tarif -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6"
+    >
+      <h3
+        class="text-lg md:text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2"
+      >
+        <i class="bx bx-list-check text-blue-600 dark:text-blue-400"></i>
+        Daftar Tarif
+      </h3>
+      <div class="space-y-2 max-h-48 overflow-y-auto" id="tarifList">
+        <!-- Daftar tarif akan diisi oleh JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabel Pembayaran Per Bulan -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <!-- Desktop Table View -->
+    <div class="hidden md:block">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Bulan
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Daftar Tarif
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Bayar
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Sisa
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Tanggal Bayar
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Status
+            </th>
+            <th
+              class="px-3 md:px-6 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="pembayaranTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile Card View -->
+    <div
+      id="pembayaranCardBody"
+      class="md:hidden divide-y divide-gray-200 dark:divide-gray-700"
+    >
+      <!-- Data akan diisi oleh JavaScript -->
+    </div>
+  </div>
+</div>
+
+<script>
+  // Load data
+  const anggota = {{anggota}} || {};
+  const iuran = {{iuran}} || [];
+  const tarif = {{tarif}} || [];
+  const tahunSaatIni = parseInt("{{tahun}}") || new Date().getFullYear();
+
+  // Nama bulan
+  const bulanNames = [
+    "",
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  // Format rupiah
+  function formatRupiah(angka) {
+    return "Rp " + new Intl.NumberFormat("id-ID").format(angka || 0);
+  }
+
+  // Format tanggal (dd/mm/yy)
+  function formatTanggal(tanggal) {
+    if (!tanggal) return "-";
+    const date = new Date(tanggal);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}/${month}/${year}`;
+  }
+
+  // Load informasi anggota
+  function loadAnggotaInfo() {
+    if (anggota && anggota.nama) {
+      document.getElementById("anggotaNama").textContent = anggota.nama || "-";
+      document.getElementById("anggotaNik").textContent = anggota.nik || "-";
+      document.getElementById("anggotaAlamat").textContent =
+        anggota.alamat || "-";
+      document.getElementById("anggotaTelepon").textContent =
+        anggota.telepon || "-";
+      document.getElementById("anggotaEmail").textContent =
+        anggota.email || "-";
+
+      const statusEl = document.getElementById("anggotaStatus");
+      if (anggota.status === "aktif") {
+        statusEl.className =
+          "inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+        statusEl.textContent = "Aktif";
+      } else {
+        statusEl.className =
+          "inline-block px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+        statusEl.textContent = "Tidak Aktif";
+      }
+    }
+  }
+
+  // Load tahun filter
+  function loadTahunFilter() {
+    const tahunSelect = document.getElementById("tahunFilter");
+    const tahunSekarang = new Date().getFullYear();
+
+    // Generate options untuk 5 tahun terakhir dan 2 tahun ke depan
+    for (let i = tahunSekarang + 2; i >= tahunSekarang - 5; i--) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i;
+      if (i === tahunSaatIni) {
+        option.selected = true;
+      }
+      tahunSelect.appendChild(option);
+    }
+
+    // Event listener untuk filter tahun
+    tahunSelect.addEventListener("change", function () {
+      const newTahun = this.value;
+      window.location.href = `/anggota/detail/${anggota.id}?tahun=${newTahun}`;
+    });
+  }
+
+  // Load daftar tarif
+  function loadTarifList() {
+    const tarifList = document.getElementById("tarifList");
+    if (!tarifList || !tarif || tarif.length === 0) {
+      tarifList.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400">Tidak ada tarif</p>';
+      return;
+    }
+
+    tarifList.innerHTML = tarif
+      .map(
+        (item) => `
+          <div class="flex items-center justify-between p-2 rounded-lg ${
+            item.status === "aktif"
+              ? "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
+              : "bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600"
+          }">
+            <div class="flex-1">
+              <p class="text-sm font-medium text-gray-800 dark:text-white">${
+                item.nama
+              }</p>
+              ${item.keterangan ? `<p class="text-xs text-gray-500 dark:text-gray-400">${item.keterangan}</p>` : ""}
+            </div>
+            <div class="text-right">
+              <p class="text-sm font-semibold text-gray-800 dark:text-white">${formatRupiah(item.jumlah)}</p>
+              <span class="text-xs px-2 py-0.5 rounded ${
+                item.status === "aktif"
+                  ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                  : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
+              }">${item.status}</span>
+            </div>
+          </div>
+        `
+      )
+      .join("");
+  }
+
+  // Load tabel pembayaran
+  function loadPembayaran() {
+    // Ambil semua tarif aktif
+    const tarifAktif = tarif.filter((t) => t.status === "aktif");
+
+    // Hitung total semua tarif aktif
+    const totalSemuaTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+
+    // Buat data untuk 12 bulan
+    const bulanData = [];
+    let totalPembayaran = 0;
+
+    for (let bulan = 1; bulan <= 12; bulan++) {
+      // Cari iuran untuk bulan ini
+      const iuranBulan = iuran.find(
+        (i) => i.bulan === bulan && i.tahun === tahunSaatIni
+      );
+
+      // Jumlah yang sudah dibayar
+      const jumlahBayar = iuranBulan ? parseInt(iuranBulan.jumlah) || 0 : 0;
+
+      // Sisa tagihan (total tagihan - jumlah yang sudah dibayar)
+      const sisa = Math.max(0, totalSemuaTarif - jumlahBayar);
+
+      // Tentukan status berdasarkan sisa dan pembayaran
+      let status;
+      if (!iuranBulan || jumlahBayar === 0) {
+        status = "belum bayar";
+      } else if (sisa > 0) {
+        status = "belum lunas";
+      } else {
+        status = "lunas";
+      }
+
+      // Hitung total pembayaran hanya untuk yang sudah lunas
+      if (status === "lunas") {
+        totalPembayaran += jumlahBayar;
+      }
+
+      bulanData.push({
+        bulan: bulan,
+        namaBulan: bulanNames[bulan],
+        tarifAktif: tarifAktif,
+        totalTarif: totalSemuaTarif,
+        jumlahBayar: jumlahBayar,
+        sisa: sisa,
+        tanggalBayar: iuranBulan ? iuranBulan.tanggal_bayar : null,
+        status: status,
+        keterangan: iuranBulan ? iuranBulan.keterangan : null,
+        iuranId: iuranBulan ? iuranBulan.id : null,
+      });
+    }
+
+    // Desktop table view
+    const tbody = document.getElementById("pembayaranTableBody");
+    if (tbody) {
+      tbody.innerHTML = bulanData
+      .map(
+        (item) => `
+          <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-medium">
+                ${item.namaBulan}
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold">
+                ${formatRupiah(item.totalTarif)}
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right">
+                ${formatRupiah(item.jumlahBayar)}
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right ${
+                item.sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
+              }">
+                ${formatRupiah(item.sisa)}
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">
+                ${item.tanggalBayar ? formatTanggal(item.tanggalBayar) : "-"}
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                  <span class="px-3 py-1 text-xs font-semibold rounded-full ${
+                    item.status === "lunas"
+                      ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200"
+                      : item.status === "belum bayar"
+                      ? "bg-gradient-to-r from-red-100 to-red-200 text-red-800 dark:from-red-900 dark:to-red-800 dark:text-red-200"
+                      : "bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 dark:from-yellow-900 dark:to-yellow-800 dark:text-yellow-200"
+                  }">${
+                    item.status === "lunas"
+                      ? "Lunas"
+                      : item.status === "belum bayar"
+                      ? "Belum Bayar"
+                      : "Belum Lunas"
+                  }</span>
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-center">
+                ${
+                  item.status === "lunas" && item.iuranId
+                    ? `
+                      <button
+                        onclick="hapusIuran(${item.iuranId}, ${item.bulan}, ${tahunSaatIni})"
+                        class="px-3 py-1.5 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-all duration-200 flex items-center gap-1 mx-auto"
+                        title="Hapus Pembayaran"
+                      >
+                        <i class="bx bx-trash"></i>
+                        <span class="hidden sm:inline">Hapus</span>
+                      </button>
+                    `
+                    : `
+                      <button
+                        onclick="bayarIuran(${item.bulan}, ${tahunSaatIni}, ${item.totalTarif})"
+                        class="px-3 py-1.5 text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-all duration-200 flex items-center gap-1 mx-auto"
+                        title="Bayar Iuran"
+                      >
+                        <i class="bx bx-check"></i>
+                        <span class="hidden sm:inline">Bayar</span>
+                      </button>
+                    `
+                }
+              </td>
+          </tr>
+      `
+      )
+      .join("") +
+      `
+      <tr class="bg-gray-50 dark:bg-gray-700 font-bold">
+        <td colspan="2" class="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-gray-800 dark:text-white text-right">
+          Total Pembayaran (Lunas):
+        </td>
+        <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold text-right">
+          ${formatRupiah(totalPembayaran)}
+        </td>
+        <td colspan="4" class="px-3 md:px-6 py-3 md:py-4"></td>
+      </tr>
+      `;
+    }
+
+    // Mobile card view
+    const cardBody = document.getElementById("pembayaranCardBody");
+    if (cardBody) {
+    cardBody.innerHTML = bulanData
+      .map(
+        (item) => `
+          <div class="p-3 hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="text-sm font-bold text-gray-800 dark:text-white">${item.namaBulan}</h4>
+              <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${
+                item.status === "lunas"
+                  ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200"
+                  : item.status === "belum bayar"
+                  ? "bg-gradient-to-r from-red-100 to-red-200 text-red-800 dark:from-red-900 dark:to-red-800 dark:text-red-200"
+                  : "bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 dark:from-yellow-900 dark:to-yellow-800 dark:text-yellow-200"
+              }">${
+                item.status === "lunas"
+                  ? "Lunas"
+                  : item.status === "belum bayar"
+                  ? "Belum Bayar"
+                  : "Belum Lunas"
+              }</span>
+            </div>
+            <div class="space-y-1.5 text-xs">
+              <div class="flex justify-between">
+                <span class="text-gray-600 dark:text-gray-400">Tarif:</span>
+                <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(item.totalTarif)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600 dark:text-gray-400">Bayar:</span>
+                <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(item.jumlahBayar)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600 dark:text-gray-400">Sisa:</span>
+                <span class="font-semibold ${
+                  item.sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
+                }">${formatRupiah(item.sisa)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600 dark:text-gray-400">Tanggal:</span>
+                <span class="text-gray-800 dark:text-white">${item.tanggalBayar ? formatTanggal(item.tanggalBayar) : "-"}</span>
+              </div>
+            </div>
+            <div class="mt-2 flex justify-end">
+              ${
+                item.status === "lunas" && item.iuranId
+                  ? `
+                    <button
+                      onclick="hapusIuran(${item.iuranId}, ${item.bulan}, ${tahunSaatIni})"
+                      class="px-3 py-1.5 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-all duration-200 flex items-center gap-1"
+                      title="Hapus Pembayaran"
+                    >
+                      <i class="bx bx-trash"></i>
+                      <span>Hapus</span>
+                    </button>
+                  `
+                  : `
+                    <button
+                      onclick="bayarIuran(${item.bulan}, ${tahunSaatIni}, ${item.totalTarif})"
+                      class="px-3 py-1.5 text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-all duration-200 flex items-center gap-1"
+                      title="Bayar Iuran"
+                    >
+                      <i class="bx bx-check"></i>
+                      <span>Bayar</span>
+                    </button>
+                  `
+              }
+            </div>
+          </div>
+      `
+      )
+      .join("") +
+      `
+      <div class="p-3 bg-gray-50 dark:bg-gray-700 font-bold">
+        <div class="flex justify-between items-center">
+          <span class="text-xs text-gray-800 dark:text-white">Total Pembayaran (Lunas):</span>
+          <span class="text-xs text-gray-800 dark:text-white font-bold">${formatRupiah(totalPembayaran)}</span>
+        </div>
+      </div>
+      `;
+    }
+  }
+
+  // Fungsi untuk bayar iuran
+  async function bayarIuran(bulan, tahun, jumlah) {
+    // Hitung total dari semua tarif aktif
+    const tarifAktif = tarif.filter((t) => t.status === "aktif");
+    const totalSemuaTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+    const tarifJumlah = jumlah || totalSemuaTarif || 0;
+
+    // Buat daftar tarif untuk ditampilkan
+    const daftarTarifHtml = tarifAktif.length > 0
+      ? tarifAktif.map(t => `<li>${t.nama}: ${formatRupiah(t.jumlah)}</li>`).join("")
+      : "<li>Tidak ada tarif aktif</li>";
+
+    const result = await Swal.fire({
+      title: "Konfirmasi Pembayaran",
+      html: `
+        <div class="text-left space-y-3">
+          <p><strong>Bulan:</strong> ${bulanNames[bulan]} ${tahun}</p>
+          <div>
+            <p class="font-medium mb-1">Daftar Tarif:</p>
+            <ul class="list-disc list-inside text-sm space-y-1 mb-2">
+              ${daftarTarifHtml}
+            </ul>
+            <p><strong>Total Tagihan:</strong> ${formatRupiah(tarifJumlah)}</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Jumlah Bayar (Rp) *</label>
+            <input
+              type="number"
+              id="jumlahBayar"
+              class="w-full px-3 py-2 border rounded-lg"
+              value="${tarifJumlah}"
+              min="0"
+              step="1000"
+              required
+            />
+            <p class="text-xs text-gray-500 mt-1">Nominal dapat diubah sesuai kebutuhan</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Tanggal Bayar *</label>
+            <input type="date" id="tanggalBayar" class="w-full px-3 py-2 border rounded-lg" value="${new Date().toISOString().split("T")[0]}" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Keterangan</label>
+            <textarea id="keteranganBayar" class="w-full px-3 py-2 border rounded-lg" rows="2" placeholder="Keterangan (opsional)"></textarea>
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonColor: "#10b981",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Bayar",
+      cancelButtonText: "Batal",
+      preConfirm: () => {
+        const tanggalBayar = document.getElementById("tanggalBayar").value;
+        const jumlahBayar = document.getElementById("jumlahBayar").value;
+        const keterangan = document.getElementById("keteranganBayar").value;
+
+        if (!tanggalBayar) {
+          Swal.showValidationMessage("Tanggal bayar harus diisi");
+          return false;
+        }
+
+        if (!jumlahBayar || parseFloat(jumlahBayar) <= 0) {
+          Swal.showValidationMessage("Jumlah bayar harus lebih dari 0");
+          return false;
+        }
+
+        return { tanggalBayar, jumlahBayar: parseFloat(jumlahBayar), keterangan };
+      },
+    });
+
+    if (result.isConfirmed) {
+      const { tanggalBayar, jumlahBayar, keterangan } = result.value;
+
+      // Buat keterangan dengan daftar tarif
+      const daftarTarif = tarifAktif.map(t => `${t.nama} (${formatRupiah(t.jumlah)})`).join(", ");
+      const keteranganFinal = keterangan || `Iuran ${bulanNames[bulan]} ${tahun} - ${daftarTarif}`;
+
+      const data = {
+        anggota_id: anggota.id,
+        bulan: bulan,
+        tahun: tahun,
+        jumlah: jumlahBayar,
+        tanggal_bayar: tanggalBayar,
+        status: "lunas",
+        keterangan: keteranganFinal,
+      };
+
+      try {
+        const response = await API.post("/iuran/create", data);
+        if (response.success) {
+          Swal.fire("Berhasil!", "Pembayaran berhasil dicatat", "success");
+          // Reload page untuk refresh data
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          Swal.fire("Error!", response.message || "Gagal mencatat pembayaran", "error");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        Swal.fire("Error!", "Terjadi kesalahan saat mencatat pembayaran", "error");
+      }
+    }
+  }
+
+  // Fungsi untuk hapus iuran
+  async function hapusIuran(iuranId, bulan, tahun) {
+    const result = await Swal.fire({
+      title: "Yakin?",
+      html: `<p>Hapus pembayaran untuk <strong>${bulanNames[bulan]} ${tahun}</strong>?</p>`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await API.delete(`/iuran/delete/${iuranId}`);
+        if (response.success) {
+          Swal.fire("Terhapus!", "Pembayaran berhasil dihapus", "success");
+          // Reload page untuk refresh data
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          Swal.fire("Error!", response.message || "Gagal menghapus pembayaran", "error");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        Swal.fire("Error!", "Terjadi kesalahan saat menghapus pembayaran", "error");
+      }
+    }
+  }
+
+  // Load semua data
+  loadAnggotaInfo();
+  loadTahunFilter();
+  loadTarifList();
+  loadPembayaran();
+</script>

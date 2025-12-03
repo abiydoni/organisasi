@@ -92,4 +92,89 @@ router.delete("/delete/:id", (req, res) => {
   });
 });
 
+router.get("/detail/:id", (req, res) => {
+  const { id } = req.params;
+  const tahun = req.query.tahun || new Date().getFullYear();
+
+  // Validate ID
+  if (!id || isNaN(parseInt(id))) {
+    return res.status(400).send("ID anggota tidak valid");
+  }
+
+  // Get organisasi data first
+  db.get(
+    "SELECT * FROM organisasi ORDER BY id DESC LIMIT 1",
+    [],
+    (err, organisasi) => {
+      if (err) {
+        console.error("Error fetching organisasi:", err);
+        organisasi = {};
+      }
+
+      // Get anggota data
+      db.get("SELECT * FROM anggota WHERE id=?", [id], (err, anggota) => {
+        if (err) {
+          console.error("Error fetching anggota:", err);
+          return res.status(500).send("Error database: " + err.message);
+        }
+
+        if (!anggota) {
+          return res.status(404).send("Anggota tidak ditemukan");
+        }
+
+        // Get semua tarif
+        db.all("SELECT * FROM tarif ORDER BY id DESC", [], (err, tarif) => {
+          if (err) {
+            console.error("Error fetching tarif:", err);
+            tarif = [];
+          }
+
+          // Get iuran data untuk tahun tertentu
+          db.all(
+            "SELECT * FROM iuran WHERE anggota_id=? AND tahun=? ORDER BY bulan ASC",
+            [id, tahun],
+            (err, iuran) => {
+              if (err) {
+                console.error("Error fetching iuran:", err);
+                iuran = [];
+              }
+
+              try {
+                const layout = renderHTML("detailAnggota.html", {
+                  title: `Detail Anggota - ${anggota.nama}`,
+                  user: req.session.user,
+                  active: { anggota: true, isAdminOrPengurus: true },
+                  content: "",
+                  organisasi: organisasi || {},
+                });
+
+                // Replace template variables
+                const anggotaJson = JSON.stringify(anggota || {});
+                const iuranJson = JSON.stringify(iuran || []);
+                const tarifJson = JSON.stringify(tarif || []);
+                const organisasiJson = JSON.stringify(organisasi || {});
+                let html = layout.replace(/\{\{anggota\}\}/g, anggotaJson);
+                html = html.replace(/\{\{iuran\}\}/g, iuranJson);
+                html = html.replace(/\{\{tarif\}\}/g, tarifJson);
+                html = html.replace(/\{\{organisasi\}\}/g, organisasiJson);
+                html = html.replace(/\{\{tahun\}\}/g, tahun);
+                html = html.replace(
+                  /\{\{user\.nama\}\}/g,
+                  req.session.user.nama || ""
+                );
+                res.send(html);
+              } catch (renderError) {
+                console.error("Error rendering HTML:", renderError);
+                res
+                  .status(500)
+                  .send("Error rendering halaman: " + renderError.message);
+              }
+            }
+          );
+        });
+      });
+    }
+  );
+});
+
 module.exports = router;

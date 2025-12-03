@@ -56,6 +56,7 @@ function renderHTML(filePath, options = {}) {
       }
 
       Object.keys(options.active).forEach((key) => {
+        // Handle both single-line and multi-line if statements
         const regex = new RegExp(
           `\\{\\{#if active\\.${key}\\}\\}([\\s\\S]*?)\\{\\{/if\\}\\}`,
           "g"
@@ -66,6 +67,9 @@ function renderHTML(filePath, options = {}) {
           layout = layout.replace(regex, "");
         }
       });
+
+      // Clean up any remaining {{/if}} tags that weren't matched
+      layout = layout.replace(/\{\{\/if\}\}/g, "");
     } else if (options.user) {
       // If no active but has user, still handle isAdmin
       const isAdmin = options.user.role === "admin";

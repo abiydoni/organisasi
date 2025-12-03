@@ -153,11 +153,50 @@ router.put("/update/:id", (req, res) => {
 router.delete("/delete/:id", (req, res) => {
   const { id } = req.params;
 
-  db.run("DELETE FROM iuran WHERE id=?", [id], (err) => {
-    if (err) {
-      return res.json({ success: false, message: "Error hapus data" });
+  // Get iuran data first to get jumlah for buku_kas adjustment
+  db.get("SELECT * FROM iuran WHERE id=?", [id], (err, iuranData) => {
+    if (err || !iuranData) {
+      return res.json({ success: false, message: "Iuran tidak ditemukan" });
     }
-    res.json({ success: true, message: "Iuran berhasil dihapus" });
+
+    // Delete iuran
+    db.run("DELETE FROM iuran WHERE id=?", [id], (err) => {
+      if (err) {
+        return res.json({ success: false, message: "Error hapus data" });
+      }
+
+      // If iuran was lunas, need to adjust buku_kas (reverse the debet)
+      if (iuranData.status === "lunas" && iuranData.jumlah > 0) {
+        // Get last saldo
+        db.get(
+          "SELECT saldo FROM buku_kas ORDER BY id DESC LIMIT 1",
+          [],
+          (err, lastRow) => {
+            const lastSaldo = lastRow?.saldo || 0;
+            const newSaldo = Math.max(
+              0,
+              lastSaldo - parseInt(iuranData.jumlah)
+            );
+
+            // Insert reverse entry (kredit)
+            db.run(
+              `INSERT INTO buku_kas (tanggal, keterangan, kategori, debet, kredit, saldo) 
+              VALUES (?, ?, ?, ?, ?, ?)`,
+              [
+                new Date().toISOString().split("T")[0],
+                `Pembatalan iuran - ${iuranData.keterangan || ""}`,
+                "iuran",
+                0,
+                parseInt(iuranData.jumlah),
+                newSaldo,
+              ]
+            );
+          }
+        );
+      }
+
+      res.json({ success: true, message: "Iuran berhasil dihapus" });
+    });
   });
 });
 
