@@ -4,11 +4,12 @@ const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
 const sharp = require("sharp");
-const { requireAuth } = require("../middleware/auth");
+const { requireAuth, requireAdmin } = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
 
 router.use(requireAuth);
+router.use(requireAdmin); // Hanya admin yang bisa akses
 
 // Configure multer for file upload
 const uploadsDir = path.join(__dirname, "..", "public", "uploads", "logos");

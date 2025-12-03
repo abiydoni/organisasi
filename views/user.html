@@ -92,35 +92,25 @@
         <input
           type="text"
           id="username"
-          required
           class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
         />
+        <p class="text-xs text-gray-500 mt-1" id="usernameHint">
+          Username tidak dapat diubah
+        </p>
       </div>
-      <div>
+      <div id="passwordField">
         <label
           class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-          >Password <span id="passwordLabel">*</span></label
+          >Password *</label
         >
         <input
           type="password"
           id="password"
           class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
         />
-        <p class="text-xs text-gray-500 mt-1" id="passwordHint">
-          Kosongkan jika tidak ingin mengubah password
+        <p class="text-xs text-gray-500 mt-1">
+          Password untuk user baru (minimal 6 karakter)
         </p>
-      </div>
-      <div>
-        <label
-          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-          >Nama *</label
-        >
-        <input
-          type="text"
-          id="nama"
-          required
-          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
-        />
       </div>
       <div>
         <label
@@ -132,9 +122,34 @@
           required
           class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
         >
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
+          <!-- Options akan diisi oleh JavaScript berdasarkan role user yang login -->
         </select>
+        <p class="text-xs text-gray-500 mt-1" id="roleHint">
+          <!-- Hint akan diisi oleh JavaScript -->
+        </p>
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Nama *</label
+        >
+        <!-- Input manual untuk pengurus dan admin -->
+        <input
+          type="text"
+          id="namaInput"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all hidden"
+          placeholder="Masukkan nama"
+        />
+        <!-- Dropdown untuk user -->
+        <select
+          id="namaSelect"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+        >
+          <option value="">Pilih Anggota</option>
+        </select>
+        <p class="text-xs text-gray-500 mt-1" id="namaHint">
+          Pilih nama dari data anggota
+        </p>
       </div>
       <div class="flex justify-end gap-3">
         <button
@@ -155,10 +170,73 @@
   </div>
 </div>
 
+<!-- Modal Ubah Password -->
+<div
+  id="passwordModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+>
+  <div class="bg-white dark:bg-gray-800 rounded-lg p-4 md:p-6 w-full max-w-md">
+    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">
+      Ubah Password
+    </h3>
+    <form id="passwordForm" class="space-y-3 md:space-y-4">
+      <input type="hidden" id="passwordUserId" />
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Password Baru *</label
+        >
+        <input
+          type="password"
+          id="newPassword"
+          required
+          minlength="6"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          placeholder="Masukkan password baru"
+        />
+        <p class="text-xs text-gray-500 mt-1">Password minimal 6 karakter</p>
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Konfirmasi Password *</label
+        >
+        <input
+          type="password"
+          id="confirmPassword"
+          required
+          minlength="6"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          placeholder="Konfirmasi password baru"
+        />
+      </div>
+      <div class="flex justify-end gap-3">
+        <button
+          type="button"
+          onclick="closePasswordModal()"
+          class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-200 font-medium"
+        >
+          Batal
+        </button>
+        <button
+          type="submit"
+          class="px-5 py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white rounded-lg transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+        >
+          Ubah Password
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
   // Load users data
   const users = {{users}} || [];
-  const isAdmin = "{{user.role}}" === "admin";
+  const anggota = {{anggota}} || [];
+  const currentUserRole = "{{user.role}}";
+  const isAdmin = currentUserRole === "admin";
+  const isPengurus = currentUserRole === "pengurus";
+  const currentUserId = parseInt("{{user.id}}") || 0;
 
   function loadUsers() {
     const tbody = document.getElementById("userTableBody");
@@ -184,14 +262,27 @@
               </td>
               <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm">
                   ${
-                    isAdmin
+                    isAdmin || isPengurus
                       ? `
-                      <button onclick="editUser(${user.id})" class="inline-flex items-center justify-center w-8 h-8 text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg transition-all duration-200 mr-2">
+                      <button onclick="editUser(${user.id})" class="inline-flex items-center justify-center w-8 h-8 text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg transition-all duration-200 mr-2 ${
+                        user.role === "admin" && !isAdmin ? "opacity-50 cursor-not-allowed" : ""
+                      }" title="${
+                        user.role === "admin" && !isAdmin
+                          ? "Hanya administrator yang dapat mengedit user administrator"
+                          : "Edit"
+                      }" ${user.role === "admin" && !isAdmin ? "disabled" : ""}>
                           <i class='bx bx-edit text-lg'></i>
                       </button>
-                      <button onclick="deleteUser(${user.id})" class="inline-flex items-center justify-center w-8 h-8 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200">
+                      ${isAdmin ? `
+                      <button onclick="changePassword(${user.id})" class="inline-flex items-center justify-center w-8 h-8 text-yellow-600 hover:text-white hover:bg-yellow-600 rounded-lg transition-all duration-200 mr-2" title="Ubah Password">
+                          <i class='bx bx-key text-lg'></i>
+                      </button>
+                      <button onclick="deleteUser(${user.id})" class="inline-flex items-center justify-center w-8 h-8 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200 ${
+                        user.id === currentUserId ? "opacity-50 cursor-not-allowed" : ""
+                      }" title="${user.id === currentUserId ? "Tidak dapat menghapus akun sendiri" : "Hapus"}" ${user.id === currentUserId ? "disabled" : ""}>
                           <i class='bx bx-trash text-lg'></i>
                       </button>
+                      ` : ""}
                   `
                       : "-"
                   }
@@ -202,28 +293,255 @@
       .join("");
   }
 
+  // Load anggota dropdown
+  function loadAnggotaDropdown() {
+    const namaSelect = document.getElementById("namaSelect");
+    if (!namaSelect) return;
+    namaSelect.innerHTML = '<option value="">Pilih Anggota</option>';
+    anggota.forEach((a) => {
+      const option = document.createElement("option");
+      option.value = a.nama;
+      option.textContent = a.nama;
+      namaSelect.appendChild(option);
+    });
+  }
+
+  // Set nama value berdasarkan role
+  function setNamaValue(role, nama) {
+    if (role === "pengurus" || role === "admin") {
+      document.getElementById("namaInput").value = nama || "";
+    } else {
+      document.getElementById("namaSelect").value = nama || "";
+    }
+  }
+
+  // Toggle nama input berdasarkan role
+  function toggleNamaInput(role) {
+    const namaInput = document.getElementById("namaInput");
+    const namaSelect = document.getElementById("namaSelect");
+    const namaHint = document.getElementById("namaHint");
+
+    if (!role) {
+      // Default: tampilkan dropdown
+      namaInput.classList.add("hidden");
+      namaInput.removeAttribute("required");
+      namaInput.value = "";
+      namaSelect.classList.remove("hidden");
+      namaSelect.setAttribute("required", "required");
+      namaHint.textContent = "Pilih nama dari data anggota";
+      return;
+    }
+
+    if (role === "pengurus" || role === "admin") {
+      // Tampilkan input manual, sembunyikan dropdown
+      namaInput.classList.remove("hidden");
+      namaInput.setAttribute("required", "required");
+      namaSelect.classList.add("hidden");
+      namaSelect.removeAttribute("required");
+      namaSelect.value = ""; // Clear dropdown value
+      namaHint.textContent = "Masukkan nama secara manual";
+    } else {
+      // Tampilkan dropdown, sembunyikan input manual
+      namaInput.classList.add("hidden");
+      namaInput.removeAttribute("required");
+      namaInput.value = ""; // Clear input value
+      namaSelect.classList.remove("hidden");
+      namaSelect.setAttribute("required", "required");
+      namaHint.textContent = "Pilih nama dari data anggota";
+    }
+  }
+
+  // Load role dropdown berdasarkan role user yang login
+  function loadRoleDropdown(editMode = false, targetUserId = null) {
+    const roleSelect = document.getElementById("role");
+    const roleHint = document.getElementById("roleHint");
+    if (!roleSelect) return;
+
+    roleSelect.innerHTML = "";
+    roleSelect.disabled = false;
+    roleHint.classList.remove("text-red-500");
+
+    // Jika edit mode, cek target user dulu
+    let targetUser = null;
+    if (editMode && targetUserId) {
+      targetUser = users.find((u) => u.id === targetUserId);
+    }
+
+    // Admin bisa set semua role
+    if (isAdmin) {
+      roleSelect.innerHTML = `
+        <option value="user">User</option>
+        <option value="pengurus">Pengurus</option>
+        <option value="admin">Admin</option>
+      `;
+      roleHint.textContent = "Admin dapat mengubah semua role";
+    }
+    // Pengurus hanya bisa set pengurus dan user
+    else if (isPengurus) {
+      // Jika edit mode dan target user adalah admin, disable dan hanya tampilkan admin
+      if (editMode && targetUser) {
+        const targetRole = (targetUser.role || "").toLowerCase().trim();
+        if (targetRole === "admin") {
+          roleSelect.disabled = true;
+          roleSelect.innerHTML = `<option value="admin">Admin</option>`;
+          roleHint.textContent = "Tidak dapat mengubah role admin";
+          roleHint.classList.add("text-red-500");
+        } else {
+          roleSelect.innerHTML = `
+            <option value="user">User</option>
+            <option value="pengurus">Pengurus</option>
+          `;
+          roleHint.textContent = "Pengurus hanya dapat mengubah role menjadi User atau Pengurus";
+        }
+      } else {
+        roleSelect.innerHTML = `
+          <option value="user">User</option>
+          <option value="pengurus">Pengurus</option>
+        `;
+        roleHint.textContent = "Pengurus hanya dapat mengubah role menjadi User atau Pengurus";
+      }
+    }
+    // User biasa tidak bisa mengubah role
+    else {
+      roleSelect.innerHTML = `<option value="user">User</option>`;
+      roleSelect.disabled = true;
+      roleHint.textContent = "Anda tidak memiliki akses untuk mengubah role";
+      roleHint.classList.add("text-red-500");
+    }
+
+    // Return target user role untuk digunakan setelah dropdown di-load
+    return targetUser ? targetUser.role : null;
+  }
+
   function openModal(id = null) {
-    if (!isAdmin) return;
+    // Hanya admin dan pengurus yang bisa akses
+    if (!isAdmin && !isPengurus) return;
+
+    // Validasi: hanya admin yang bisa edit user admin
+    if (id) {
+      const user = users.find((u) => u.id === id);
+      const userRole = user ? (user.role || "").toLowerCase().trim() : "";
+      if (user && userRole === "admin" && !isAdmin) {
+        Swal.fire({
+          icon: "error",
+          title: "Akses Ditolak",
+          text: "Hanya administrator yang dapat mengedit user administrator",
+        });
+        return;
+      }
+    }
+
     document.getElementById("userModal").classList.remove("hidden");
     document.getElementById("userForm").reset();
     document.getElementById("userId").value = id || "";
     document.getElementById("modalTitle").textContent = id
       ? "Edit User"
       : "Tambah User";
-    document.getElementById("passwordLabel").textContent = id ? "" : "*";
-    document.getElementById("passwordHint").style.display = id
-      ? "block"
-      : "none";
-    document.getElementById("password").required = !id;
+
+    // Load anggota dropdown
+    loadAnggotaDropdown();
+
+    // Username readonly saat edit, required saat create
+    const usernameInput = document.getElementById("username");
+    const passwordField = document.getElementById("passwordField");
+    const passwordInput = document.getElementById("password");
+    const roleSelect = document.getElementById("role");
 
     if (id) {
+      // Edit mode
+      usernameInput.setAttribute("readonly", "readonly");
+      usernameInput.classList.add("bg-gray-100", "dark:bg-gray-600");
+      usernameInput.removeAttribute("required");
+      document.getElementById("usernameHint").style.display = "block";
+
+      // Hide password field saat edit
+      passwordField.style.display = "none";
+      passwordInput.removeAttribute("required");
+
       const user = users.find((u) => u.id === id);
       if (user) {
-        document.getElementById("username").value = user.username;
-        document.getElementById("nama").value = user.nama;
-        document.getElementById("role").value = user.role;
+        // Set username
+        usernameInput.value = user.username || "";
+
+        // Load role dropdown dulu dengan validasi
+        loadRoleDropdown(true, id);
+
+        // Set semua data setelah dropdown selesai di-load
+        // Gunakan fungsi helper untuk set data
+        const setEditData = () => {
+          // Pastikan dropdown sudah ter-load
+          if (roleSelect && roleSelect.options.length > 0) {
+            // Normalize role value (lowercase, trim)
+            const userRole = (user.role || "").toLowerCase().trim();
+
+            // Cari option yang sesuai (case-insensitive)
+            let foundOption = null;
+            for (let i = 0; i < roleSelect.options.length; i++) {
+              const optionValue = (roleSelect.options[i].value || "").toLowerCase().trim();
+              if (optionValue === userRole) {
+                foundOption = roleSelect.options[i];
+                break;
+              }
+            }
+
+            // Set role value
+            if (foundOption) {
+              roleSelect.value = foundOption.value;
+            } else {
+              // Jika tidak ditemukan, coba set langsung
+              roleSelect.value = user.role;
+            }
+
+            // Verifikasi role sudah ter-set dengan benar (case-insensitive)
+            const selectedValue = (roleSelect.value || "").toLowerCase().trim();
+            if (selectedValue === userRole) {
+              // Role sudah benar, sekarang set nama
+              toggleNamaInput(roleSelect.value); // Gunakan value yang terpilih
+              setNamaValue(roleSelect.value, user.nama || "");
+            } else {
+              // Jika belum sesuai, coba lagi
+              setTimeout(setEditData, 50);
+            }
+          } else {
+            // Dropdown belum ready, coba lagi
+            setTimeout(setEditData, 50);
+          }
+        };
+
+        // Mulai set data setelah DOM ready
+        setTimeout(setEditData, 150);
+      }
+    } else {
+      // Create mode
+      usernameInput.removeAttribute("readonly");
+      usernameInput.classList.remove("bg-gray-100", "dark:bg-gray-600");
+      usernameInput.setAttribute("required", "required");
+      document.getElementById("usernameHint").style.display = "none";
+
+      // Show password field saat create
+      passwordField.style.display = "block";
+      passwordInput.setAttribute("required", "required");
+
+      // Default: tampilkan dropdown (untuk role user)
+      toggleNamaInput("user");
+
+      // Set default role ke "user"
+      if (roleSelect.options.length > 0) {
+        roleSelect.value = "user";
+        toggleNamaInput("user");
       }
     }
+
+    // Event listener untuk role change - hapus listener lama jika ada
+    const newRoleSelect = document.getElementById("role");
+    // Clone dan replace untuk menghapus semua event listener
+    const newSelect = newRoleSelect.cloneNode(true);
+    newRoleSelect.parentNode.replaceChild(newSelect, newRoleSelect);
+
+    // Tambahkan event listener baru
+    document.getElementById("role").addEventListener("change", function() {
+      toggleNamaInput(this.value);
+    });
   }
 
   function closeModal() {
@@ -235,6 +553,16 @@
   }
 
   async function deleteUser(id) {
+    // Validasi: user aktif tidak dapat menghapus akunnya sendiri
+    if (id === currentUserId) {
+      Swal.fire({
+        icon: "error",
+        title: "Tidak dapat menghapus",
+        text: "Anda tidak dapat menghapus akun sendiri",
+      });
+      return;
+    }
+
     const result = await Swal.fire({
       title: "Yakin?",
       text: "Data akan dihapus permanen",
@@ -256,20 +584,64 @@
     }
   }
 
+  function changePassword(id) {
+    document.getElementById("passwordModal").classList.remove("hidden");
+    document.getElementById("passwordForm").reset();
+    document.getElementById("passwordUserId").value = id;
+  }
+
+  function closePasswordModal() {
+    document.getElementById("passwordModal").classList.add("hidden");
+    document.getElementById("passwordForm").reset();
+  }
+
   document.getElementById("userForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const id = document.getElementById("userId").value;
-    const data = {
-      username: document.getElementById("username").value,
-      nama: document.getElementById("nama").value,
-      role: document.getElementById("role").value,
-    };
+    const username = document.getElementById("username").value;
+    const role = document.getElementById("role").value;
 
-    const password = document.getElementById("password").value;
-    if (password) data.password = password;
+    // Ambil nama berdasarkan role
+    let nama;
+    if (role === "pengurus" || role === "admin") {
+      nama = document.getElementById("namaInput").value;
+    } else {
+      nama = document.getElementById("namaSelect").value;
+    }
 
-    const url = id ? `/user/update/${id}` : "/user/create";
-    const method = id ? "put" : "post";
+    if (!nama || !role) {
+      Swal.fire("Error!", "Nama dan Role wajib diisi", "error");
+      return;
+    }
+
+    let data;
+    let url;
+    let method;
+
+    if (id) {
+      // Edit: hanya update nama dan role (username tidak bisa diubah)
+      if (!username) {
+        Swal.fire("Error!", "Username tidak ditemukan", "error");
+        return;
+      }
+      data = { nama, role };
+      url = `/user/update/${id}`;
+      method = "put";
+    } else {
+      // Create: butuh username dan password
+      if (!username) {
+        Swal.fire("Error!", "Username wajib diisi", "error");
+        return;
+      }
+      const password = document.getElementById("password")?.value;
+      if (!password || password.length < 6) {
+        Swal.fire("Error!", "Password wajib diisi dan minimal 6 karakter", "error");
+        return;
+      }
+      data = { username, password, nama, role };
+      url = "/user/create";
+      method = "post";
+    }
 
     const response = await API[method](url, data);
     if (response.success) {
@@ -281,5 +653,42 @@
     }
   });
 
+  // Handle password form submission
+  document.getElementById("passwordForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const userId = document.getElementById("passwordUserId").value;
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    // Validasi
+    if (!newPassword) {
+      Swal.fire("Error!", "Password wajib diisi", "error");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      Swal.fire("Error!", "Password minimal 6 karakter", "error");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      Swal.fire("Error!", "Password tidak sama", "error");
+      return;
+    }
+
+    const response = await API.put(`/user/change-password/${userId}`, {
+      password: newPassword,
+    });
+
+    if (response.success) {
+      Swal.fire("Berhasil!", response.message, "success");
+      closePasswordModal();
+    } else {
+      Swal.fire("Error!", response.message, "error");
+    }
+  });
+
+  // Load data on page load
   loadUsers();
+  loadAnggotaDropdown();
 </script>

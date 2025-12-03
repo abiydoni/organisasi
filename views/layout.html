@@ -84,6 +84,7 @@
               Data User
             </a>
           </li>
+          {{/if}} {{#if active.isAdminOrPengurus}}
           <li>
             <a
               href="/anggota"
@@ -114,7 +115,7 @@
               Buku Kas
             </a>
           </li>
-          {{else}}
+          {{/if}}
           <li>
             <a
               href="/tagihan"
@@ -125,7 +126,6 @@
               Tagihan Saya
             </a>
           </li>
-          {{/if}}
         </ul>
       </div>
     </aside>

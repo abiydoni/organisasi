@@ -12,4 +12,15 @@ function requireAdmin(req, res, next) {
   res.status(403).send("Akses ditolak");
 }
 
-module.exports = { requireAuth, requireAdmin };
+function requireAdminOrPengurus(req, res, next) {
+  if (
+    req.session &&
+    req.session.user &&
+    (req.session.user.role === "admin" || req.session.user.role === "pengurus")
+  ) {
+    return next();
+  }
+  res.status(403).send("Akses ditolak");
+}
+
+module.exports = { requireAuth, requireAdmin, requireAdminOrPengurus };

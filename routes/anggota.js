@@ -2,11 +2,13 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const fs = require("fs");
-const { requireAuth } = require("../middleware/auth");
+const { requireAuth, requireAdminOrPengurus } = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
 
 router.use(requireAuth);
+// Hanya admin dan pengurus yang bisa akses
+router.use(requireAdminOrPengurus);
 
 router.get("/", (req, res) => {
   // Get organisasi data first
@@ -23,7 +25,7 @@ router.get("/", (req, res) => {
         const layout = renderHTML("anggota.html", {
           title: "Data Anggota",
           user: req.session.user,
-          active: { anggota: true },
+          active: { anggota: true, isAdminOrPengurus: true },
           content: "",
           organisasi: organisasi || {},
         });

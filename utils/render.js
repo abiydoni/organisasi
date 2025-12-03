@@ -33,11 +33,26 @@ function renderHTML(filePath, options = {}) {
       const isAdminRegex =
         /\{\{#if active\.isAdmin\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
       layout = layout.replace(isAdminRegex, isAdmin ? "$1" : "$2");
+
+      // Handle isAdminOrPengurus condition automatically
+      const isAdminOrPengurus =
+        options.user.role === "admin" || options.user.role === "pengurus";
+      const isAdminOrPengurusRegex =
+        /\{\{#if active\.isAdminOrPengurus\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
+      layout = layout.replace(
+        isAdminOrPengurusRegex,
+        isAdminOrPengurus ? "$1" : "$2"
+      );
     }
     if (options.active) {
       // Add isAdmin to active if user exists
       if (options.user && !options.active.hasOwnProperty("isAdmin")) {
         options.active.isAdmin = options.user.role === "admin";
+      }
+      // Add isAdminOrPengurus to active if user exists
+      if (options.user && !options.active.hasOwnProperty("isAdminOrPengurus")) {
+        options.active.isAdminOrPengurus =
+          options.user.role === "admin" || options.user.role === "pengurus";
       }
 
       Object.keys(options.active).forEach((key) => {
@@ -57,6 +72,16 @@ function renderHTML(filePath, options = {}) {
       const isAdminRegex =
         /\{\{#if active\.isAdmin\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
       layout = layout.replace(isAdminRegex, isAdmin ? "$1" : "$2");
+
+      // Handle isAdminOrPengurus
+      const isAdminOrPengurus =
+        options.user.role === "admin" || options.user.role === "pengurus";
+      const isAdminOrPengurusRegex =
+        /\{\{#if active\.isAdminOrPengurus\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
+      layout = layout.replace(
+        isAdminOrPengurusRegex,
+        isAdminOrPengurus ? "$1" : "$2"
+      );
     }
 
     // Inject content
