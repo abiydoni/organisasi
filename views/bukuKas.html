@@ -12,12 +12,46 @@
         Kelola transaksi keuangan organisasi
       </p>
     </div>
-    <button
-      onclick="openModal()"
-      class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white rounded-lg transition-all duration-300 text-sm md:text-base font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2 justify-center"
-    >
-      <i class="bx bx-plus text-lg"></i> <span>Tambah Transaksi</span>
-    </button>
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
+        <label class="text-sm text-gray-700 dark:text-gray-300">Bulan:</label>
+        <select
+          id="bulanFilter"
+          class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-700 dark:text-white transition-all text-sm"
+          onchange="filterBukuKas()"
+        >
+          <option value="">Semua</option>
+          <option value="1">Januari</option>
+          <option value="2">Februari</option>
+          <option value="3">Maret</option>
+          <option value="4">April</option>
+          <option value="5">Mei</option>
+          <option value="6">Juni</option>
+          <option value="7">Juli</option>
+          <option value="8">Agustus</option>
+          <option value="9">September</option>
+          <option value="10">Oktober</option>
+          <option value="11">November</option>
+          <option value="12">Desember</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2">
+        <label class="text-sm text-gray-700 dark:text-gray-300">Tahun:</label>
+        <select
+          id="tahunFilter"
+          class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-700 dark:text-white transition-all text-sm"
+          onchange="filterBukuKas()"
+        >
+          <!-- Options akan diisi oleh JavaScript -->
+        </select>
+      </div>
+      <button
+        onclick="openModal()"
+        class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white rounded-lg transition-all duration-300 text-sm md:text-base font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2 justify-center"
+      >
+        <i class="bx bx-plus text-lg"></i> <span>Tambah Transaksi</span>
+      </button>
+    </div>
   </div>
 
   <!-- Statistics -->
@@ -92,17 +126,17 @@
               Keterangan
             </th>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-3 md:px-6 py-2 md:py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Debet
             </th>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-3 md:px-6 py-2 md:py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Kredit
             </th>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-3 md:px-6 py-2 md:py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Saldo
             </th>
@@ -227,8 +261,9 @@
 
 <script>
   // Load bukuKas and stats data
-  const bukuKas = {{bukuKas}} || [];
+  const bukuKasAll = {{bukuKas}} || [];
   const stats = {{stats}} || {};
+  let bukuKas = [...bukuKasAll]; // Copy untuk filtering
 
   // Fungsi untuk memperpendek teks
   function truncateText(text, maxLength = 50) {
@@ -243,6 +278,82 @@
   function isAutoEntry(item) {
     return item.kategori === "iuran" ||
            (item.keterangan && (item.keterangan.includes("Iuran ") || item.keterangan.includes("Pembatalan iuran ")));
+  }
+
+  // Fungsi untuk filter buku kas berdasarkan bulan dan tahun
+  function filterBukuKas() {
+    const bulanFilter = document.getElementById("bulanFilter").value;
+    const tahunFilter = document.getElementById("tahunFilter").value;
+
+    bukuKas = bukuKasAll.filter((item) => {
+      if (!item.tanggal) return false;
+
+      const date = new Date(item.tanggal);
+      const bulan = date.getMonth() + 1; // getMonth() returns 0-11
+      const tahun = date.getFullYear();
+
+      const matchBulan = !bulanFilter || bulan.toString() === bulanFilter;
+      const matchTahun = !tahunFilter || tahun.toString() === tahunFilter;
+
+      return matchBulan && matchTahun;
+    });
+
+    loadBukuKas();
+    updateStats();
+  }
+
+  // Fungsi untuk update stats berdasarkan filtered data
+  function updateStats() {
+    const totalDebet = bukuKas.reduce((sum, item) => sum + (parseInt(item.debet) || 0), 0);
+    const totalKredit = bukuKas.reduce((sum, item) => sum + (parseInt(item.kredit) || 0), 0);
+
+    // Untuk saldo, ambil saldo terakhir dari data yang difilter
+    // Jika ada filter, saldo adalah saldo terakhir dari periode tersebut
+    // Jika tidak ada filter, gunakan saldo dari stats
+    let saldo = stats.saldo || 0;
+    if (bukuKas.length > 0) {
+      // Urutkan berdasarkan tanggal dan id untuk mendapatkan saldo terakhir
+      const sorted = [...bukuKas].sort((a, b) => {
+        const dateA = new Date(a.tanggal);
+        const dateB = new Date(b.tanggal);
+        if (dateA.getTime() === dateB.getTime()) {
+          return (a.id || 0) - (b.id || 0);
+        }
+        return dateA.getTime() - dateB.getTime();
+      });
+      saldo = sorted[sorted.length - 1]?.saldo || 0;
+    }
+
+    document.getElementById("stat-debet").textContent = formatRupiah(totalDebet);
+    document.getElementById("stat-kredit").textContent = formatRupiah(totalKredit);
+    document.getElementById("stat-saldo").textContent = formatRupiah(saldo);
+  }
+
+  // Fungsi untuk load tahun filter options
+  function loadTahunFilter() {
+    const tahunFilter = document.getElementById("tahunFilter");
+    const tahunSaatIni = new Date().getFullYear();
+    const tahunOptions = [];
+
+    // Ambil semua tahun unik dari data
+    const tahunUnik = [...new Set(bukuKasAll.map(item => {
+      if (!item.tanggal) return null;
+      return new Date(item.tanggal).getFullYear();
+    }).filter(t => t !== null))].sort((a, b) => b - a);
+
+    // Jika tidak ada data, gunakan tahun saat ini dan beberapa tahun sebelumnya
+    if (tahunUnik.length === 0) {
+      for (let i = tahunSaatIni; i >= tahunSaatIni - 5; i--) {
+        tahunOptions.push(`<option value="${i}">${i}</option>`);
+      }
+    } else {
+      tahunOptions.push('<option value="">Semua</option>');
+      tahunUnik.forEach(tahun => {
+        tahunOptions.push(`<option value="${tahun}">${tahun}</option>`);
+      });
+    }
+
+    tahunFilter.innerHTML = tahunOptions.join("");
   }
 
   function loadBukuKas() {
@@ -307,13 +418,13 @@
                     ${keteranganTambahan ? `<span class="text-[10px] text-gray-500 dark:text-gray-400 italic" title="${keteranganTambahan}">${truncateText(keteranganTambahan, 40)}</span>` : ''}
                   </div>
                 </td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-semibold text-green-600 dark:text-green-400">
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-semibold text-green-600 dark:text-green-400 text-right">
                     ${item.debet > 0 ? "Rp " + formatNumber(item.debet) : "-"}
                 </td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-semibold text-red-600 dark:text-red-400">
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-semibold text-red-600 dark:text-red-400 text-right">
                     ${item.kredit > 0 ? "Rp " + formatNumber(item.kredit) : "-"}
                 </td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-bold text-blue-600 dark:text-blue-400">
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-bold text-blue-600 dark:text-blue-400 text-right">
                     Rp ${formatNumber(item.saldo || 0)}
                 </td>
             </tr>
@@ -323,15 +434,7 @@
       .join("");
 
     // Update stats
-    document.getElementById("stat-debet").textContent = formatRupiah(
-      stats.totalDebet || 0
-    );
-    document.getElementById("stat-kredit").textContent = formatRupiah(
-      stats.totalKredit || 0
-    );
-    document.getElementById("stat-saldo").textContent = formatRupiah(
-      stats.saldo || 0
-    );
+    updateStats();
   }
 
   function formatNumber(num) {
@@ -588,5 +691,7 @@
       }
     });
 
+  // Initialize
+  loadTahunFilter();
   loadBukuKas();
 </script>
