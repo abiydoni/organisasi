@@ -109,11 +109,20 @@ router.post("/create", (req, res) => {
     keterangan,
   } = req.body;
 
+  // Pastikan anggota_id adalah integer
+  const anggotaIdInt = parseInt(anggota_id);
+  console.log(
+    "Creating iuran - anggota_id:",
+    anggotaIdInt,
+    "type:",
+    typeof anggotaIdInt
+  );
+
   db.run(
     `INSERT INTO iuran (anggota_id, bulan, tahun, jumlah, tanggal_bayar, status, keterangan) 
     VALUES (?, ?, ?, ?, ?, ?, ?)`,
     [
-      anggota_id,
+      anggotaIdInt,
       bulan,
       tahun,
       jumlah,
@@ -131,18 +140,40 @@ router.post("/create", (req, res) => {
         // Get anggota name
         db.get(
           "SELECT nama FROM anggota WHERE id = ?",
-          [anggota_id],
+          [anggotaIdInt],
           (err, anggota) => {
             if (err) {
-              return res.json({
-                success: false,
-                message: "Error mengambil data anggota",
-              });
+              console.error(
+                "Error mengambil data anggota:",
+                err,
+                "anggota_id:",
+                anggotaIdInt
+              );
+              // Tetap lanjutkan dengan "Unknown" jika error
+            }
+
+            // Pastikan nama anggota ada
+            if (!anggota || !anggota.nama) {
+              console.error("Anggota tidak ditemukan untuk id:", anggotaIdInt);
             }
 
             const namaAnggota = anggota?.nama || "Unknown";
+            console.log(
+              "Nama anggota untuk buku_kas:",
+              namaAnggota,
+              "dari anggota_id:",
+              anggotaIdInt,
+              "anggota object:",
+              anggota
+            );
+
             const namaBulan = getNamaBulan(bulan);
             let keteranganBukuKas = `Iuran ${namaBulan} - ${namaAnggota}`;
+
+            console.log(
+              "Keterangan buku_kas yang akan disimpan:",
+              keteranganBukuKas
+            );
 
             // Tambahkan keterangan dari form jika ada
             if (keterangan && keterangan.trim()) {
@@ -154,6 +185,9 @@ router.post("/create", (req, res) => {
               "SELECT saldo FROM buku_kas ORDER BY id DESC LIMIT 1",
               [],
               (err, lastRow) => {
+                if (err) {
+                  console.error("Error mengambil saldo:", err);
+                }
                 const lastSaldo = lastRow?.saldo || 0;
                 const newSaldo = lastSaldo + parseInt(jumlah);
 
@@ -167,7 +201,12 @@ router.post("/create", (req, res) => {
                     parseInt(jumlah),
                     0,
                     newSaldo,
-                  ]
+                  ],
+                  (err) => {
+                    if (err) {
+                      console.error("Error insert buku_kas:", err);
+                    }
+                  }
                 );
               }
             );
@@ -227,13 +266,21 @@ router.delete("/delete/:id", (req, res) => {
           [iuranData.anggota_id],
           (err, anggota) => {
             if (err) {
-              return res.json({
-                success: false,
-                message: "Error mengambil data anggota",
-              });
+              console.error(
+                "Error mengambil data anggota:",
+                err,
+                "anggota_id:",
+                anggota_id
+              );
             }
 
             const namaAnggota = anggota?.nama || "Unknown";
+            console.log(
+              "Nama anggota untuk buku_kas:",
+              namaAnggota,
+              "dari anggota_id:",
+              anggota_id
+            );
             const namaBulan = getNamaBulan(iuranData.bulan);
             const keteranganBukuKas = `Pembatalan iuran ${namaBulan} - ${namaAnggota}`;
 

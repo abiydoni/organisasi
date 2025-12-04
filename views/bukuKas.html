@@ -149,40 +149,48 @@
         <div>
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >Kategori</label
+            >Kategori *</label
           >
-          <input
-            type="text"
+          <select
             id="kategori"
+            required
             class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
-            placeholder="Contoh: iuran, operasional, dll"
-          />
+            onchange="handleKategoriChange()"
+          >
+            <option value="">Pilih Kategori</option>
+            <option value="Pemasukan">Pemasukan</option>
+            <option value="Pengeluaran">Pengeluaran</option>
+          </select>
         </div>
         <div>
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >Debet (Rp)</label
+            >Debet (Rp) *</label
           >
           <input
             type="number"
             id="debet"
             min="0"
+            step="1"
             value="0"
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            required
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
             oninput="validateAmounts()"
           />
         </div>
         <div>
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >Kredit (Rp)</label
+            >Kredit (Rp) *</label
           >
           <input
             type="number"
             id="kredit"
             min="0"
+            step="1"
             value="0"
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            required
+            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
             oninput="validateAmounts()"
           />
         </div>
@@ -246,17 +254,44 @@
           let keteranganUtama = item.keterangan || "-";
           let keteranganTambahan = "";
 
-          if (item.keterangan && item.keterangan.includes('\n')) {
-            const parts = item.keterangan.split('\n');
-            keteranganUtama = parts[0];
-            keteranganTambahan = parts.slice(1).join('\n');
+          // Handle newline character (bisa dari JSON.stringify yang escape atau langsung)
+          const keteranganRaw = item.keterangan || "";
+
+          // Cek apakah ada newline (bisa \n atau \\n dari JSON)
+          if (keteranganRaw.includes('\n') || keteranganRaw.includes('\\n')) {
+            // Replace escaped newline dengan actual newline
+            const normalizedKeterangan = keteranganRaw.replace(/\\n/g, '\n');
+            const parts = normalizedKeterangan.split('\n');
+            if (parts.length > 1) {
+              keteranganUtama = parts[0].trim();
+              keteranganTambahan = parts.slice(1).join('\n').trim();
+            }
+          } else {
+            // Untuk data lama yang masih menggunakan format "Iuran bulanan - ..."
+            // Coba ekstrak informasi dari format lama dan cari nama anggota
+            if (keteranganRaw.includes("Iuran bulanan -") || keteranganRaw.includes("Pembatalan iuran -")) {
+              // Format lama: "Iuran bulanan - Iuran Januari 2025 - Kas (Rp 75.000)"
+              // Atau: "Pembatalan iuran - Iuran Januari 2025 - Kas (Rp 75.000)"
+              const parts = keteranganRaw.split(" - ");
+              if (parts.length >= 2) {
+                // Coba ekstrak nama bulan dan nama anggota dari format lama jika memungkinkan
+                // Tapi untuk data lama, kita tetap tampilkan sebagai keterangan tambahan
+                keteranganUtama = parts[0].trim();
+                // Gabungkan sisa sebagai keterangan tambahan
+                keteranganTambahan = parts.slice(1).join(" - ").trim();
+              }
+            } else if (keteranganRaw.startsWith("Iuran ") && keteranganRaw.includes(" - ")) {
+              // Format baru: "Iuran Januari - Ciara" atau "Pembatalan iuran Januari - Ciara"
+              // Sudah benar, tidak perlu dipisah lagi
+              keteranganUtama = keteranganRaw;
+            }
           }
 
           const shortKeterangan = truncateText(keteranganUtama);
           const isAuto = isAutoEntry(item);
 
           return `
-            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 ${isAuto ? 'bg-blue-50/30 dark:bg-blue-900/20' : ''}">
                 <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
                   index + 1
                 }</td>
@@ -313,17 +348,85 @@
     return date.toLocaleDateString("id-ID");
   }
 
-  function validateAmounts() {
-    const debet = parseInt(document.getElementById("debet").value) || 0;
-    const kredit = parseInt(document.getElementById("kredit").value) || 0;
+  function handleKategoriChange() {
+    const kategori = document.getElementById("kategori").value;
+    const debetInput = document.getElementById("debet");
+    const kreditInput = document.getElementById("kredit");
 
-    if (debet > 0 && kredit > 0) {
+    if (kategori === "Pemasukan") {
+      // Pemasukan: enable debet, disable kredit
+      debetInput.disabled = false;
+      debetInput.required = true;
+      kreditInput.disabled = true;
+      kreditInput.required = false;
+      kreditInput.value = "0";
+    } else if (kategori === "Pengeluaran") {
+      // Pengeluaran: disable debet, enable kredit
+      debetInput.disabled = true;
+      debetInput.required = false;
+      debetInput.value = "0";
+      kreditInput.disabled = false;
+      kreditInput.required = true;
+    } else {
+      // Belum pilih kategori: disable keduanya
+      debetInput.disabled = true;
+      debetInput.required = false;
+      kreditInput.disabled = true;
+      kreditInput.required = false;
+      debetInput.value = "0";
+      kreditInput.value = "0";
+    }
+  }
+
+  function validateAmounts() {
+    const debet = parseFloat(document.getElementById("debet").value) || 0;
+    const kredit = parseFloat(document.getElementById("kredit").value) || 0;
+
+    // Pastikan tidak negatif
+    if (debet < 0) {
+      document.getElementById("debet").value = "0";
       Swal.fire({
         icon: "warning",
         title: "Perhatian!",
-        text: "Debet dan Kredit tidak boleh diisi bersamaan. Pilih salah satu.",
+        text: "Debet tidak boleh bernilai negatif.",
         timer: 2000,
       });
+      return;
+    }
+
+    if (kredit < 0) {
+      document.getElementById("kredit").value = "0";
+      Swal.fire({
+        icon: "warning",
+        title: "Perhatian!",
+        text: "Kredit tidak boleh bernilai negatif.",
+        timer: 2000,
+      });
+      return;
+    }
+
+    // Validasi berdasarkan kategori
+    const kategori = document.getElementById("kategori").value;
+    if (kategori === "Pemasukan" && kredit > 0) {
+      document.getElementById("kredit").value = "0";
+      Swal.fire({
+        icon: "warning",
+        title: "Perhatian!",
+        text: "Untuk Pemasukan, hanya Debet yang boleh diisi.",
+        timer: 2000,
+      });
+      return;
+    }
+
+    if (kategori === "Pengeluaran" && debet > 0) {
+      document.getElementById("debet").value = "0";
+      Swal.fire({
+        icon: "warning",
+        title: "Perhatian!",
+        text: "Untuk Pengeluaran, hanya Kredit yang boleh diisi.",
+        timer: 2000,
+      });
+      return;
     }
   }
 
@@ -337,17 +440,33 @@
     document.getElementById("tanggal").value = new Date()
       .toISOString()
       .split("T")[0];
+    document.getElementById("kategori").value = "";
     document.getElementById("debet").value = "0";
     document.getElementById("kredit").value = "0";
+
+    // Reset disable state
+    handleKategoriChange();
 
     if (id) {
       const item = bukuKas.find((b) => b.id === id);
       if (item) {
         document.getElementById("tanggal").value = item.tanggal || "";
-        document.getElementById("kategori").value = item.kategori || "";
+
+        // Tentukan kategori berdasarkan debet/kredit
+        let kategoriValue = "";
+        if (item.debet > 0) {
+          kategoriValue = "Pemasukan";
+        } else if (item.kredit > 0) {
+          kategoriValue = "Pengeluaran";
+        }
+
+        document.getElementById("kategori").value = kategoriValue || item.kategori || "";
         document.getElementById("debet").value = item.debet || 0;
         document.getElementById("kredit").value = item.kredit || 0;
         document.getElementById("keterangan").value = item.keterangan || "";
+
+        // Update disable state setelah set nilai
+        handleKategoriChange();
       }
     }
   }
@@ -390,20 +509,60 @@
       const debet = parseInt(document.getElementById("debet").value) || 0;
       const kredit = parseInt(document.getElementById("kredit").value) || 0;
 
-      if (debet === 0 && kredit === 0) {
+      const kategori = document.getElementById("kategori").value;
+
+      if (!kategori) {
         Swal.fire({
           icon: "error",
           title: "Error!",
-          text: "Debet atau Kredit harus diisi minimal salah satu",
+          text: "Kategori harus dipilih",
         });
         return;
       }
 
-      if (debet > 0 && kredit > 0) {
+      // Validasi berdasarkan kategori
+      if (kategori === "Pemasukan") {
+        if (debet <= 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "Untuk Pemasukan, Debet harus diisi dan lebih dari 0",
+          });
+          return;
+        }
+        if (kredit > 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "Untuk Pemasukan, Kredit harus 0",
+          });
+          return;
+        }
+      } else if (kategori === "Pengeluaran") {
+        if (kredit <= 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "Untuk Pengeluaran, Kredit harus diisi dan lebih dari 0",
+          });
+          return;
+        }
+        if (debet > 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "Untuk Pengeluaran, Debet harus 0",
+          });
+          return;
+        }
+      }
+
+      // Pastikan tidak negatif
+      if (debet < 0 || kredit < 0) {
         Swal.fire({
           icon: "error",
           title: "Error!",
-          text: "Debet dan Kredit tidak boleh diisi bersamaan",
+          text: "Debet dan Kredit tidak boleh bernilai negatif",
         });
         return;
       }
