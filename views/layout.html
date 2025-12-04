@@ -53,6 +53,7 @@
         </div>
 
         <ul class="space-y-2">
+          {{#if active.isAdminOrPengurus}}
           <li>
             <a
               href="/dashboard"
@@ -63,7 +64,7 @@
               Dashboard
             </a>
           </li>
-          {{#if active.isAdmin}}
+          {{/if}} {{#if active.isAdmin}}
           <li>
             <a
               href="/organisasi"
@@ -74,6 +75,7 @@
               Data Organisasi
             </a>
           </li>
+          {{/if}} {{#if active.isAdminOrPengurus}}
           <li>
             <a
               href="/user"
@@ -84,7 +86,6 @@
               Data User
             </a>
           </li>
-          {{/if}} {{#if active.isAdminOrPengurus}}
           <li>
             <a
               href="/anggota"
@@ -125,7 +126,7 @@
               Data Tarif
             </a>
           </li>
-          {{/if}}
+          {{/if}} {{#if active.isUser}}
           <li>
             <a
               href="/tagihan"
@@ -136,6 +137,7 @@
               Tagihan Saya
             </a>
           </li>
+          {{/if}}
         </ul>
       </div>
     </aside>

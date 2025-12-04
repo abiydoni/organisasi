@@ -37,7 +37,7 @@ router.get("/", (req, res) => {
               const layout = renderHTML("tagihan.html", {
                 title: "Tagihan Iuran Saya",
                 user: req.session.user,
-                active: { tagihan: true },
+                active: { tagihan: true, isUser: true },
                 content: "",
                 organisasi: organisasi || {},
               });

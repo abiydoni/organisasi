@@ -240,12 +240,23 @@
 
   function loadUsers() {
     const tbody = document.getElementById("userTableBody");
-    tbody.innerHTML = users
+
+    // Filter users: jika pengurus, sembunyikan user dengan role admin
+    const filteredUsers = isPengurus && !isAdmin
+      ? users.filter(user => user.role !== "admin")
+      : users;
+
+    // Hitung ulang index untuk filtered users
+    let displayIndex = 0;
+
+    tbody.innerHTML = filteredUsers
       .map(
-        (user, index) => `
+        (user) => {
+          displayIndex++;
+          return `
           <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
               <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-medium">${
-                index + 1
+                displayIndex
               }</td>
               <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold">${
                 user.username
@@ -277,6 +288,8 @@
                       <button onclick="changePassword(${user.id})" class="inline-flex items-center justify-center w-8 h-8 text-yellow-600 hover:text-white hover:bg-yellow-600 rounded-lg transition-all duration-200 mr-2" title="Ubah Password">
                           <i class='bx bx-key text-lg'></i>
                       </button>
+                      ` : ""}
+                      ${isAdmin || isPengurus ? `
                       <button onclick="deleteUser(${user.id})" class="inline-flex items-center justify-center w-8 h-8 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200 ${
                         user.id === currentUserId ? "opacity-50 cursor-not-allowed" : ""
                       }" title="${user.id === currentUserId ? "Tidak dapat menghapus akun sendiri" : "Hapus"}" ${user.id === currentUserId ? "disabled" : ""}>
@@ -288,7 +301,8 @@
                   }
               </td>
           </tr>
-      `
+      `;
+        }
       )
       .join("");
   }
@@ -538,27 +552,27 @@
       passwordField.style.display = "block";
       passwordInput.setAttribute("required", "required");
 
-      // Default: tampilkan dropdown (untuk role user)
-      toggleNamaInput("user");
+      // Load role dropdown untuk create mode
+      loadRoleDropdown(false, null);
 
-      // Set default role ke "user"
-      if (roleSelect.options.length > 0) {
-        roleSelect.value = "user";
-        toggleNamaInput("user");
-      }
-    }
+      // Set default role ke "user" setelah dropdown ter-load dan setup event listener
+      setTimeout(() => {
+        const roleSelectAfterLoad = document.getElementById("role");
+        if (roleSelectAfterLoad && roleSelectAfterLoad.options.length > 0) {
+          roleSelectAfterLoad.value = "user";
+          toggleNamaInput("user");
 
-    // Event listener untuk role change - hanya untuk create mode
-    if (!id) {
-      const roleSelectForCreate = document.getElementById("role");
-      // Hapus listener lama jika ada dengan clone
-      const newSelect = roleSelectForCreate.cloneNode(true);
-      roleSelectForCreate.parentNode.replaceChild(newSelect, roleSelectForCreate);
+          // Setup event listener untuk role change di create mode
+          // Hapus listener lama jika ada dengan clone
+          const newSelect = roleSelectAfterLoad.cloneNode(true);
+          roleSelectAfterLoad.parentNode.replaceChild(newSelect, roleSelectAfterLoad);
 
-      // Tambahkan event listener baru hanya untuk create mode
-      document.getElementById("role").addEventListener("change", function() {
-        toggleNamaInput(this.value);
-      });
+          // Tambahkan event listener baru
+          document.getElementById("role").addEventListener("change", function() {
+            toggleNamaInput(this.value);
+          });
+        }
+      }, 50);
     }
   }
 

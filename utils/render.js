@@ -28,65 +28,138 @@ function renderHTML(filePath, options = {}) {
       layout = layout.replace(/\{\{user\.nama\}\}/g, options.user.nama || "");
       layout = layout.replace(/\{\{user\.role\}\}/g, options.user.role || "");
 
-      // Handle isAdmin condition automatically
+      // Handle isAdmin condition automatically (with or without else)
       const isAdmin = options.user.role === "admin";
-      const isAdminRegex =
+      // Handle with else clause
+      const isAdminRegexWithElse =
         /\{\{#if active\.isAdmin\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
-      layout = layout.replace(isAdminRegex, isAdmin ? "$1" : "$2");
+      layout = layout.replace(isAdminRegexWithElse, isAdmin ? "$1" : "$2");
+      // Handle without else clause (will be processed later in active section)
 
-      // Handle isAdminOrPengurus condition automatically
+      // Handle isAdminOrPengurus condition automatically (with or without else)
       const isAdminOrPengurus =
         options.user.role === "admin" || options.user.role === "pengurus";
-      const isAdminOrPengurusRegex =
+      // Handle with else clause
+      const isAdminOrPengurusRegexWithElse =
         /\{\{#if active\.isAdminOrPengurus\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
       layout = layout.replace(
-        isAdminOrPengurusRegex,
+        isAdminOrPengurusRegexWithElse,
         isAdminOrPengurus ? "$1" : "$2"
       );
+      // Handle without else clause (will be processed later in active section)
+
+      // Handle isUser condition automatically (with or without else)
+      const isUser = options.user.role === "user";
+      // Handle with else clause
+      const isUserRegexWithElse =
+        /\{\{#if active\.isUser\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
+      layout = layout.replace(isUserRegexWithElse, isUser ? "$1" : "$2");
+      // Handle without else clause (will be processed later in active section)
     }
     if (options.active) {
-      // Add isAdmin to active if user exists
-      if (options.user && !options.active.hasOwnProperty("isAdmin")) {
-        options.active.isAdmin = options.user.role === "admin";
-      }
-      // Add isAdminOrPengurus to active if user exists
-      if (options.user && !options.active.hasOwnProperty("isAdminOrPengurus")) {
-        options.active.isAdminOrPengurus =
-          options.user.role === "admin" || options.user.role === "pengurus";
-      }
-
-      Object.keys(options.active).forEach((key) => {
-        // Handle both single-line and multi-line if statements
-        const regex = new RegExp(
-          `\\{\\{#if active\\.${key}\\}\\}([\\s\\S]*?)\\{\\{/if\\}\\}`,
-          "g"
-        );
-        if (options.active[key]) {
-          layout = layout.replace(regex, "$1");
-        } else {
-          layout = layout.replace(regex, "");
+      // Always add isAdmin, isAdminOrPengurus, and isUser to active if user exists
+      // This ensures these conditions are always processed
+      if (options.user) {
+        if (!options.active.hasOwnProperty("isAdmin")) {
+          options.active.isAdmin = options.user.role === "admin";
         }
+        if (!options.active.hasOwnProperty("isAdminOrPengurus")) {
+          options.active.isAdminOrPengurus =
+            options.user.role === "admin" || options.user.role === "pengurus";
+        }
+        if (!options.active.hasOwnProperty("isUser")) {
+          options.active.isUser = options.user.role === "user";
+        }
+      }
+
+      // Process all conditions - iterate multiple times to handle nested/adjacent conditions
+      let maxIterations = 10;
+      let iteration = 0;
+      let previousLayout = "";
+
+      while (iteration < maxIterations && layout !== previousLayout) {
+        previousLayout = layout;
+
+        Object.keys(options.active).forEach((key) => {
+          const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          // Match with flexible whitespace - handle all variations
+          // Pattern: {{#if active.xxx}}...{{/if}} or {{#if active.xxx }}...{{/if}}
+          // Use a more flexible pattern that matches the exact format in layout.html
+          // Format: {{#if active.xxx}}...{{/if}}
+          const regex = new RegExp(
+            `\\{\\{#if\\s+active\\.${escapedKey}\\}\\}([\\s\\S]*?)\\{\\{/if\\}\\}`,
+            "g"
+          );
+
+          if (options.active[key]) {
+            layout = layout.replace(regex, "$1");
+          } else {
+            layout = layout.replace(regex, "");
+          }
+        });
+
+        iteration++;
+      }
+
+      // Aggressive cleanup: remove any remaining template tags
+      // Try multiple patterns to catch all variations
+      const cleanupPatterns = [
+        /\{\{#if\s+active\.[^}]+\}\}/g,
+        /\{\{#if\s*active\.[^}]+\s*\}\}/g,
+        /\{\{#if\s*active\.[^}]*\}\}/g,
+        /\{\{\s*\/if\s*\}\}/g,
+        /\{\{\/if\}\}/g,
+        /\{\{#if[^}]*\}\}/g,
+        /\{\{else\}\}/g,
+        /\{\{\s*else\s*\}\}/g,
+      ];
+
+      cleanupPatterns.forEach((pattern) => {
+        layout = layout.replace(pattern, "");
       });
-
-      // Clean up any remaining {{/if}} tags that weren't matched
-      layout = layout.replace(/\{\{\/if\}\}/g, "");
     } else if (options.user) {
-      // If no active but has user, still handle isAdmin
+      // If no active but has user, still handle isAdmin, isAdminOrPengurus, and isUser
       const isAdmin = options.user.role === "admin";
-      const isAdminRegex =
-        /\{\{#if active\.isAdmin\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
-      layout = layout.replace(isAdminRegex, isAdmin ? "$1" : "$2");
-
-      // Handle isAdminOrPengurus
       const isAdminOrPengurus =
         options.user.role === "admin" || options.user.role === "pengurus";
-      const isAdminOrPengurusRegex =
+      const isUser = options.user.role === "user";
+
+      // Handle with else clause
+      const isAdminRegexWithElse =
+        /\{\{#if active\.isAdmin\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
+      layout = layout.replace(isAdminRegexWithElse, isAdmin ? "$1" : "$2");
+
+      const isAdminOrPengurusRegexWithElse =
         /\{\{#if active\.isAdminOrPengurus\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
       layout = layout.replace(
-        isAdminOrPengurusRegex,
+        isAdminOrPengurusRegexWithElse,
         isAdminOrPengurus ? "$1" : "$2"
       );
+
+      const isUserRegexWithElse =
+        /\{\{#if active\.isUser\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
+      layout = layout.replace(isUserRegexWithElse, isUser ? "$1" : "$2");
+
+      // Handle without else clause
+      const isAdminRegex = /\{\{#if active\.isAdmin\}\}([\s\S]*?)\{\{\/if\}\}/g;
+      layout = layout.replace(isAdminRegex, isAdmin ? "$1" : "");
+
+      const isAdminOrPengurusRegex =
+        /\{\{#if active\.isAdminOrPengurus\}\}([\s\S]*?)\{\{\/if\}\}/g;
+      layout = layout.replace(
+        isAdminOrPengurusRegex,
+        isAdminOrPengurus ? "$1" : ""
+      );
+
+      const isUserRegex = /\{\{#if active\.isUser\}\}([\s\S]*?)\{\{\/if\}\}/g;
+      layout = layout.replace(isUserRegex, isUser ? "$1" : "");
     }
+
+    // Final cleanup: remove any remaining template syntax that might have been missed
+    // This ensures no template tags leak through to the final HTML
+    layout = layout.replace(/\{\{#if[^}]*\}\}/g, "");
+    layout = layout.replace(/\{\{\/if\}\}/g, "");
+    layout = layout.replace(/\{\{else\}\}/g, "");
 
     // Inject content
     layout = layout.replace(/\{\{content\}\}/g, pageContent);

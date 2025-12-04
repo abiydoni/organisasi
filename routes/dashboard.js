@@ -41,7 +41,7 @@ router.get("/", (req, res) => {
                       const layout = renderHTML("dashboard.html", {
                         title: "Dashboard",
                         user: req.session.user,
-                        active: { dashboard: true },
+                        active: { dashboard: true, isAdminOrPengurus: true },
                         content: "",
                         organisasi: organisasi || {},
                       });

@@ -33,7 +33,7 @@ router.get("/", (req, res) => {
               const layout = renderHTML("user.html", {
                 title: "Data User",
                 user: req.session.user,
-                active: { user: true },
+                active: { user: true, isAdminOrPengurus: true },
                 content: "",
                 organisasi: organisasi || {},
               });
@@ -200,28 +200,47 @@ router.put("/change-password/:id", (req, res) => {
 });
 
 router.delete("/delete/:id", (req, res) => {
-  // Hanya admin yang bisa hapus user
-  if (req.session.user.role !== "admin") {
+  // Hanya admin dan pengurus yang bisa hapus user
+  const currentUser = req.session.user;
+  if (currentUser.role !== "admin" && currentUser.role !== "pengurus") {
     return res.json({
       success: false,
-      message: "Hanya admin yang dapat menghapus user",
+      message: "Anda tidak memiliki akses untuk menghapus user",
     });
   }
   const { id } = req.params;
 
   // Validasi: user aktif tidak dapat menghapus akunnya sendiri
-  if (parseInt(id) === req.session.user.id) {
+  if (parseInt(id) === currentUser.id) {
     return res.json({
       success: false,
       message: "Tidak dapat menghapus akun sendiri",
     });
   }
 
-  db.run("DELETE FROM users WHERE id=?", [id], (err) => {
-    if (err) {
-      return res.json({ success: false, message: "Error hapus data" });
+  // Get user yang akan dihapus untuk validasi
+  db.get("SELECT role FROM users WHERE id=?", [id], (err, targetUser) => {
+    if (err || !targetUser) {
+      return res.json({
+        success: false,
+        message: "User tidak ditemukan",
+      });
     }
-    res.json({ success: true, message: "User berhasil dihapus" });
+
+    // Validasi: pengurus tidak bisa hapus user admin
+    if (currentUser.role === "pengurus" && targetUser.role === "admin") {
+      return res.json({
+        success: false,
+        message: "Pengurus tidak dapat menghapus user administrator",
+      });
+    }
+
+    db.run("DELETE FROM users WHERE id=?", [id], (err) => {
+      if (err) {
+        return res.json({ success: false, message: "Error hapus data" });
+      }
+      res.json({ success: true, message: "User berhasil dihapus" });
+    });
   });
 });
 
