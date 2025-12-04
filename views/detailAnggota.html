@@ -152,11 +152,6 @@
             <th
               class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
-              Tanggal Bayar
-            </th>
-            <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
-            >
               Status
             </th>
             <th
@@ -172,6 +167,12 @@
         >
           <!-- Data akan diisi oleh JavaScript -->
         </tbody>
+        <tfoot
+          id="pembayaranTableFooter"
+          class="bg-gray-50 dark:bg-gray-700 font-bold border-t-2 border-gray-300 dark:border-gray-600"
+        >
+          <!-- Total akan diisi oleh JavaScript -->
+        </tfoot>
       </table>
     </div>
 
@@ -181,6 +182,193 @@
       class="md:hidden divide-y divide-gray-200 dark:divide-gray-700"
     >
       <!-- Data akan diisi oleh JavaScript -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detail Pembayaran -->
+<div
+  id="modalDetailPembayaran"
+  class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+  onclick="closeModalDetailPembayaran(event)"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col"
+    onclick="event.stopPropagation()"
+  >
+    <!-- Header Modal -->
+    <div
+      class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+    >
+      <h3
+        class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
+      >
+        <i class="bx bx-info-circle text-blue-600 dark:text-blue-400"></i>
+        <span id="modalDetailTitle">Detail Pembayaran</span>
+      </h3>
+      <button
+        onclick="closeModalDetailPembayaran()"
+        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+      >
+        <i class="bx bx-x text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Content Modal -->
+    <div class="flex-1 overflow-y-auto p-4">
+      <div id="modalDetailContent">
+        <!-- Loading state -->
+        <div class="text-center py-8">
+          <div
+            class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"
+          ></div>
+          <p class="mt-2 text-xs text-gray-600 dark:text-gray-400">
+            Memuat data...
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Bayar Iuran -->
+<div
+  id="modalBayarIuran"
+  class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+  onclick="closeModalBayarIuran(event)"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full"
+    onclick="event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div
+      class="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-700"
+    >
+      <h3
+        class="text-sm font-semibold text-gray-800 dark:text-white"
+        id="modalBayarTitle"
+      >
+        Bayar Iuran
+      </h3>
+      <button
+        onclick="closeModalBayarIuran()"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+      >
+        <i class="bx bx-x text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="p-3">
+      <form id="formBayarIuran" onsubmit="submitBayarIuran(event)">
+        <!-- Info Ringkas -->
+        <div class="mb-3 space-y-1.5 text-xs">
+          <div class="flex justify-between">
+            <span class="text-gray-600 dark:text-gray-400">Bulan:</span>
+            <span
+              class="font-medium text-gray-800 dark:text-white"
+              id="modalBayarBulan"
+              >-</span
+            >
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600 dark:text-gray-400">Total Tarif:</span>
+            <span
+              class="font-medium text-blue-600 dark:text-blue-400"
+              id="modalBayarTotalTarif"
+              >Rp 0</span
+            >
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600 dark:text-gray-400">Sudah Bayar:</span>
+            <span
+              class="font-medium text-gray-800 dark:text-white"
+              id="modalBayarSudahBayar"
+              >Rp 0</span
+            >
+          </div>
+          <div
+            class="flex justify-between pb-2 border-b border-gray-200 dark:border-gray-700"
+          >
+            <span class="text-gray-600 dark:text-gray-400">Sisa:</span>
+            <span
+              class="font-bold text-yellow-600 dark:text-yellow-400"
+              id="modalBayarSisa"
+              >Rp 0</span
+            >
+          </div>
+        </div>
+
+        <!-- Form Input -->
+        <div class="space-y-2.5">
+          <div>
+            <label class="block text-xs text-gray-700 dark:text-gray-300 mb-1">
+              Jumlah Bayar (Rp) <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              id="modalBayarJumlah"
+              class="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+              min="1"
+              step="1"
+              required
+            />
+            <p
+              class="text-xs text-red-500 hidden mt-0.5"
+              id="modalBayarError"
+            ></p>
+          </div>
+
+          <div>
+            <label class="block text-xs text-gray-700 dark:text-gray-300 mb-1">
+              Tanggal Bayar <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              id="modalBayarTanggal"
+              class="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs text-gray-700 dark:text-gray-300 mb-1">
+              Keterangan
+            </label>
+            <textarea
+              id="modalBayarKeterangan"
+              rows="2"
+              class="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white resize-none"
+              placeholder="Opsional"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Hidden fields -->
+        <input type="hidden" id="modalBayarBulanValue" />
+        <input type="hidden" id="modalBayarTahunValue" />
+        <input type="hidden" id="modalBayarSisaValue" />
+
+        <!-- Footer -->
+        <div
+          class="flex justify-end gap-2 mt-3 pt-2 border-t border-gray-200 dark:border-gray-700"
+        >
+          <button
+            type="button"
+            onclick="closeModalBayarIuran()"
+            class="px-3 py-1.5 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+          >
+            Batal
+          </button>
+          <button
+            type="submit"
+            class="px-3 py-1.5 text-xs text-white bg-green-600 hover:bg-green-700 rounded"
+          >
+            Bayar
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -321,20 +509,23 @@
     let totalPembayaran = 0;
 
     for (let bulan = 1; bulan <= 12; bulan++) {
-      // Cari iuran untuk bulan ini
-      const iuranBulan = iuran.find(
+      // Cari semua iuran untuk bulan ini (bisa lebih dari 1 pembayaran)
+      const semuaIuranBulan = iuran.filter(
         (i) => i.bulan === bulan && i.tahun === tahunSaatIni
       );
 
-      // Jumlah yang sudah dibayar
-      const jumlahBayar = iuranBulan ? parseInt(iuranBulan.jumlah) || 0 : 0;
+      // Jumlah total yang sudah dibayar (jumlahkan semua pembayaran)
+      const jumlahBayar = semuaIuranBulan.reduce(
+        (sum, i) => sum + (parseInt(i.jumlah) || 0),
+        0
+      );
 
       // Sisa tagihan (total tagihan - jumlah yang sudah dibayar)
       const sisa = Math.max(0, totalSemuaTarif - jumlahBayar);
 
       // Tentukan status berdasarkan sisa dan pembayaran
       let status;
-      if (!iuranBulan || jumlahBayar === 0) {
+      if (semuaIuranBulan.length === 0 || jumlahBayar === 0) {
         status = "belum bayar";
       } else if (sisa > 0) {
         status = "belum lunas";
@@ -347,6 +538,15 @@
         totalPembayaran += jumlahBayar;
       }
 
+      // Ambil tanggal bayar terakhir (pembayaran paling baru)
+      const iuranTerakhir = semuaIuranBulan.length > 0
+        ? semuaIuranBulan.sort((a, b) => {
+            const dateA = new Date(a.tanggal_bayar || a.created_at || 0);
+            const dateB = new Date(b.tanggal_bayar || b.created_at || 0);
+            return dateB - dateA;
+          })[0]
+        : null;
+
       bulanData.push({
         bulan: bulan,
         namaBulan: bulanNames[bulan],
@@ -354,12 +554,17 @@
         totalTarif: totalSemuaTarif,
         jumlahBayar: jumlahBayar,
         sisa: sisa,
-        tanggalBayar: iuranBulan ? iuranBulan.tanggal_bayar : null,
+        tanggalBayar: iuranTerakhir ? iuranTerakhir.tanggal_bayar : null,
         status: status,
-        keterangan: iuranBulan ? iuranBulan.keterangan : null,
-        iuranId: iuranBulan ? iuranBulan.id : null,
+        keterangan: iuranTerakhir ? iuranTerakhir.keterangan : null,
+        iuranId: iuranTerakhir ? iuranTerakhir.id : null,
       });
     }
+
+    // Hitung total untuk setiap kolom
+    const totalDaftarTarif = bulanData.reduce((sum, item) => sum + item.totalTarif, 0);
+    const totalBayar = bulanData.reduce((sum, item) => sum + item.jumlahBayar, 0);
+    const totalSisa = bulanData.reduce((sum, item) => sum + item.sisa, 0);
 
     // Desktop table view
     const tbody = document.getElementById("pembayaranTableBody");
@@ -369,7 +574,15 @@
         (item) => `
           <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
               <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-medium">
-                ${item.namaBulan}
+                <a
+                  href="javascript:void(0)"
+                  onclick="lihatDetailPembayaran(${item.bulan}, ${tahunSaatIni}, '${item.namaBulan}')"
+                  class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline font-semibold flex items-center gap-1"
+                  title="Lihat Detail Pembayaran"
+                >
+                  ${item.namaBulan}
+                  <i class="bx bx-info-circle text-sm"></i>
+                </a>
               </td>
               <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold">
                 ${formatRupiah(item.totalTarif)}
@@ -381,9 +594,6 @@
                 item.sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
               }">
                 ${formatRupiah(item.sisa)}
-              </td>
-              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">
-                ${item.tanggalBayar ? formatTanggal(item.tanggalBayar) : "-"}
               </td>
               <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
                   <span class="px-3 py-1 text-xs font-semibold rounded-full ${
@@ -428,17 +638,31 @@
           </tr>
       `
       )
-      .join("") +
-      `
-      <tr class="bg-gray-50 dark:bg-gray-700 font-bold">
-        <td colspan="2" class="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-gray-800 dark:text-white text-right">
-          Total Pembayaran (Lunas):
-        </td>
-        <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold text-right">
-          ${formatRupiah(totalPembayaran)}
-        </td>
-        <td colspan="4" class="px-3 md:px-6 py-3 md:py-4"></td>
-      </tr>
+      .join("");
+    }
+
+    // Footer dengan total
+    const tfoot = document.getElementById("pembayaranTableFooter");
+    if (tfoot) {
+      tfoot.innerHTML = `
+        <tr>
+          <td class="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-gray-800 dark:text-white font-bold">
+            TOTAL
+          </td>
+          <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold">
+            ${formatRupiah(totalDaftarTarif)}
+          </td>
+          <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold text-right">
+            ${formatRupiah(totalBayar)}
+          </td>
+          <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-bold text-right ${
+            totalSisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
+          }">
+            ${formatRupiah(totalSisa)}
+          </td>
+          <td class="px-3 md:px-6 py-3 md:py-4"></td>
+          <td class="px-3 md:px-6 py-3 md:py-4"></td>
+        </tr>
       `;
     }
 
@@ -450,7 +674,15 @@
         (item) => `
           <div class="p-3 hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150">
             <div class="flex items-center justify-between mb-2">
-              <h4 class="text-sm font-bold text-gray-800 dark:text-white">${item.namaBulan}</h4>
+              <a
+                href="javascript:void(0)"
+                onclick="lihatDetailPembayaran(${item.bulan}, ${tahunSaatIni}, '${item.namaBulan}')"
+                class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline flex items-center gap-1"
+                title="Lihat Detail Pembayaran"
+              >
+                ${item.namaBulan}
+                <i class="bx bx-info-circle text-xs"></i>
+              </a>
               <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${
                 item.status === "lunas"
                   ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200"
@@ -479,10 +711,6 @@
                 <span class="font-semibold ${
                   item.sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
                 }">${formatRupiah(item.sisa)}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-gray-400">Tanggal:</span>
-                <span class="text-gray-800 dark:text-white">${item.tanggalBayar ? formatTanggal(item.tanggalBayar) : "-"}</span>
               </div>
             </div>
             <div class="mt-2 flex justify-end">
@@ -515,127 +743,357 @@
       )
       .join("") +
       `
-      <div class="p-3 bg-gray-50 dark:bg-gray-700 font-bold">
-        <div class="flex justify-between items-center">
-          <span class="text-xs text-gray-800 dark:text-white">Total Pembayaran (Lunas):</span>
-          <span class="text-xs text-gray-800 dark:text-white font-bold">${formatRupiah(totalPembayaran)}</span>
+      <div class="p-3 bg-gray-50 dark:bg-gray-700 font-bold border-t-2 border-gray-300 dark:border-gray-600">
+        <div class="space-y-1.5 text-xs">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-800 dark:text-white">Total Daftar Tarif:</span>
+            <span class="text-gray-800 dark:text-white font-bold">${formatRupiah(totalDaftarTarif)}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-800 dark:text-white">Total Bayar:</span>
+            <span class="text-gray-800 dark:text-white font-bold">${formatRupiah(totalBayar)}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-800 dark:text-white">Total Sisa:</span>
+            <span class="font-bold ${totalSisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}">${formatRupiah(totalSisa)}</span>
+          </div>
         </div>
       </div>
       `;
     }
   }
 
-  // Fungsi untuk bayar iuran
-  async function bayarIuran(bulan, tahun, jumlah) {
+  // Fungsi untuk bayar iuran (buka modal)
+  function bayarIuran(bulan, tahun, totalTarif) {
     // Hitung total dari semua tarif aktif
     const tarifAktif = tarif.filter((t) => t.status === "aktif");
-    const totalSemuaTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
-    const tarifJumlah = jumlah || totalSemuaTarif || 0;
+    const totalSemuaTarif = totalTarif || tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
 
-    // Buat daftar tarif untuk ditampilkan
-    const daftarTarifHtml = tarifAktif.length > 0
-      ? tarifAktif.map(t => `<li>${t.nama}: ${formatRupiah(t.jumlah)}</li>`).join("")
-      : "<li>Tidak ada tarif aktif</li>";
+    // Cari semua iuran untuk bulan ini
+    const semuaIuranBulan = iuran.filter(
+      (i) => i.bulan === bulan && i.tahun === tahun
+    );
 
+    // Hitung total yang sudah dibayar
+    const sudahBayar = semuaIuranBulan.reduce(
+      (sum, i) => sum + (parseInt(i.jumlah) || 0),
+      0
+    );
+
+    // Hitung sisa
+    const sisa = Math.max(0, totalSemuaTarif - sudahBayar);
+
+    // Set data modal
+    document.getElementById("modalBayarTitle").textContent = `Bayar Iuran - ${bulanNames[bulan]} ${tahun}`;
+    document.getElementById("modalBayarBulan").textContent = `${bulanNames[bulan]} ${tahun}`;
+
+    // Daftar tarif tidak perlu ditampilkan di modal sederhana
+
+    // Set informasi pembayaran
+    document.getElementById("modalBayarTotalTarif").textContent = formatRupiah(totalSemuaTarif);
+    document.getElementById("modalBayarSudahBayar").textContent = formatRupiah(sudahBayar);
+    document.getElementById("modalBayarSisa").textContent = formatRupiah(sisa);
+
+    // Set form values
+    const jumlahInput = document.getElementById("modalBayarJumlah");
+    if (jumlahInput) {
+      jumlahInput.value = sisa;
+      jumlahInput.setAttribute("max", sisa);
+      jumlahInput.setAttribute("min", "1");
+      jumlahInput.setAttribute("step", "1");
+      // Remove any existing validation messages
+      jumlahInput.setCustomValidity("");
+    }
+    document.getElementById("modalBayarTanggal").value = new Date().toISOString().split("T")[0];
+    document.getElementById("modalBayarKeterangan").value = "";
+
+    // Set hidden values
+    document.getElementById("modalBayarBulanValue").value = bulan;
+    document.getElementById("modalBayarTahunValue").value = tahun;
+    document.getElementById("modalBayarSisaValue").value = sisa;
+
+    // Reset error message
+    const errorEl = document.getElementById("modalBayarError");
+    errorEl.classList.add("hidden");
+    errorEl.textContent = "";
+
+    // Show modal
+    const modal = document.getElementById("modalBayarIuran");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+
+    // Setup validation setelah modal ditampilkan
+    setTimeout(() => {
+      setupBayarModalValidation();
+    }, 100);
+  }
+
+  // Fungsi untuk validasi input jumlah
+  function validateJumlahBayar() {
+    const jumlahInput = document.getElementById("modalBayarJumlah");
+    if (!jumlahInput) return false;
+
+    const sisa = parseFloat(document.getElementById("modalBayarSisaValue").value) || 0;
+    const jumlah = parseFloat(jumlahInput.value) || 0;
+    const errorEl = document.getElementById("modalBayarError");
+
+    // Clear HTML5 validation
+    jumlahInput.setCustomValidity("");
+
+    if (isNaN(jumlah) || jumlah < 1) {
+      const errorMsg = "Jumlah pembayaran minimal Rp 1";
+      errorEl.textContent = errorMsg;
+      errorEl.classList.remove("hidden");
+      jumlahInput.classList.add("border-red-500");
+      jumlahInput.setCustomValidity(errorMsg);
+      return false;
+    } else if (jumlah > sisa) {
+      const errorMsg = `Jumlah pembayaran tidak boleh melebihi sisa (${formatRupiah(sisa)})`;
+      errorEl.textContent = errorMsg;
+      errorEl.classList.remove("hidden");
+      jumlahInput.classList.add("border-red-500");
+      jumlahInput.setCustomValidity(errorMsg);
+      return false;
+    } else {
+      errorEl.classList.add("hidden");
+      jumlahInput.classList.remove("border-red-500");
+      jumlahInput.setCustomValidity("");
+      return true;
+    }
+  }
+
+  // Setup event listener untuk validasi real-time (akan dipanggil setelah modal dibuka)
+  function setupBayarModalValidation() {
+    const jumlahInput = document.getElementById("modalBayarJumlah");
+    if (jumlahInput) {
+      // Remove existing listeners jika ada
+      const newInput = jumlahInput.cloneNode(true);
+      jumlahInput.parentNode.replaceChild(newInput, jumlahInput);
+
+      // Add new listeners
+      newInput.addEventListener("input", validateJumlahBayar);
+      newInput.addEventListener("blur", validateJumlahBayar);
+    }
+  }
+
+  // Fungsi untuk submit form bayar
+  async function submitBayarIuran(event) {
+    event.preventDefault();
+
+    // Validasi JavaScript
+    if (!validateJumlahBayar()) {
+      // Focus ke input jika ada error
+      const jumlahInput = document.getElementById("modalBayarJumlah");
+      if (jumlahInput) {
+        jumlahInput.focus();
+      }
+      return;
+    }
+
+    const bulan = parseInt(document.getElementById("modalBayarBulanValue").value);
+    const tahun = parseInt(document.getElementById("modalBayarTahunValue").value);
+    const jumlahBayar = parseFloat(document.getElementById("modalBayarJumlah").value);
+    const tanggalBayar = document.getElementById("modalBayarTanggal").value;
+    const keterangan = document.getElementById("modalBayarKeterangan").value;
+
+    if (!tanggalBayar) {
+      Swal.fire("Error!", "Tanggal bayar harus diisi", "error");
+      return;
+    }
+
+    // Hanya kirim keterangan tambahan (yang diinput user), bukan format lengkap
+    // Backend yang akan membuat format utama "Iuran Januari - Ciara"
+    const data = {
+      anggota_id: anggota.id,
+      bulan: bulan,
+      tahun: tahun,
+      jumlah: jumlahBayar,
+      tanggal_bayar: tanggalBayar,
+      status: "lunas",
+      keterangan: keterangan || "", // Hanya keterangan tambahan dari user
+    };
+
+    try {
+      const response = await API.post("/iuran/create", data);
+      if (response.success) {
+        Swal.fire("Berhasil!", "Pembayaran berhasil dicatat", "success");
+        // Close modal
+        closeModalBayarIuran();
+        // Reload page untuk refresh data
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        Swal.fire("Error!", response.message || "Gagal mencatat pembayaran", "error");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      Swal.fire("Error!", "Terjadi kesalahan saat mencatat pembayaran", "error");
+    }
+  }
+
+  // Fungsi untuk close modal bayar
+  function closeModalBayarIuran(event) {
+    if (event && event.target !== event.currentTarget) {
+      return;
+    }
+    const modal = document.getElementById("modalBayarIuran");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+
+  // Fungsi untuk hapus semua iuran bulan tertentu (dari tabel detail anggota)
+  async function hapusIuran(iuranId, bulan, tahun) {
     const result = await Swal.fire({
-      title: "Konfirmasi Pembayaran",
-      html: `
-        <div class="text-left space-y-3">
-          <p><strong>Bulan:</strong> ${bulanNames[bulan]} ${tahun}</p>
-          <div>
-            <p class="font-medium mb-1">Daftar Tarif:</p>
-            <ul class="list-disc list-inside text-sm space-y-1 mb-2">
-              ${daftarTarifHtml}
-            </ul>
-            <p><strong>Total Tagihan:</strong> ${formatRupiah(tarifJumlah)}</p>
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Jumlah Bayar (Rp) *</label>
-            <input
-              type="number"
-              id="jumlahBayar"
-              class="w-full px-3 py-2 border rounded-lg"
-              value="${tarifJumlah}"
-              min="0"
-              step="1000"
-              required
-            />
-            <p class="text-xs text-gray-500 mt-1">Nominal dapat diubah sesuai kebutuhan</p>
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Tanggal Bayar *</label>
-            <input type="date" id="tanggalBayar" class="w-full px-3 py-2 border rounded-lg" value="${new Date().toISOString().split("T")[0]}" required />
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Keterangan</label>
-            <textarea id="keteranganBayar" class="w-full px-3 py-2 border rounded-lg" rows="2" placeholder="Keterangan (opsional)"></textarea>
-          </div>
-        </div>
-      `,
+      title: "Yakin?",
+      html: `<p>Hapus <strong>SEMUA</strong> pembayaran untuk <strong>${bulanNames[bulan]} ${tahun}</strong>?</p><p class="text-xs text-gray-500 mt-2">Ini akan menghapus semua pembayaran di bulan tersebut.</p>`,
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#10b981",
+      confirmButtonColor: "#ef4444",
       cancelButtonColor: "#6b7280",
-      confirmButtonText: "Bayar",
+      confirmButtonText: "Ya, Hapus Semua!",
       cancelButtonText: "Batal",
-      preConfirm: () => {
-        const tanggalBayar = document.getElementById("tanggalBayar").value;
-        const jumlahBayar = document.getElementById("jumlahBayar").value;
-        const keterangan = document.getElementById("keteranganBayar").value;
-
-        if (!tanggalBayar) {
-          Swal.showValidationMessage("Tanggal bayar harus diisi");
-          return false;
-        }
-
-        if (!jumlahBayar || parseFloat(jumlahBayar) <= 0) {
-          Swal.showValidationMessage("Jumlah bayar harus lebih dari 0");
-          return false;
-        }
-
-        return { tanggalBayar, jumlahBayar: parseFloat(jumlahBayar), keterangan };
-      },
     });
 
     if (result.isConfirmed) {
-      const { tanggalBayar, jumlahBayar, keterangan } = result.value;
-
-      // Buat keterangan dengan daftar tarif
-      const daftarTarif = tarifAktif.map(t => `${t.nama} (${formatRupiah(t.jumlah)})`).join(", ");
-      const keteranganFinal = keterangan || `Iuran ${bulanNames[bulan]} ${tahun} - ${daftarTarif}`;
-
-      const data = {
-        anggota_id: anggota.id,
-        bulan: bulan,
-        tahun: tahun,
-        jumlah: jumlahBayar,
-        tanggal_bayar: tanggalBayar,
-        status: "lunas",
-        keterangan: keteranganFinal,
-      };
-
       try {
-        const response = await API.post("/iuran/create", data);
+        // Hapus semua pembayaran untuk bulan tersebut
+        const response = await API.delete(`/iuran/delete-bulan/${anggota.id}/${bulan}/${tahun}`);
         if (response.success) {
-          Swal.fire("Berhasil!", "Pembayaran berhasil dicatat", "success");
+          Swal.fire("Terhapus!", response.message || "Semua pembayaran berhasil dihapus", "success");
           // Reload page untuk refresh data
           setTimeout(() => {
             window.location.reload();
           }, 1000);
         } else {
-          Swal.fire("Error!", response.message || "Gagal mencatat pembayaran", "error");
+          Swal.fire("Error!", response.message || "Gagal menghapus pembayaran", "error");
         }
       } catch (error) {
         console.error("Error:", error);
-        Swal.fire("Error!", "Terjadi kesalahan saat mencatat pembayaran", "error");
+        Swal.fire("Error!", "Terjadi kesalahan saat menghapus pembayaran", "error");
       }
     }
   }
 
-  // Fungsi untuk hapus iuran
-  async function hapusIuran(iuranId, bulan, tahun) {
+  // Fungsi untuk lihat detail pembayaran
+  async function lihatDetailPembayaran(bulan, tahun, namaBulan) {
+    const modal = document.getElementById("modalDetailPembayaran");
+    const modalTitle = document.getElementById("modalDetailTitle");
+    const modalContent = document.getElementById("modalDetailContent");
+
+    // Set title
+    modalTitle.textContent = `Detail Pembayaran - ${namaBulan} ${tahun}`;
+
+    // Show modal
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+
+    // Show loading
+    modalContent.innerHTML = `
+      <div class="text-center py-8">
+        <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+        <p class="mt-2 text-xs text-gray-600 dark:text-gray-400">Memuat data...</p>
+      </div>
+    `;
+
+    try {
+      // Fetch detail pembayaran
+      const response = await API.get(`/anggota/detail/${anggota.id}/pembayaran?bulan=${bulan}&tahun=${tahun}`);
+
+      if (response.success && response.data) {
+        const pembayaranList = response.data;
+
+        if (pembayaranList.length === 0) {
+          modalContent.innerHTML = `
+            <div class="text-center py-8">
+              <i class="bx bx-info-circle text-3xl text-gray-400 dark:text-gray-500 mb-2"></i>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Belum ada pembayaran untuk bulan ini</p>
+            </div>
+          `;
+        } else {
+          // Hitung total
+          const totalBayar = pembayaranList.reduce((sum, p) => sum + (parseInt(p.jumlah) || 0), 0);
+
+          // Get tarif aktif untuk bulan ini
+          const tarifAktif = tarif.filter((t) => t.status === "aktif");
+          const totalTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+          const sisa = Math.max(0, totalTarif - totalBayar);
+
+          modalContent.innerHTML = `
+            <!-- Tabel Pembayaran -->
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">No</th>
+                    <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Jumlah Pembayaran</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Tanggal Pembayaran</th>
+                    <th class="px-3 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  ${pembayaranList.map((p, index) => {
+                    const tanggal = p.tanggal_bayar ? formatTanggal(p.tanggal_bayar) : "-";
+                    return `
+                      <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">${index + 1}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-gray-800 dark:text-gray-200 text-right">${formatRupiah(p.jumlah)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">${tanggal}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-center">
+                          <button
+                            onclick="hapusPembayaranDetail(${p.id}, ${bulan}, ${tahun}, '${namaBulan}')"
+                            class="px-2 py-1 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded transition-colors"
+                            title="Hapus Pembayaran"
+                          >
+                            <i class="bx bx-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    `;
+                  }).join("")}
+                </tbody>
+                <tfoot class="bg-gray-50 dark:bg-gray-700 border-t-2 border-gray-300 dark:border-gray-600">
+                  <tr>
+                    <td colspan="4" class="px-3 py-3 space-y-1">
+                      <div class="flex justify-between items-center text-sm">
+                        <span class="font-semibold text-gray-700 dark:text-gray-300">Total Sudah Dibayar:</span>
+                        <span class="font-bold text-green-600 dark:text-green-400">${formatRupiah(totalBayar)}</span>
+                      </div>
+                      <div class="flex justify-between items-center text-sm">
+                        <span class="font-semibold text-gray-700 dark:text-gray-300">Sisa yang Harus Dibayar:</span>
+                        <span class="font-bold ${sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}">${formatRupiah(sisa)}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          `;
+        }
+      } else {
+        modalContent.innerHTML = `
+          <div class="text-center py-8">
+            <i class="bx bx-error-circle text-4xl text-red-400 mb-2"></i>
+            <p class="text-red-600 dark:text-red-400">Gagal memuat data pembayaran</p>
+          </div>
+        `;
+      }
+    } catch (error) {
+      console.error("Error fetching detail pembayaran:", error);
+      modalContent.innerHTML = `
+        <div class="text-center py-8">
+          <i class="bx bx-error-circle text-4xl text-red-400 mb-2"></i>
+          <p class="text-red-600 dark:text-red-400">Terjadi kesalahan saat memuat data</p>
+        </div>
+      `;
+    }
+  }
+
+  // Fungsi untuk hapus pembayaran dari detail modal
+  async function hapusPembayaranDetail(iuranId, bulan, tahun, namaBulan) {
     const result = await Swal.fire({
       title: "Yakin?",
-      html: `<p>Hapus pembayaran untuk <strong>${bulanNames[bulan]} ${tahun}</strong>?</p>`,
+      html: `<p>Hapus pembayaran ini?</p>`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#ef4444",
@@ -649,9 +1107,13 @@
         const response = await API.delete(`/iuran/delete/${iuranId}`);
         if (response.success) {
           Swal.fire("Terhapus!", "Pembayaran berhasil dihapus", "success");
-          // Reload page untuk refresh data
+          // Reload modal detail pembayaran
           setTimeout(() => {
-            window.location.reload();
+            lihatDetailPembayaran(bulan, tahun, namaBulan);
+            // Reload page untuk refresh tabel utama
+            setTimeout(() => {
+              window.location.reload();
+            }, 500);
           }, 1000);
         } else {
           Swal.fire("Error!", response.message || "Gagal menghapus pembayaran", "error");
@@ -661,6 +1123,16 @@
         Swal.fire("Error!", "Terjadi kesalahan saat menghapus pembayaran", "error");
       }
     }
+  }
+
+  // Fungsi untuk close modal
+  function closeModalDetailPembayaran(event) {
+    if (event && event.target !== event.currentTarget) {
+      return;
+    }
+    const modal = document.getElementById("modalDetailPembayaran");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
   }
 
   // Load semua data

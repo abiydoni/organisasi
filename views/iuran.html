@@ -6,19 +6,68 @@
       <h2
         class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-1"
       >
-        <i class="bx bx-money text-green-600 dark:text-green-400"></i> Iuran
-        Bulanan
+        <i class="bx bx-money text-green-600 dark:text-green-400"></i> Informasi
+        Pembayaran
       </h2>
       <p class="text-sm text-gray-600 dark:text-gray-400">
-        Kelola pembayaran iuran bulanan
+        Status pembayaran iuran bulanan per anggota
       </p>
     </div>
-    <button
-      onclick="openModal()"
-      class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg transition-all duration-300 text-sm md:text-base font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2 justify-center"
-    >
-      <i class="bx bx-plus text-lg"></i> <span>Tambah Iuran</span>
-    </button>
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
+        <label class="text-sm text-gray-700 dark:text-gray-300">Tahun:</label>
+        <select
+          id="tahunFilter"
+          class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white transition-all text-sm"
+        >
+          <!-- Options akan diisi oleh JavaScript -->
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4"
+  >
+    <div class="flex flex-wrap items-center gap-4 text-sm">
+      <span class="font-semibold text-gray-700 dark:text-gray-300"
+        >Legenda:</span
+      >
+      <div class="flex items-center gap-2">
+        <div
+          style="
+            width: 24px;
+            height: 24px;
+            background-color: #10b981;
+            border-radius: 0.25rem;
+          "
+        ></div>
+        <span class="text-gray-700 dark:text-gray-300">Lunas</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div
+          style="
+            width: 24px;
+            height: 24px;
+            background-color: #eab308;
+            border-radius: 0.25rem;
+          "
+        ></div>
+        <span class="text-gray-700 dark:text-gray-300">Belum Lunas</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div
+          style="
+            width: 24px;
+            height: 24px;
+            background-color: #ef4444;
+            border-radius: 0.25rem;
+          "
+        ></div>
+        <span class="text-gray-700 dark:text-gray-300">Belum Bayar</span>
+      </div>
+    </div>
   </div>
 
   <div
@@ -31,34 +80,74 @@
         >
           <tr>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase sticky left-0 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 z-10 border-r border-gray-200 dark:border-gray-700"
             >
               No
             </th>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase sticky left-12 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 z-10 min-w-[150px] border-r border-gray-200 dark:border-gray-700"
             >
-              Anggota
+              Nama Anggota
             </th>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
-              Bulan/Tahun
+              Jan
             </th>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
-              Jumlah
+              Feb
             </th>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
-              Status
+              Mar
             </th>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
-              Aksi
+              Apr
+            </th>
+            <th
+              class="px-2 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Mei
+            </th>
+            <th
+              class="px-2 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Jun
+            </th>
+            <th
+              class="px-2 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Jul
+            </th>
+            <th
+              class="px-2 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Agu
+            </th>
+            <th
+              class="px-2 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Sep
+            </th>
+            <th
+              class="px-2 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Okt
+            </th>
+            <th
+              class="px-2 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Nov
+            </th>
+            <th
+              class="px-2 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Des
             </th>
           </tr>
         </thead>
@@ -67,6 +156,201 @@
           class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
         ></tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detail Pembayaran -->
+<div
+  id="modalDetailPembayaran"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-2.5 w-full max-w-[280px] border border-gray-200 dark:border-gray-700"
+    style="max-width: 280px"
+  >
+    <div
+      class="flex items-center justify-between mb-2 pb-2 border-b border-gray-200 dark:border-gray-700"
+    >
+      <h3
+        class="text-xs font-bold text-gray-800 dark:text-white leading-tight"
+        id="modalDetailTitle"
+      >
+        Detail Pembayaran
+      </h3>
+      <button
+        onclick="closeDetailModal()"
+        class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+      >
+        <i class="bx bx-x text-base"></i>
+      </button>
+    </div>
+
+    <!-- Informasi Anggota dan Bulan -->
+    <div
+      class="mb-2 p-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-lg text-[10px] leading-tight"
+    >
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <p
+            class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mb-0.5"
+          >
+            Nama Anggota
+          </p>
+          <p
+            class="text-[10px] font-semibold text-gray-800 dark:text-white leading-tight"
+            id="detailNamaAnggota"
+          >
+            -
+          </p>
+        </div>
+        <div>
+          <p
+            class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mb-0.5"
+          >
+            Periode
+          </p>
+          <p
+            class="text-[10px] font-semibold text-gray-800 dark:text-white leading-tight"
+            id="detailPeriode"
+          >
+            -
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daftar Tarif -->
+    <div class="mb-2">
+      <h4
+        class="text-[10px] font-semibold text-gray-800 dark:text-white mb-1 leading-tight flex items-center gap-1"
+      >
+        <i class="bx bx-list-ul text-[10px]"></i>
+        Daftar Tarif
+      </h4>
+      <div
+        class="bg-gray-50 dark:bg-gray-700 rounded-lg p-1.5 text-[10px] leading-tight border border-gray-200 dark:border-gray-600"
+      >
+        <div id="detailDaftarTarif" class="space-y-1">
+          <!-- Akan diisi oleh JavaScript -->
+        </div>
+        <div
+          class="mt-1.5 pt-1.5 border-t border-gray-300 dark:border-gray-600"
+        >
+          <div class="flex justify-between items-center">
+            <span
+              class="text-[10px] font-semibold text-gray-800 dark:text-white leading-tight"
+              >Total:</span
+            >
+            <span
+              class="text-[10px] font-bold text-gray-800 dark:text-white leading-tight"
+              id="detailTotalTarif"
+              >Rp 0</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daftar Pembayaran -->
+    <div class="mb-2">
+      <h4
+        class="text-[10px] font-semibold text-gray-800 dark:text-white mb-1 leading-tight flex items-center gap-1"
+      >
+        <i class="bx bx-history text-[10px]"></i>
+        Riwayat Pembayaran
+      </h4>
+      <div
+        class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-600"
+      >
+        <table
+          class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-[10px] leading-tight"
+        >
+          <thead class="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th
+                class="px-1.5 py-1 text-left text-[10px] font-medium text-gray-500 dark:text-gray-300 leading-tight"
+              >
+                No
+              </th>
+              <th
+                class="px-1.5 py-1 text-left text-[10px] font-medium text-gray-500 dark:text-gray-300 leading-tight"
+              >
+                Jumlah
+              </th>
+              <th
+                class="px-1.5 py-1 text-left text-[10px] font-medium text-gray-500 dark:text-gray-300 leading-tight"
+              >
+                Tanggal
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            id="detailPembayaranBody"
+            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+          >
+            <!-- Akan diisi oleh JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Ringkasan -->
+    <div
+      class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-lg p-2 mb-2 text-[10px] leading-tight border border-gray-200 dark:border-gray-600"
+    >
+      <div class="grid grid-cols-3 gap-2">
+        <div class="text-center">
+          <p
+            class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mb-0.5"
+          >
+            Total Tarif
+          </p>
+          <p
+            class="text-[10px] font-bold text-gray-800 dark:text-white leading-tight"
+            id="ringkasanTotalTarif"
+          >
+            Rp 0
+          </p>
+        </div>
+        <div class="text-center">
+          <p
+            class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mb-0.5"
+          >
+            Sudah Bayar
+          </p>
+          <p
+            class="text-[10px] font-bold text-green-600 dark:text-green-400 leading-tight"
+            id="ringkasanSudahBayar"
+          >
+            Rp 0
+          </p>
+        </div>
+        <div class="text-center">
+          <p
+            class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mb-0.5"
+          >
+            Sisa
+          </p>
+          <p
+            class="text-[10px] font-bold text-red-600 dark:text-red-400 leading-tight"
+            id="ringkasanSisa"
+          >
+            Rp 0
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="flex justify-end pt-1 border-t border-gray-200 dark:border-gray-700"
+    >
+      <button
+        onclick="closeDetailModal()"
+        class="px-3 py-1.5 text-[10px] bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-200 font-medium leading-tight shadow-sm hover:shadow"
+      >
+        Tutup
+      </button>
     </div>
   </div>
 </div>
@@ -138,7 +422,6 @@
             min="2020"
             max="2100"
             class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
-            value="${new Date().getFullYear()}"
           />
         </div>
         <div>
@@ -210,67 +493,173 @@
 </div>
 
 <script>
-  // Load iuran and anggota data
+  // Load data
   const iuran = {{iuran}} || [];
   const anggota = {{anggota}} || [];
+  const tarif = {{tarif}} || [];
+  const tahunSaatIni = parseInt("{{tahun}}") || new Date().getFullYear();
+
+  // Hitung total tarif aktif
+  const totalTarif = tarif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+
+  // Debug log
+  console.log("Data loaded:", {
+    iuranCount: iuran.length,
+    anggotaCount: anggota.length,
+    tarifCount: tarif.length,
+    totalTarif: totalTarif,
+    tahunSaatIni: tahunSaatIni
+  });
+
+  // Load tahun filter
+  function loadTahunFilter() {
+    const tahunSelect = document.getElementById("tahunFilter");
+    const tahunSekarang = new Date().getFullYear();
+
+    // Generate options untuk 5 tahun terakhir dan 2 tahun ke depan
+    for (let i = tahunSekarang + 2; i >= tahunSekarang - 5; i--) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i;
+      if (i === tahunSaatIni) {
+        option.selected = true;
+      }
+      tahunSelect.appendChild(option);
+    }
+
+    // Event listener untuk filter tahun
+    tahunSelect.addEventListener("change", function () {
+      const newTahun = this.value;
+      window.location.href = `/iuran?tahun=${newTahun}`;
+    });
+  }
+
+  // Fungsi untuk mendapatkan status pembayaran per bulan
+  function getStatusPembayaran(anggotaId, bulan, tahun) {
+    if (!iuran || iuran.length === 0) {
+      return "belum bayar";
+    }
+
+    // Cari semua iuran untuk anggota, bulan, dan tahun ini
+    const iuranBulan = iuran.filter((i) => {
+      const match = parseInt(i.anggota_id) === parseInt(anggotaId) &&
+                    parseInt(i.bulan) === parseInt(bulan) &&
+                    parseInt(i.tahun) === parseInt(tahun);
+      return match;
+    });
+
+    if (iuranBulan.length === 0) {
+      return "belum bayar";
+    }
+
+    // Hitung total yang sudah dibayar
+    const totalBayar = iuranBulan.reduce(
+      (sum, i) => sum + (parseInt(i.jumlah) || 0),
+      0
+    );
+
+    // Bandingkan dengan total tarif
+    if (totalTarif > 0 && totalBayar >= totalTarif) {
+      return "lunas";
+    } else if (totalBayar > 0) {
+      return "belum lunas";
+    } else {
+      return "belum bayar";
+    }
+  }
+
+  // Fungsi untuk mendapatkan class warna berdasarkan status
+  function getStatusClass(status) {
+    if (!status) return "bg-red-500 dark:bg-red-600";
+
+    switch (status.toLowerCase().trim()) {
+      case "lunas":
+        return "bg-green-500 dark:bg-green-600";
+      case "belum lunas":
+        return "bg-yellow-500 dark:bg-yellow-600";
+      case "belum bayar":
+        return "bg-red-500 dark:bg-red-600";
+      default:
+        return "bg-red-500 dark:bg-red-600";
+    }
+  }
 
   function loadIuran() {
     const tbody = document.getElementById("iuranTableBody");
-    const bulanNames = [
-      "",
-      "Januari",
-      "Februari",
-      "Maret",
-      "April",
-      "Mei",
-      "Juni",
-      "Juli",
-      "Agustus",
-      "September",
-      "Oktober",
-      "November",
-      "Desember",
-    ];
 
-    tbody.innerHTML = iuran
-      .map(
-        (item, index) => `
-            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
-                  index + 1
-                }</td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
-                  item.nama_anggota || "-"
-                }</td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
-                  bulanNames[item.bulan]
-                } ${item.tahun}</td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">Rp ${formatNumber(
-                  item.jumlah
-                )}</td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                    <span class="px-2 py-1 text-xs rounded ${
-                      item.status === "lunas"
-                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                        : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-                    }">${item.status}</span>
-                </td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm">
-                    <button onclick="editIuran(${
-                      item.id
-                    })" class="text-blue-600 hover:text-blue-800 mr-3">
-                        <i class='bx bx-edit'></i>
-                    </button>
-                    <button onclick="deleteIuran(${
-                      item.id
-                    })" class="text-red-600 hover:text-red-800">
-                        <i class='bx bx-trash'></i>
-                    </button>
-                </td>
-            </tr>
-        `
-      )
-      .join("");
+    if (!tbody) {
+      console.error("Table body not found!");
+      return;
+    }
+
+    console.log("Loading iuran table...");
+    console.log("Anggota count:", anggota ? anggota.length : 0);
+    console.log("Iuran count:", iuran ? iuran.length : 0);
+
+    if (!anggota || anggota.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="14" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+            Tidak ada data anggota
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    const rows = anggota.map((a, index) => {
+      // Generate cells untuk setiap bulan (1-12)
+      const bulanCells = [];
+      for (let bulan = 1; bulan <= 12; bulan++) {
+        const status = getStatusPembayaran(a.id, bulan, tahunSaatIni);
+        const statusClass = getStatusClass(status);
+        const statusText = status === "lunas" ? "Lunas" : status === "belum lunas" ? "Belum Lunas" : "Belum Bayar";
+
+        // Debug untuk anggota pertama, bulan pertama
+        if (index === 0 && bulan === 1) {
+          console.log(`Debug - Anggota: ${a.nama}, ID: ${a.id}, Bulan: ${bulan}, Tahun: ${tahunSaatIni}, Status: ${status}, Class: ${statusClass}`);
+          console.log(`Iuran untuk anggota ini:`, iuran.filter(i => parseInt(i.anggota_id) === parseInt(a.id)));
+        }
+
+        // Tentukan warna berdasarkan status
+        let bgColor;
+        if (status === "lunas") {
+          bgColor = "#10b981"; // green-500
+        } else if (status === "belum lunas") {
+          bgColor = "#eab308"; // yellow-500
+        } else {
+          bgColor = "#ef4444"; // red-500
+        }
+
+        // Pastikan div selalu memiliki warna dengan inline style yang eksplisit
+        bulanCells.push(`
+          <td class="px-2 py-3 text-center">
+            <div
+              style="width: 32px; height: 32px; background-color: ${bgColor}; border-radius: 0.25rem; margin: 0 auto; cursor: pointer; transition: opacity 0.2s;"
+              onmouseover="this.style.opacity='0.8'"
+              onmouseout="this.style.opacity='1'"
+              ondblclick="showDetailPembayaran(${a.id}, ${bulan}, ${tahunSaatIni})"
+              title="${statusText} - Double click untuk detail"
+            ></div>
+          </td>
+        `);
+      }
+
+      return `
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+          <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10 border-r border-gray-200 dark:border-gray-700">
+            ${index + 1}
+          </td>
+          <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-medium sticky left-12 bg-white dark:bg-gray-800 z-10 min-w-[150px] border-r border-gray-200 dark:border-gray-700">
+            ${a.nama || "-"}
+          </td>
+          ${bulanCells.join("")}
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = rows.join("");
+    console.log("Table loaded with", rows.length, "rows");
   }
 
   function formatNumber(num) {
@@ -366,5 +755,143 @@
     }
   });
 
-  loadIuran();
+  // Fungsi untuk menampilkan detail pembayaran
+  async function showDetailPembayaran(anggotaId, bulan, tahun) {
+    const modal = document.getElementById("modalDetailPembayaran");
+    const anggotaData = anggota.find(a => parseInt(a.id) === parseInt(anggotaId));
+
+    if (!anggotaData) {
+      Swal.fire("Error!", "Data anggota tidak ditemukan", "error");
+      return;
+    }
+
+    const bulanNames = [
+      "", "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+
+    // Set informasi dasar
+    document.getElementById("detailNamaAnggota").textContent = anggotaData.nama || "-";
+    document.getElementById("detailPeriode").textContent = `${bulanNames[bulan]} ${tahun}`;
+
+    // Tampilkan modal
+    modal.classList.remove("hidden");
+
+    // Load data pembayaran
+    try {
+      const response = await API.get(`/anggota/detail/${anggotaId}/pembayaran?bulan=${bulan}&tahun=${tahun}`);
+
+      if (response.success && response.data) {
+        const pembayaranList = response.data;
+
+        // Tampilkan daftar tarif
+        const tarifList = tarif.filter(t => t.status === "aktif");
+        const tarifHtml = tarifList.map(t => `
+          <div class="flex justify-between items-center leading-tight py-0.5">
+            <span class="text-[10px] text-gray-700 dark:text-gray-300">${t.nama}</span>
+            <span class="text-[10px] font-semibold text-gray-800 dark:text-white">Rp ${formatNumber(t.jumlah)}</span>
+          </div>
+        `).join("");
+        document.getElementById("detailDaftarTarif").innerHTML = tarifHtml || "<p class='text-[10px] text-gray-500 leading-tight'>Tidak ada tarif aktif</p>";
+
+        const totalTarifAmount = tarifList.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+        document.getElementById("detailTotalTarif").textContent = `Rp ${formatNumber(totalTarifAmount)}`;
+
+        // Tampilkan riwayat pembayaran
+        const tbody = document.getElementById("detailPembayaranBody");
+        if (pembayaranList.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="3" class="px-1.5 py-2 text-center text-[10px] text-gray-500 dark:text-gray-400 leading-tight">
+                Belum ada pembayaran
+              </td>
+            </tr>
+          `;
+        } else {
+          tbody.innerHTML = pembayaranList.map((p, index) => {
+            const tanggal = p.tanggal_bayar ? formatDate(p.tanggal_bayar) : "-";
+
+            return `
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <td class="px-1.5 py-1 text-[10px] text-gray-800 dark:text-gray-200 leading-tight">${index + 1}</td>
+                <td class="px-1.5 py-1 text-[10px] font-semibold text-gray-800 dark:text-gray-200 leading-tight">Rp ${formatNumber(p.jumlah)}</td>
+                <td class="px-1.5 py-1 text-[10px] text-gray-800 dark:text-gray-200 leading-tight">${tanggal}</td>
+              </tr>
+            `;
+          }).join("");
+        }
+
+        // Hitung total sudah dibayar
+        const totalBayar = pembayaranList.reduce((sum, p) => sum + (parseInt(p.jumlah) || 0), 0);
+        const sisa = Math.max(0, totalTarifAmount - totalBayar);
+
+        // Update ringkasan
+        document.getElementById("ringkasanTotalTarif").textContent = `Rp ${formatNumber(totalTarifAmount)}`;
+        document.getElementById("ringkasanSudahBayar").textContent = `Rp ${formatNumber(totalBayar)}`;
+        document.getElementById("ringkasanSisa").textContent = `Rp ${formatNumber(sisa)}`;
+      } else {
+        // Jika tidak ada pembayaran
+        const tarifList = tarif.filter(t => t.status === "aktif");
+        const tarifHtml = tarifList.map(t => `
+          <div class="flex justify-between items-center leading-tight py-0.5">
+            <span class="text-[10px] text-gray-700 dark:text-gray-300">${t.nama}</span>
+            <span class="text-[10px] font-semibold text-gray-800 dark:text-white">Rp ${formatNumber(t.jumlah)}</span>
+          </div>
+        `).join("");
+        document.getElementById("detailDaftarTarif").innerHTML = tarifHtml || "<p class='text-[10px] text-gray-500 leading-tight'>Tidak ada tarif aktif</p>";
+
+        const totalTarifAmount = tarifList.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+        document.getElementById("detailTotalTarif").textContent = `Rp ${formatNumber(totalTarifAmount)}`;
+
+        document.getElementById("detailPembayaranBody").innerHTML = `
+          <tr>
+            <td colspan="3" class="px-1.5 py-2 text-center text-[10px] text-gray-500 dark:text-gray-400 leading-tight">
+              Belum ada pembayaran
+            </td>
+          </tr>
+        `;
+
+        document.getElementById("ringkasanTotalTarif").textContent = `Rp ${formatNumber(totalTarifAmount)}`;
+        document.getElementById("ringkasanSudahBayar").textContent = `Rp 0`;
+        document.getElementById("ringkasanSisa").textContent = `Rp ${formatNumber(totalTarifAmount)}`;
+      }
+    } catch (error) {
+      console.error("Error loading payment details:", error);
+      Swal.fire("Error!", "Gagal memuat detail pembayaran", "error");
+    }
+  }
+
+  // Fungsi untuk menutup modal detail
+  function closeDetailModal() {
+    document.getElementById("modalDetailPembayaran").classList.add("hidden");
+  }
+
+  // Fungsi untuk format tanggal
+  function formatDate(dateString) {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}/${month}/${year}`;
+  }
+
+  // Load data saat halaman dimuat
+  function init() {
+    console.log("Initializing...");
+    console.log("Anggota:", anggota);
+    console.log("Iuran:", iuran);
+    console.log("Tarif:", tarif);
+    console.log("Total Tarif:", totalTarif);
+
+    loadTahunFilter();
+    loadIuran();
+  }
+
+  // Panggil saat DOM ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 </script>

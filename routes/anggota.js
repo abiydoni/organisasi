@@ -177,4 +177,43 @@ router.get("/detail/:id", (req, res) => {
   );
 });
 
+// Endpoint untuk mengambil detail pembayaran per bulan
+router.get("/detail/:id/pembayaran", (req, res) => {
+  const { id } = req.params;
+  const { bulan, tahun } = req.query;
+
+  // Validate parameters
+  if (!id || isNaN(parseInt(id))) {
+    return res
+      .status(400)
+      .json({ success: false, message: "ID anggota tidak valid" });
+  }
+  if (!bulan || isNaN(parseInt(bulan)) || bulan < 1 || bulan > 12) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Bulan tidak valid" });
+  }
+  if (!tahun || isNaN(parseInt(tahun))) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Tahun tidak valid" });
+  }
+
+  // Get all iuran for this month and year
+  db.all(
+    "SELECT * FROM iuran WHERE anggota_id=? AND bulan=? AND tahun=? ORDER BY tanggal_bayar DESC, created_at DESC",
+    [id, bulan, tahun],
+    (err, iuran) => {
+      if (err) {
+        console.error("Error fetching iuran detail:", err);
+        return res
+          .status(500)
+          .json({ success: false, message: "Error database: " + err.message });
+      }
+
+      res.json({ success: true, data: iuran || [] });
+    }
+  );
+});
+
 module.exports = router;
