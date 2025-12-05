@@ -1,271 +1,308 @@
-<div class="space-y-4 md:space-y-6">
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 md:p-6">
-    <div
-      class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-6 no-print"
-    >
-      <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
-        <i class="bx bx-receipt"></i> Tagihan Iuran Saya
-      </h2>
-      <div class="flex gap-2 w-full sm:w-auto">
-        <button
-          onclick="window.print()"
-          class="flex-1 sm:flex-none px-3 md:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition text-sm md:text-base"
+<!-- Kop Surat untuk Print -->
+<div id="printHeader" class="print-only print-header">
+  <table
+    style="width: 100%; border-bottom: 2px solid #000; margin-bottom: 15px"
+  >
+    <tr>
+      <td style="width: 20%; vertical-align: top; padding-right: 15px">
+        <img
+          id="printLogo"
+          src=""
+          alt="Logo"
+          style="max-width: 80px; max-height: 80px; display: none"
+        />
+      </td>
+      <td style="vertical-align: top">
+        <h1
+          id="printOrgNama"
+          style="margin: 0; font-size: 18pt; font-weight: bold"
         >
-          <i class="bx bx-printer"></i> <span class="ml-1">Print</span>
-        </button>
-        <button
-          onclick="exportToPDF()"
-          class="flex-1 sm:flex-none px-3 md:px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition text-sm md:text-base"
-        >
-          <i class="bx bx-file"></i> <span class="ml-1">PDF</span>
-        </button>
-      </div>
-    </div>
-    <div class="print-only hidden print:block mb-4">
-      <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
-        Tagihan Iuran
-      </h2>
-    </div>
+          -
+        </h1>
+        <p id="printOrgAlamat" style="margin: 5px 0; font-size: 10pt">-</p>
+        <p style="margin: 5px 0; font-size: 10pt">
+          Telp: <span id="printOrgTelepon">-</span> | Email:
+          <span id="printOrgEmail">-</span>
+        </p>
+      </td>
+    </tr>
+  </table>
+</div>
 
-    <!-- Header untuk Print -->
-    <div
-      id="printHeader"
-      class="mb-4 md:mb-6 border-b-2 border-gray-300 dark:border-gray-600 pb-3 md:pb-4"
-    >
-      <div class="flex items-center justify-between">
-        <div>
-          <h1
-            class="text-3xl font-bold text-gray-800 dark:text-white"
-            id="orgNama"
-          >
-            -
-          </h1>
-          <p class="text-gray-600 dark:text-gray-400" id="orgAlamat">-</p>
-          <p class="text-gray-600 dark:text-gray-400">
-            Telp: <span id="orgTelepon">-</span> | Email:
-            <span id="orgEmail">-</span>
-          </p>
-        </div>
-        <div id="orgLogo" class="hidden">
-          <img src="" alt="Logo" class="h-20" id="logoImg" />
-        </div>
-      </div>
-    </div>
-
-    <!-- Data Anggota -->
-    <div class="mb-4 md:mb-6 bg-gray-50 dark:bg-gray-700 rounded-lg p-3 md:p-4">
-      <h3
-        class="text-base md:text-lg font-semibold text-gray-800 dark:text-white mb-2 md:mb-3"
+<div class="space-y-3 md:space-y-4">
+  <!-- Header dengan tombol kembali -->
+  <div class="flex items-center justify-between no-print">
+    <div class="flex items-center gap-2 md:gap-3">
+      <a
+        href="/dashboard"
+        class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+        title="Kembali"
       >
-        Data Anggota
-      </h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-        <div>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Nama</p>
-          <p
-            class="font-semibold text-gray-800 dark:text-white"
-            id="anggotaNama"
-          >
-            -
-          </p>
-        </div>
-        <div>
-          <p class="text-sm text-gray-600 dark:text-gray-400">NIK</p>
-          <p
-            class="font-semibold text-gray-800 dark:text-white"
-            id="anggotaNIK"
-          >
-            -
-          </p>
-        </div>
-        <div>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Alamat</p>
-          <p
-            class="font-semibold text-gray-800 dark:text-white"
-            id="anggotaAlamat"
-          >
-            -
-          </p>
-        </div>
-        <div>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Telepon</p>
-          <p
-            class="font-semibold text-gray-800 dark:text-white"
-            id="anggotaTelepon"
-          >
-            -
-          </p>
-        </div>
+        <i class="bx bx-arrow-back text-xl md:text-2xl"></i>
+      </a>
+      <div>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
+          <i class="bx bx-receipt text-blue-600 dark:text-blue-400"></i> Tagihan
+          Iuran Saya
+        </h2>
+        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+          Informasi dan riwayat pembayaran saya
+        </p>
       </div>
     </div>
-
-    <!-- Tabel Tagihan -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-50 dark:bg-gray-700">
-            <tr>
-              <th
-                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
-              >
-                No
-              </th>
-              <th
-                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
-              >
-                Bulan/Tahun
-              </th>
-              <th
-                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
-              >
-                Jumlah
-              </th>
-              <th
-                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
-              >
-                Tanggal Bayar
-              </th>
-              <th
-                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
-              >
-                Status
-              </th>
-              <th
-                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
-              >
-                Keterangan
-              </th>
-            </tr>
-          </thead>
-          <tbody
-            id="tagihanTableBody"
-            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
-          ></tbody>
-        </table>
-      </div>
+    <div class="flex gap-2 no-print">
+      <button
+        onclick="window.print()"
+        class="px-3 md:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition text-sm md:text-base flex items-center gap-1"
+      >
+        <i class="bx bx-printer"></i>
+        <span class="hidden sm:inline">Print</span>
+      </button>
+      <button
+        onclick="exportToPDF()"
+        class="px-3 md:px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition text-sm md:text-base flex items-center gap-1"
+      >
+        <i class="bx bx-file"></i>
+        <span class="hidden sm:inline">PDF</span>
+      </button>
     </div>
+  </div>
 
-    <!-- Summary -->
-    <div
-      class="mt-4 md:mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+  <!-- Informasi Anggota -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4"
+  >
+    <h3
+      class="text-lg md:text-xl font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2"
     >
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 md:p-4">
-        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-          Total Tagihan
-        </p>
+      <i class="bx bx-info-circle text-blue-600 dark:text-blue-400"></i>
+      Informasi Anggota
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Nama</p>
         <p
-          id="totalTagihan"
-          class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white"
+          class="text-sm md:text-base font-semibold text-gray-800 dark:text-white"
+          id="anggotaNama"
         >
-          Rp 0
+          -
         </p>
       </div>
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 md:p-4">
-        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-          Sudah Lunas
-        </p>
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">NIK</p>
         <p
-          id="totalLunas"
-          class="text-xl md:text-2xl font-bold text-green-600 dark:text-green-400"
+          class="text-sm md:text-base text-gray-800 dark:text-white"
+          id="anggotaNik"
         >
-          Rp 0
+          -
         </p>
       </div>
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 md:p-4">
-        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-          Belum Lunas
-        </p>
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Alamat</p>
         <p
-          id="totalBelumLunas"
-          class="text-xl md:text-2xl font-bold text-red-600 dark:text-red-400"
+          class="text-sm md:text-base text-gray-800 dark:text-white"
+          id="anggotaAlamat"
         >
-          Rp 0
+          -
         </p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Telepon</p>
+        <p
+          class="text-sm md:text-base text-gray-800 dark:text-white"
+          id="anggotaTelepon"
+        >
+          -
+        </p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Email</p>
+        <p
+          class="text-sm md:text-base text-gray-800 dark:text-white"
+          id="anggotaEmail"
+        >
+          -
+        </p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Status</p>
+        <span
+          id="anggotaStatus"
+          class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full"
+        >
+          -
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Tahun dan Daftar Tarif -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
+    <!-- Filter Tahun -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4"
+    >
+      <div class="flex flex-col gap-2">
+        <h3
+          class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
+        >
+          <i class="bx bx-calendar text-blue-600 dark:text-blue-400"></i>
+          Riwayat Pembayaran
+        </h3>
+        <div class="flex items-center gap-2">
+          <label class="text-xs md:text-sm text-gray-700 dark:text-gray-300"
+            >Tahun:</label
+          >
+          <select
+            id="tahunFilter"
+            class="flex-1 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          >
+            <!-- Options akan diisi oleh JavaScript -->
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daftar Tarif -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4"
+    >
+      <h3
+        class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-2 md:mb-3 flex items-center gap-2"
+      >
+        <i class="bx bx-list-check text-blue-600 dark:text-blue-400"></i>
+        Daftar Tarif Aktif
+      </h3>
+      <div
+        class="space-y-1.5 max-h-40 md:max-h-48 overflow-y-auto"
+        id="tarifList"
+      >
+        <!-- Daftar tarif akan diisi oleh JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabel Pembayaran Per Bulan -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <!-- Desktop Table View -->
+    <div class="hidden md:block">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Bulan
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Daftar Tarif
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Bayar
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Sisa
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Status
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="pembayaranTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+        <tfoot
+          id="pembayaranTableFooter"
+          class="bg-gray-50 dark:bg-gray-700 font-bold border-t-2 border-gray-300 dark:border-gray-600"
+        >
+          <!-- Total akan diisi oleh JavaScript -->
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Mobile Card View -->
+    <div
+      id="pembayaranCardBody"
+      class="md:hidden divide-y divide-gray-200 dark:divide-gray-700"
+    >
+      <!-- Data akan diisi oleh JavaScript -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detail Pembayaran -->
+<div
+  id="modalDetailPembayaran"
+  class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+  onclick="closeModalDetailPembayaran(event)"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col"
+    onclick="event.stopPropagation()"
+  >
+    <!-- Header Modal -->
+    <div
+      class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+    >
+      <h3
+        class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
+      >
+        <i class="bx bx-info-circle text-blue-600 dark:text-blue-400"></i>
+        <span id="modalDetailTitle">Detail Pembayaran</span>
+      </h3>
+      <button
+        onclick="closeModalDetailPembayaran()"
+        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+      >
+        <i class="bx bx-x text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Content Modal -->
+    <div class="flex-1 overflow-y-auto p-4">
+      <div id="modalDetailContent">
+        <!-- Loading state -->
+        <div class="text-center py-8">
+          <div
+            class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"
+          ></div>
+          <p class="mt-2 text-xs text-gray-600 dark:text-gray-400">
+            Memuat data...
+          </p>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Print Styles -->
-<style>
-  @media print {
-    body * {
-      visibility: hidden;
-    }
-    .space-y-6,
-    .space-y-6 * {
-      visibility: visible;
-    }
-    .space-y-6 {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-    }
-    .no-print {
-      display: none !important;
-    }
-    button {
-      display: none !important;
-    }
-    .bg-white,
-    .bg-gray-50,
-    .bg-gray-800,
-    .bg-gray-700 {
-      background: white !important;
-      color: black !important;
-    }
-    .border-gray-300,
-    .border-gray-600,
-    .border-gray-700 {
-      border-color: #000 !important;
-    }
-    .text-gray-800,
-    .text-gray-700,
-    .text-gray-600,
-    .text-gray-400,
-    .text-gray-200,
-    .text-gray-300 {
-      color: black !important;
-    }
-    .text-white {
-      color: black !important;
-    }
-  }
-</style>
+<link rel="stylesheet" href="/css/print.css" media="print" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
   // Load data
-  const iuran = {{iuran}} || [];
   const anggota = {{anggota}} || {};
-  const organisasi = {{organisasi}} || {};
+  const iuran = {{iuran}} || [];
+  const tarif = {{tarif}} || [];
+  // organisasi sudah dideklarasikan di layout.html
+  const tahunSaatIni = parseInt("{{tahun}}") || new Date().getFullYear();
 
-  // Load organisasi data
-  if (organisasi.nama) {
-    document.getElementById("orgNama").textContent = organisasi.nama;
-    document.getElementById("orgAlamat").textContent = organisasi.alamat || "-";
-    document.getElementById("orgTelepon").textContent =
-      organisasi.telepon || "-";
-    document.getElementById("orgEmail").textContent = organisasi.email || "-";
-    if (organisasi.logo) {
-      document.getElementById("orgLogo").classList.remove("hidden");
-      document.getElementById("logoImg").src = organisasi.logo;
-    }
-  }
-
-  // Load anggota data
-  if (anggota.nama) {
-    document.getElementById("anggotaNama").textContent = anggota.nama;
-    document.getElementById("anggotaNIK").textContent = anggota.nik || "-";
-    document.getElementById("anggotaAlamat").textContent =
-      anggota.alamat || "-";
-    document.getElementById("anggotaTelepon").textContent =
-      anggota.telepon || "-";
-  }
-
-  function loadTagihan() {
-    const tbody = document.getElementById("tagihanTableBody");
+  // Nama bulan
     const bulanNames = [
       "",
       "Januari",
@@ -282,76 +319,325 @@
       "Desember",
     ];
 
-    let totalTagihan = 0;
-    let totalLunas = 0;
-    let totalBelumLunas = 0;
-
-    tbody.innerHTML = iuran
-      .map((item, index) => {
-        totalTagihan += parseInt(item.jumlah) || 0;
-        if (item.status === "lunas") {
-          totalLunas += parseInt(item.jumlah) || 0;
-        } else {
-          totalBelumLunas += parseInt(item.jumlah) || 0;
-        }
-
-        return `
-            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
-                  index + 1
-                }</td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
-                  bulanNames[item.bulan]
-                } ${item.tahun}</td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-semibold text-gray-800 dark:text-gray-200">Rp ${formatNumber(
-                  item.jumlah
-                )}</td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
-                  item.tanggal_bayar ? formatDate(item.tanggal_bayar) : "-"
-                }</td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                    <span class="px-2 py-1 text-xs rounded ${
-                      item.status === "lunas"
-                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                        : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-                    }">${item.status}</span>
-                </td>
-                <td class="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-gray-800 dark:text-gray-200">${
-                  item.keterangan || "-"
-                }</td>
-            </tr>
-        `;
-      })
-      .join("");
-
-    // Update summary
-    document.getElementById("totalTagihan").textContent =
-      formatRupiah(totalTagihan);
-    document.getElementById("totalLunas").textContent =
-      formatRupiah(totalLunas);
-    document.getElementById("totalBelumLunas").textContent =
-      formatRupiah(totalBelumLunas);
-  }
-
-  function formatNumber(num) {
-    return new Intl.NumberFormat("id-ID").format(num || 0);
-  }
-
+  // Format rupiah
   function formatRupiah(angka) {
-    return "Rp " + formatNumber(angka);
+    return "Rp " + new Intl.NumberFormat("id-ID").format(angka || 0);
   }
 
-  function formatDate(dateStr) {
-    if (!dateStr) return "-";
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("id-ID");
+  // Format tanggal (dd/mm/yy)
+  function formatTanggal(tanggal) {
+    if (!tanggal) return "-";
+    const date = new Date(tanggal);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}/${month}/${year}`;
   }
 
+  // Load informasi anggota
+  function loadAnggotaInfo() {
+    if (anggota && anggota.nama) {
+      document.getElementById("anggotaNama").textContent = anggota.nama || "-";
+      document.getElementById("anggotaNik").textContent = anggota.nik || "-";
+      document.getElementById("anggotaAlamat").textContent =
+        anggota.alamat || "-";
+      document.getElementById("anggotaTelepon").textContent =
+        anggota.telepon || "-";
+      document.getElementById("anggotaEmail").textContent =
+        anggota.email || "-";
+
+      const statusEl = document.getElementById("anggotaStatus");
+      if (anggota.status === "aktif") {
+        statusEl.className =
+          "inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+        statusEl.textContent = "Aktif";
+        } else {
+        statusEl.className =
+          "inline-block px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+        statusEl.textContent = "Tidak Aktif";
+      }
+    }
+  }
+
+  // Load tahun filter
+  function loadTahunFilter() {
+    const tahunSelect = document.getElementById("tahunFilter");
+    const tahunSekarang = new Date().getFullYear();
+
+    // Generate options untuk 5 tahun terakhir dan 2 tahun ke depan
+    for (let i = tahunSekarang + 2; i >= tahunSekarang - 5; i--) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i;
+      if (i === tahunSaatIni) {
+        option.selected = true;
+      }
+      tahunSelect.appendChild(option);
+    }
+
+    // Event listener untuk filter tahun
+    tahunSelect.addEventListener("change", function () {
+      const newTahun = this.value;
+      window.location.href = `/tagihan?tahun=${newTahun}`;
+    });
+  }
+
+  // Load daftar tarif - hanya yang aktif
+  function loadTarifList() {
+    const tarifList = document.getElementById("tarifList");
+    if (!tarifList || !tarif || tarif.length === 0) {
+      tarifList.innerHTML = '<p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 py-2">Tidak ada tarif aktif</p>';
+      return;
+    }
+
+    // Filter hanya tarif yang aktif
+    const tarifAktif = tarif.filter((item) => item.status === "aktif");
+
+    if (tarifAktif.length === 0) {
+      tarifList.innerHTML = '<p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 py-2">Tidak ada tarif aktif</p>';
+      return;
+    }
+
+    tarifList.innerHTML = tarifAktif
+      .map(
+        (item) => `
+          <div class="flex items-center justify-between p-1.5 md:p-2 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs md:text-sm font-medium text-gray-800 dark:text-white truncate">${
+                item.nama
+              }</p>
+              ${item.keterangan ? `<p class="text-xs text-gray-500 dark:text-gray-400 truncate">${item.keterangan}</p>` : ""}
+            </div>
+            <div class="text-right ml-2 flex-shrink-0">
+              <p class="text-xs md:text-sm font-semibold text-gray-800 dark:text-white">${formatRupiah(item.jumlah)}</p>
+            </div>
+          </div>
+        `
+      )
+      .join("");
+  }
+
+  // Load tabel pembayaran
+  function loadPembayaran() {
+    // Ambil semua tarif aktif
+    const tarifAktif = tarif.filter((t) => t.status === "aktif");
+
+    // Hitung total semua tarif aktif
+    const totalSemuaTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+
+    // Buat data untuk 12 bulan
+    const bulanData = [];
+    let totalPembayaran = 0;
+
+    for (let bulan = 1; bulan <= 12; bulan++) {
+      // Cari semua iuran untuk bulan ini (bisa lebih dari 1 pembayaran)
+      const semuaIuranBulan = iuran.filter(
+        (i) => i.bulan === bulan && i.tahun === tahunSaatIni
+      );
+
+      // Jumlah total yang sudah dibayar (jumlahkan semua pembayaran)
+      const jumlahBayar = semuaIuranBulan.reduce(
+        (sum, i) => sum + (parseInt(i.jumlah) || 0),
+        0
+      );
+
+      // Sisa tagihan (total tagihan - jumlah yang sudah dibayar)
+      const sisa = Math.max(0, totalSemuaTarif - jumlahBayar);
+
+      // Tentukan status berdasarkan sisa dan pembayaran
+      let status;
+      if (semuaIuranBulan.length === 0 || jumlahBayar === 0) {
+        status = "belum bayar";
+      } else if (sisa > 0) {
+        status = "belum lunas";
+      } else {
+        status = "lunas";
+      }
+
+      // Hitung total pembayaran hanya untuk yang sudah lunas
+      if (status === "lunas") {
+        totalPembayaran += jumlahBayar;
+      }
+
+      // Ambil tanggal bayar terakhir (pembayaran paling baru)
+      const iuranTerakhir = semuaIuranBulan.length > 0
+        ? semuaIuranBulan.sort((a, b) => {
+            const dateA = new Date(a.tanggal_bayar || a.created_at || 0);
+            const dateB = new Date(b.tanggal_bayar || b.created_at || 0);
+            return dateB - dateA;
+          })[0]
+        : null;
+
+      bulanData.push({
+        bulan: bulan,
+        namaBulan: bulanNames[bulan],
+        tarifAktif: tarifAktif,
+        totalTarif: totalSemuaTarif,
+        jumlahBayar: jumlahBayar,
+        sisa: sisa,
+        tanggalBayar: iuranTerakhir ? iuranTerakhir.tanggal_bayar : null,
+        status: status,
+        keterangan: iuranTerakhir ? iuranTerakhir.keterangan : null,
+        iuranId: iuranTerakhir ? iuranTerakhir.id : null,
+      });
+    }
+
+    // Hitung total untuk setiap kolom
+    const totalDaftarTarif = bulanData.reduce((sum, item) => sum + item.totalTarif, 0);
+    const totalBayar = bulanData.reduce((sum, item) => sum + item.jumlahBayar, 0);
+    const totalSisa = bulanData.reduce((sum, item) => sum + item.sisa, 0);
+
+    // Desktop table view
+    const tbody = document.getElementById("pembayaranTableBody");
+    if (tbody) {
+      tbody.innerHTML = bulanData
+      .map(
+        (item) => `
+          <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-medium">
+                <a
+                  href="javascript:void(0)"
+                  onclick="lihatDetailPembayaran(${item.bulan}, ${tahunSaatIni}, '${item.namaBulan}')"
+                  class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline font-semibold flex items-center gap-1"
+                  title="Lihat Detail Pembayaran"
+                >
+                  ${item.namaBulan}
+                  <i class="bx bx-info-circle text-sm"></i>
+                </a>
+              </td>
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold">
+                ${formatRupiah(item.totalTarif)}
+              </td>
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right">
+                ${formatRupiah(item.jumlahBayar)}
+              </td>
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right ${
+                item.sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
+              }">
+                ${formatRupiah(item.sisa)}
+              </td>
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap">
+                  <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${
+                    item.status === "lunas"
+                      ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200"
+                      : item.status === "belum bayar"
+                      ? "bg-gradient-to-r from-red-100 to-red-200 text-red-800 dark:from-red-900 dark:to-red-800 dark:text-red-200"
+                      : "bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 dark:from-yellow-900 dark:to-yellow-800 dark:text-yellow-200"
+                  }">${
+                    item.status === "lunas"
+                      ? "Lunas"
+                      : item.status === "belum bayar"
+                      ? "Belum Bayar"
+                      : "Belum Lunas"
+                  }</span>
+              </td>
+          </tr>
+      `
+      )
+      .join("");
+    }
+
+    // Footer dengan total
+    const tfoot = document.getElementById("pembayaranTableFooter");
+    if (tfoot) {
+      tfoot.innerHTML = `
+        <tr>
+          <td class="px-2 md:px-4 py-2 md:py-3 text-xs md:text-sm text-gray-800 dark:text-white font-bold">
+            TOTAL
+          </td>
+          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold">
+            ${formatRupiah(totalDaftarTarif)}
+          </td>
+          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold text-right">
+            ${formatRupiah(totalBayar)}
+          </td>
+          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm font-bold text-right ${
+            totalSisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
+          }">
+            ${formatRupiah(totalSisa)}
+          </td>
+        </tr>
+      `;
+    }
+
+    // Mobile card view
+    const cardBody = document.getElementById("pembayaranCardBody");
+    if (cardBody) {
+    cardBody.innerHTML = bulanData
+      .map(
+        (item) => `
+          <div class="p-2 md:p-3 hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150">
+            <div class="flex items-center justify-between mb-2">
+              <a
+                href="javascript:void(0)"
+                onclick="lihatDetailPembayaran(${item.bulan}, ${tahunSaatIni}, '${item.namaBulan}')"
+                class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline flex items-center gap-1"
+                title="Lihat Detail Pembayaran"
+              >
+                ${item.namaBulan}
+                <i class="bx bx-info-circle text-xs"></i>
+              </a>
+              <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${
+                item.status === "lunas"
+                  ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200"
+                  : item.status === "belum bayar"
+                  ? "bg-gradient-to-r from-red-100 to-red-200 text-red-800 dark:from-red-900 dark:to-red-800 dark:text-red-200"
+                  : "bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 dark:from-yellow-900 dark:to-yellow-800 dark:text-yellow-200"
+              }">${
+                item.status === "lunas"
+                  ? "Lunas"
+                  : item.status === "belum bayar"
+                  ? "Belum Bayar"
+                  : "Belum Lunas"
+              }</span>
+            </div>
+            <div class="space-y-1.5 text-xs">
+              <div class="flex justify-between">
+                <span class="text-gray-600 dark:text-gray-400">Tarif:</span>
+                <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(item.totalTarif)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600 dark:text-gray-400">Bayar:</span>
+                <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(item.jumlahBayar)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600 dark:text-gray-400">Sisa:</span>
+                <span class="font-semibold ${
+                  item.sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
+                }">${formatRupiah(item.sisa)}</span>
+              </div>
+            </div>
+          </div>
+      `
+      )
+      .join("") +
+      `
+      <div class="p-2 md:p-3 bg-gray-50 dark:bg-gray-700 font-bold border-t-2 border-gray-300 dark:border-gray-600">
+        <div class="space-y-1 text-xs">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-800 dark:text-white">Total Daftar Tarif:</span>
+            <span class="text-gray-800 dark:text-white font-bold">${formatRupiah(totalDaftarTarif)}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-800 dark:text-white">Total Bayar:</span>
+            <span class="text-gray-800 dark:text-white font-bold">${formatRupiah(totalBayar)}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-800 dark:text-white">Total Sisa:</span>
+            <span class="font-bold ${totalSisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}">${formatRupiah(totalSisa)}</span>
+          </div>
+        </div>
+      </div>
+      `;
+    }
+  }
+
+  // Fungsi untuk export ke PDF
   function exportToPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    // Header
+    // Header Organisasi
     doc.setFontSize(18);
     doc.text(organisasi.nama || "Organisasi", 14, 20);
     doc.setFontSize(10);
@@ -370,85 +656,76 @@
     doc.text(`NIK: ${anggota.nik || "-"}`, 14, 58);
     doc.text(`Alamat: ${anggota.alamat || "-"}`, 14, 64);
     doc.text(`Telepon: ${anggota.telepon || "-"}`, 14, 70);
+    doc.text(`Email: ${anggota.email || "-"}`, 14, 76);
 
     // Table Header
-    let y = 80;
+    let y = 85;
     doc.setFontSize(12);
-    doc.text("Tagihan Iuran", 14, y);
+    doc.text(`Tagihan Iuran Tahun ${tahunSaatIni}`, 14, y);
     y += 10;
 
     // Table
     doc.setFontSize(9);
-    const bulanNames = [
-      "",
-      "Januari",
-      "Februari",
-      "Maret",
-      "April",
-      "Mei",
-      "Juni",
-      "Juli",
-      "Agustus",
-      "September",
-      "Oktober",
-      "November",
-      "Desember",
-    ];
-
-    // Table headers
     doc.setFont(undefined, "bold");
-    doc.text("No", 14, y);
-    doc.text("Bulan/Tahun", 25, y);
-    doc.text("Jumlah", 70, y);
-    doc.text("Tanggal Bayar", 100, y);
+    doc.text("Bulan", 14, y);
+    doc.text("Tarif", 50, y);
+    doc.text("Bayar", 80, y);
+    doc.text("Sisa", 110, y);
     doc.text("Status", 140, y);
-    doc.text("Keterangan", 160, y);
     y += 5;
     doc.line(14, y, 200, y);
     y += 5;
 
     // Table rows
     doc.setFont(undefined, "normal");
-    iuran.forEach((item, index) => {
+    const tarifAktif = tarif.filter((t) => t.status === "aktif");
+    const totalSemuaTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+    let totalBayar = 0;
+    let totalSisa = 0;
+
+    for (let bulan = 1; bulan <= 12; bulan++) {
       if (y > 270) {
         doc.addPage();
         y = 20;
       }
-      doc.text((index + 1).toString(), 14, y);
-      doc.text(`${bulanNames[item.bulan]} ${item.tahun}`, 25, y);
-      doc.text(formatRupiah(item.jumlah), 70, y);
-      doc.text(
-        item.tanggal_bayar ? formatDate(item.tanggal_bayar) : "-",
-        100,
-        y
+
+      const semuaIuranBulan = iuran.filter(
+        (i) => i.bulan === bulan && i.tahun === tahunSaatIni
       );
-      doc.text(item.status || "-", 140, y);
-      doc.text(item.keterangan || "-", 160, y);
+      const jumlahBayar = semuaIuranBulan.reduce(
+        (sum, i) => sum + (parseInt(i.jumlah) || 0),
+        0
+      );
+      const sisa = Math.max(0, totalSemuaTarif - jumlahBayar);
+      let status;
+      if (semuaIuranBulan.length === 0 || jumlahBayar === 0) {
+        status = "Belum Bayar";
+      } else if (sisa > 0) {
+        status = "Belum Lunas";
+      } else {
+        status = "Lunas";
+      }
+
+      totalBayar += jumlahBayar;
+      totalSisa += sisa;
+
+      doc.text(bulanNames[bulan], 14, y);
+      doc.text(formatRupiah(totalSemuaTarif), 50, y);
+      doc.text(formatRupiah(jumlahBayar), 80, y);
+      doc.text(formatRupiah(sisa), 110, y);
+      doc.text(status, 140, y);
       y += 6;
-    });
+    }
 
     // Summary
     y += 5;
     doc.line(14, y, 200, y);
     y += 5;
     doc.setFont(undefined, "bold");
-    const totalTagihan = iuran.reduce(
-      (sum, item) => sum + (parseInt(item.jumlah) || 0),
-      0
-    );
-    const totalLunas = iuran
-      .filter((item) => item.status === "lunas")
-      .reduce((sum, item) => sum + (parseInt(item.jumlah) || 0), 0);
-    const totalBelumLunas = totalTagihan - totalLunas;
-
-    doc.text("Total Tagihan:", 100, y);
-    doc.text(formatRupiah(totalTagihan), 140, y);
-    y += 6;
-    doc.text("Sudah Lunas:", 100, y);
-    doc.text(formatRupiah(totalLunas), 140, y);
-    y += 6;
-    doc.text("Belum Lunas:", 100, y);
-    doc.text(formatRupiah(totalBelumLunas), 140, y);
+    doc.text("TOTAL", 14, y);
+    doc.text(formatRupiah(totalSemuaTarif * 12), 50, y);
+    doc.text(formatRupiah(totalBayar), 80, y);
+    doc.text(formatRupiah(totalSisa), 110, y);
 
     // Footer
     const pageCount = doc.internal.getNumberOfPages();
@@ -467,8 +744,155 @@
       );
     }
 
-    doc.save(`Tagihan_Iuran_${anggota.nama}_${new Date().getTime()}.pdf`);
+    doc.save(`Tagihan_Iuran_${anggota.nama}_${tahunSaatIni}_${new Date().getTime()}.pdf`);
   }
 
-  loadTagihan();
+  // Fungsi untuk lihat detail pembayaran
+  async function lihatDetailPembayaran(bulan, tahun, namaBulan) {
+    const modal = document.getElementById("modalDetailPembayaran");
+    const modalTitle = document.getElementById("modalDetailTitle");
+    const modalContent = document.getElementById("modalDetailContent");
+
+    // Set title
+    modalTitle.textContent = `Detail Pembayaran - ${namaBulan} ${tahun}`;
+
+    // Show modal
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+
+    // Show loading
+    modalContent.innerHTML = `
+      <div class="text-center py-8">
+        <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+        <p class="mt-2 text-xs text-gray-600 dark:text-gray-400">Memuat data...</p>
+      </div>
+    `;
+
+    try {
+      // Fetch detail pembayaran
+      const response = await API.get(`/tagihan/pembayaran?bulan=${bulan}&tahun=${tahun}`);
+
+      if (response.success && response.data) {
+        const pembayaranList = response.data;
+
+        if (pembayaranList.length === 0) {
+          modalContent.innerHTML = `
+            <div class="text-center py-8">
+              <i class="bx bx-info-circle text-3xl text-gray-400 dark:text-gray-500 mb-2"></i>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Belum ada pembayaran untuk bulan ini</p>
+            </div>
+          `;
+        } else {
+          // Hitung total
+          const totalBayar = pembayaranList.reduce((sum, p) => sum + (parseInt(p.jumlah) || 0), 0);
+
+          // Get tarif aktif untuk bulan ini
+          const tarifAktif = tarif.filter((t) => t.status === "aktif");
+          const totalTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+          const sisa = Math.max(0, totalTarif - totalBayar);
+
+          modalContent.innerHTML = `
+            <!-- Tabel Pembayaran -->
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">No</th>
+                    <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Jumlah Pembayaran</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Tanggal Pembayaran</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  ${pembayaranList.map((p, index) => {
+                    const tanggal = p.tanggal_bayar ? formatTanggal(p.tanggal_bayar) : "-";
+                    return `
+                      <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">${index + 1}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-gray-800 dark:text-gray-200 text-right">${formatRupiah(p.jumlah)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">${tanggal}</td>
+                      </tr>
+                    `;
+                  }).join("")}
+                </tbody>
+                <tfoot class="bg-gray-50 dark:bg-gray-700 border-t-2 border-gray-300 dark:border-gray-600">
+                  <tr>
+                    <td colspan="3" class="px-3 py-3 space-y-1">
+                      <div class="flex justify-between items-center text-sm">
+                        <span class="font-semibold text-gray-700 dark:text-gray-300">Total Sudah Dibayar:</span>
+                        <span class="font-bold text-green-600 dark:text-green-400">${formatRupiah(totalBayar)}</span>
+                      </div>
+                      <div class="flex justify-between items-center text-sm">
+                        <span class="font-semibold text-gray-700 dark:text-gray-300">Sisa yang Harus Dibayar:</span>
+                        <span class="font-bold ${sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}">${formatRupiah(sisa)}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          `;
+        }
+      } else {
+        modalContent.innerHTML = `
+          <div class="text-center py-8">
+            <i class="bx bx-error-circle text-4xl text-red-400 mb-2"></i>
+            <p class="text-red-600 dark:text-red-400">Gagal memuat data pembayaran</p>
+          </div>
+        `;
+      }
+    } catch (error) {
+      console.error("Error fetching detail pembayaran:", error);
+      modalContent.innerHTML = `
+        <div class="text-center py-8">
+          <i class="bx bx-error-circle text-4xl text-red-400 mb-2"></i>
+          <p class="text-red-600 dark:text-red-400">Terjadi kesalahan saat memuat data</p>
+        </div>
+      `;
+    }
+  }
+
+
+  // Fungsi untuk close modal
+  function closeModalDetailPembayaran(event) {
+    if (event && event.target !== event.currentTarget) {
+      return;
+    }
+    const modal = document.getElementById("modalDetailPembayaran");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+
+  // Load kop surat untuk print
+  function loadPrintHeader() {
+    // organisasi sudah tersedia dari layout.html (scope global)
+    const orgData = typeof organisasi !== 'undefined' ? organisasi : (window.organisasi || {});
+
+    if (orgData && orgData.nama) {
+      const orgNamaEl = document.getElementById("printOrgNama");
+      const orgAlamatEl = document.getElementById("printOrgAlamat");
+      const orgTeleponEl = document.getElementById("printOrgTelepon");
+      const orgEmailEl = document.getElementById("printOrgEmail");
+      const logoImg = document.getElementById("printLogo");
+
+      if (orgNamaEl) orgNamaEl.textContent = orgData.nama || "-";
+      if (orgAlamatEl) orgAlamatEl.textContent = orgData.alamat || "-";
+      if (orgTeleponEl) orgTeleponEl.textContent = orgData.telepon || "-";
+      if (orgEmailEl) orgEmailEl.textContent = orgData.email || "-";
+
+      if (orgData.logo && logoImg) {
+        logoImg.src = orgData.logo;
+        logoImg.style.display = "block";
+        logoImg.onerror = function() {
+          this.style.display = "none";
+        };
+      }
+    }
+  }
+
+  // Load semua data
+  loadAnggotaInfo();
+  loadTahunFilter();
+  loadTarifList();
+  loadPembayaran();
+  loadPrintHeader();
 </script>

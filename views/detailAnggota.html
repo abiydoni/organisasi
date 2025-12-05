@@ -1,6 +1,37 @@
+<!-- Kop Surat untuk Print -->
+<div id="printHeader" class="print-only print-header">
+  <table
+    style="width: 100%; border-bottom: 2px solid #000; margin-bottom: 15px"
+  >
+    <tr>
+      <td style="width: 20%; vertical-align: top; padding-right: 15px">
+        <img
+          id="printLogo"
+          src=""
+          alt="Logo"
+          style="max-width: 80px; max-height: 80px; display: none"
+        />
+      </td>
+      <td style="vertical-align: top">
+        <h1
+          id="printOrgNama"
+          style="margin: 0; font-size: 18pt; font-weight: bold"
+        >
+          -
+        </h1>
+        <p id="printOrgAlamat" style="margin: 5px 0; font-size: 10pt">-</p>
+        <p style="margin: 5px 0; font-size: 10pt">
+          Telp: <span id="printOrgTelepon">-</span> | Email:
+          <span id="printOrgEmail">-</span>
+        </p>
+      </td>
+    </tr>
+  </table>
+</div>
+
 <div class="space-y-3 md:space-y-4">
   <!-- Header dengan tombol kembali -->
-  <div class="flex items-center justify-between">
+  <div class="flex items-center justify-between no-print">
     <div class="flex items-center gap-2 md:gap-3">
       <a
         href="/anggota"
@@ -23,7 +54,7 @@
 
   <!-- Informasi Anggota -->
   <div
-    class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4"
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4 print-info-anggota"
   >
     <h3
       class="text-lg md:text-xl font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2"
@@ -31,7 +62,9 @@
       <i class="bx bx-info-circle text-blue-600 dark:text-blue-400"></i>
       Informasi Anggota
     </h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 print-grid-info"
+    >
       <div>
         <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Nama</p>
         <p
@@ -90,7 +123,7 @@
   </div>
 
   <!-- Filter Tahun dan Daftar Tarif -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 print-grid-tarif">
     <!-- Filter Tahun -->
     <div
       class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4"
@@ -1151,9 +1184,40 @@
     modal.classList.remove("flex");
   }
 
+  // Load kop surat untuk print
+  function loadPrintHeader() {
+    // organisasi sudah tersedia dari layout.html (scope global)
+    const orgData = typeof organisasi !== 'undefined' ? organisasi : (window.organisasi || {});
+
+    if (orgData && orgData.nama) {
+      const orgNamaEl = document.getElementById("printOrgNama");
+      const orgAlamatEl = document.getElementById("printOrgAlamat");
+      const orgTeleponEl = document.getElementById("printOrgTelepon");
+      const orgEmailEl = document.getElementById("printOrgEmail");
+      const logoImg = document.getElementById("printLogo");
+
+      if (orgNamaEl) orgNamaEl.textContent = orgData.nama || "-";
+      if (orgAlamatEl) orgAlamatEl.textContent = orgData.alamat || "-";
+      if (orgTeleponEl) orgTeleponEl.textContent = orgData.telepon || "-";
+      if (orgEmailEl) orgEmailEl.textContent = orgData.email || "-";
+
+      if (orgData.logo && logoImg) {
+        logoImg.src = orgData.logo;
+        logoImg.style.display = "block";
+        logoImg.onerror = function() {
+          this.style.display = "none";
+        };
+      }
+    }
+  }
+
   // Load semua data
   loadAnggotaInfo();
   loadTahunFilter();
   loadTarifList();
   loadPembayaran();
+  loadPrintHeader();
 </script>
+
+<!-- Print Styles -->
+<link rel="stylesheet" href="/css/print.css" media="print" />
