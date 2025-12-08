@@ -1,6 +1,49 @@
 const fs = require("fs");
 const path = require("path");
 
+// Helper function to find matching {{/if}} for a {{#if}} using stack-based approach
+// startIndex should be the position after the opening {{#if ...}}
+function findConditionBlock(text, startIndex) {
+  let depth = 1; // Start at 1 because we're already inside the opening {{#if}}
+  let i = startIndex;
+
+  while (i < text.length - 6) {
+    // Need at least 7 chars for {{/if}}
+    // Check for {{#if (nested condition) - must be at current position
+    if (i + 5 <= text.length && text.substring(i, i + 5) === "{{#if") {
+      // Find the closing }} of this {{#if ...}}
+      let j = i + 5;
+      // Skip to the closing }}
+      while (j < text.length - 1) {
+        if (text[j] === "}" && text[j + 1] === "}") {
+          depth++;
+          i = j + 2; // Skip past the closing }}
+          break;
+        }
+        j++;
+      }
+      if (j >= text.length - 1) {
+        // Didn't find closing }}, skip this character
+        i++;
+      }
+      continue;
+    }
+
+    // Check for {{/if}}
+    if (i + 7 <= text.length && text.substring(i, i + 7) === "{{/if}}") {
+      depth--;
+      if (depth === 0) {
+        return i + 7; // Return position after {{/if}}
+      }
+      i += 7;
+      continue;
+    }
+
+    i++;
+  }
+  return -1; // Not found
+}
+
 function renderHTML(filePath, options = {}) {
   // Always use layout.html as wrapper if filePath is provided (unless useLayout is explicitly false)
   // If content is provided as string, use it; otherwise read from filePath
@@ -73,43 +116,84 @@ function renderHTML(filePath, options = {}) {
       }
 
       // Process all conditions - iterate multiple times to handle nested/adjacent conditions
+      // Process isAdmin, isUser, and isAdminOrPengurus first (most specific)
       let maxIterations = 10;
       let iteration = 0;
       let previousLayout = "";
 
+      // Priority order: process role-based conditions first
+      const priorityKeys = ["isAdmin", "isUser", "isAdminOrPengurus"];
+      const otherKeys = Object.keys(options.active).filter(
+        (key) => !priorityKeys.includes(key)
+      );
+      const orderedKeys = [...priorityKeys, ...otherKeys];
+
       while (iteration < maxIterations && layout !== previousLayout) {
         previousLayout = layout;
 
-        Object.keys(options.active).forEach((key) => {
+        orderedKeys.forEach((key) => {
+          if (!options.active.hasOwnProperty(key)) return;
+
           const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          // Match with flexible whitespace - handle all variations
-          // Pattern: {{#if active.xxx}}...{{/if}} or {{#if active.xxx }}...{{/if}}
-          // Use a more flexible pattern that matches the exact format in layout.html
-          // Format: {{#if active.xxx}}...{{/if}}
-          const regex = new RegExp(
-            `\\{\\{#if\\s+active\\.${escapedKey}\\}\\}([\\s\\S]*?)\\{\\{/if\\}\\}`,
+          const replacements = [];
+
+          // Use regex to find all {{#if active.key}} patterns
+          const ifPattern = new RegExp(
+            `\\{\\{#if\\s+active\\.${escapedKey}\\}\\}`,
             "g"
           );
 
-          if (options.active[key]) {
-            layout = layout.replace(regex, "$1");
-          } else {
-            layout = layout.replace(regex, "");
+          // Collect all matches first
+          const matches = [];
+          let match;
+          ifPattern.lastIndex = 0;
+          while ((match = ifPattern.exec(layout)) !== null) {
+            matches.push({
+              index: match.index,
+              length: match[0].length,
+            });
+          }
+
+          // Process each match from end to start (to maintain positions)
+          for (let i = matches.length - 1; i >= 0; i--) {
+            const matchInfo = matches[i];
+            const startPos = matchInfo.index;
+            const endPos = findConditionBlock(
+              layout,
+              startPos + matchInfo.length
+            );
+
+            if (endPos !== -1) {
+              const contentStart = startPos + matchInfo.length;
+              const contentEnd = endPos - 7; // Subtract {{/if}} length (7 characters)
+              const content = layout.substring(contentStart, contentEnd);
+
+              // Apply replacement immediately (from end to start)
+              if (options.active[key]) {
+                // Keep the content (condition is true) - remove only the {{#if}} and {{/if}} tags
+                layout =
+                  layout.substring(0, startPos) +
+                  content +
+                  layout.substring(endPos);
+              } else {
+                // Remove the entire block including {{#if}} and {{/if}} tags (condition is false)
+                layout =
+                  layout.substring(0, startPos) + "" + layout.substring(endPos);
+              }
+            }
           }
         });
 
         iteration++;
       }
 
-      // Aggressive cleanup: remove any remaining template tags
-      // Try multiple patterns to catch all variations
+      // Aggressive cleanup: remove any remaining template tags that weren't processed
+      // Only remove standalone template tags, not content
       const cleanupPatterns = [
         /\{\{#if\s+active\.[^}]+\}\}/g,
         /\{\{#if\s*active\.[^}]+\s*\}\}/g,
-        /\{\{#if\s*active\.[^}]*\}\}/g,
         /\{\{\s*\/if\s*\}\}/g,
         /\{\{\/if\}\}/g,
-        /\{\{#if[^}]*\}\}/g,
         /\{\{else\}\}/g,
         /\{\{\s*else\s*\}\}/g,
       ];

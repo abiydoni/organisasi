@@ -43,7 +43,7 @@ router.post("/login", (req, res) => {
         role: user.role,
       };
 
-      res.json({ success: true, message: "Login berhasil" });
+      res.json({ success: true, message: "Login berhasil", role: user.role });
     });
   });
 });

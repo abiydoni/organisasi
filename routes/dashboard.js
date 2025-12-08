@@ -38,10 +38,20 @@ router.get("/", (req, res) => {
                         totalKeluar: kreditResult?.total || 0,
                       };
 
+                      // Set active flags based on user role
+                      const userRole = req.session.user.role;
+                      const active = {
+                        dashboard: true,
+                        isAdmin: userRole === "admin",
+                        isAdminOrPengurus:
+                          userRole === "admin" || userRole === "pengurus",
+                        isUser: userRole === "user",
+                      };
+
                       const layout = renderHTML("dashboard.html", {
                         title: "Dashboard",
                         user: req.session.user,
-                        active: { dashboard: true, isAdminOrPengurus: true },
+                        active: active,
                         content: "",
                         organisasi: organisasi || {},
                       });

@@ -30,10 +30,20 @@ router.get("/", (req, res) => {
             "SELECT id, nama FROM anggota ORDER BY nama",
             [],
             (err, anggota) => {
+              // Set active flags based on user role
+              const userRole = req.session.user.role;
+              const active = {
+                user: true,
+                isAdmin: userRole === "admin",
+                isAdminOrPengurus:
+                  userRole === "admin" || userRole === "pengurus",
+                isUser: userRole === "user",
+              };
+
               const layout = renderHTML("user.html", {
                 title: "Data User",
                 user: req.session.user,
-                active: { user: true, isAdminOrPengurus: true },
+                active: active,
                 content: "",
                 organisasi: organisasi || {},
               });

@@ -2,18 +2,19 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const fs = require("fs");
-const { requireAuth } = require("../middleware/auth");
+const { requireUser } = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
 
-router.use(requireAuth);
+router.use(requireUser);
 
 router.get("/", (req, res) => {
   const tahun = req.query.tahun || new Date().getFullYear();
 
   // Get anggota data based on user
+  // Try to find by nama (case-insensitive) first, then by email if available
   db.get(
-    "SELECT * FROM anggota WHERE nama = ? LIMIT 1",
+    "SELECT * FROM anggota WHERE LOWER(TRIM(nama)) = LOWER(TRIM(?)) LIMIT 1",
     [req.session.user.nama],
     (err, anggota) => {
       if (err) {
@@ -21,9 +22,26 @@ router.get("/", (req, res) => {
         return res.status(500).send("Error database: " + err.message);
       }
 
+      // If not found by nama, try to find by email (if user has email in session or can be matched)
       if (!anggota) {
+        // Try alternative: check if there's a way to match via other fields
+        // For now, we'll show a more helpful error message
+        console.warn(
+          `Anggota not found for user: ${req.session.user.nama}. User ID: ${req.session.user.id}`
+        );
         return res.send(
-          "<h1>Anggota tidak ditemukan. Silakan hubungi administrator.</h1>"
+          `<div style="padding: 20px; text-align: center;">
+            <h1 style="color: #dc2626; margin-bottom: 10px;">Anggota Tidak Ditemukan</h1>
+            <p style="color: #6b7280; margin-bottom: 20px;">
+              Data anggota dengan nama "<strong>${req.session.user.nama}</strong>" tidak ditemukan dalam sistem.
+            </p>
+            <p style="color: #6b7280;">
+              Silakan hubungi administrator untuk menghubungkan akun Anda dengan data anggota.
+            </p>
+            <a href="/auth/logout" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #dc2626; color: white; text-decoration: none; border-radius: 5px;">
+              Logout
+            </a>
+          </div>`
         );
       }
 
@@ -55,10 +73,20 @@ router.get("/", (req, res) => {
                 }
 
                 try {
+                  // Set active flags based on user role
+                  const userRole = req.session.user.role;
+                  const active = {
+                    tagihan: true,
+                    isAdmin: userRole === "admin",
+                    isAdminOrPengurus:
+                      userRole === "admin" || userRole === "pengurus",
+                    isUser: userRole === "user",
+                  };
+
                   const layout = renderHTML("tagihan.html", {
                     title: "Tagihan Iuran Saya",
                     user: req.session.user,
-                    active: { tagihan: true, isUser: true },
+                    active: active,
                     content: "",
                     organisasi: organisasi || {},
                   });
@@ -77,6 +105,51 @@ router.get("/", (req, res) => {
                     /\{\{user\.nama\}\}/g,
                     req.session.user.nama || ""
                   );
+
+                  // Replace organisasi template variables directly from database
+                  if (organisasi) {
+                    html = html.replace(
+                      /\{\{organisasi\.nama\}\}/g,
+                      organisasi.nama || ""
+                    );
+                    html = html.replace(
+                      /\{\{organisasi\.alamat\}\}/g,
+                      organisasi.alamat || ""
+                    );
+                    html = html.replace(
+                      /\{\{organisasi\.telepon\}\}/g,
+                      organisasi.telepon || ""
+                    );
+                    html = html.replace(
+                      /\{\{organisasi\.email\}\}/g,
+                      organisasi.email || ""
+                    );
+                    // Handle logo path - ensure it's a valid URL
+                    const logoPath = organisasi.logo
+                      ? organisasi.logo.startsWith("http")
+                        ? organisasi.logo
+                        : organisasi.logo
+                      : "";
+                    html = html.replace(/\{\{organisasi\.logo\}\}/g, logoPath);
+                    // Replace display style for logo
+                    const logoDisplay = organisasi.logo ? "block" : "none";
+                    html = html.replace(
+                      /\{\{organisasi\.logo\}.*display:\s*\{\{organisasi\.logo\}\}/g,
+                      `display: ${logoDisplay}`
+                    );
+                  } else {
+                    // If no organisasi data, replace with empty strings
+                    html = html.replace(/\{\{organisasi\.nama\}\}/g, "");
+                    html = html.replace(/\{\{organisasi\.alamat\}\}/g, "");
+                    html = html.replace(/\{\{organisasi\.telepon\}\}/g, "");
+                    html = html.replace(/\{\{organisasi\.email\}\}/g, "");
+                    html = html.replace(/\{\{organisasi\.logo\}\}/g, "");
+                    html = html.replace(
+                      /display:\s*\{\{organisasi\.logo\}\}/g,
+                      "display: none"
+                    );
+                  }
+
                   res.send(html);
                 } catch (renderError) {
                   console.error("Error rendering HTML:", renderError);
@@ -98,8 +171,9 @@ router.get("/pembayaran", (req, res) => {
   const { bulan, tahun } = req.query;
 
   // Get anggota data based on user
+  // Try to find by nama (case-insensitive)
   db.get(
-    "SELECT * FROM anggota WHERE nama = ? LIMIT 1",
+    "SELECT * FROM anggota WHERE LOWER(TRIM(nama)) = LOWER(TRIM(?)) LIMIT 1",
     [req.session.user.nama],
     (err, anggota) => {
       if (err) {
@@ -134,12 +208,10 @@ router.get("/pembayaran", (req, res) => {
         (err, iuran) => {
           if (err) {
             console.error("Error fetching iuran detail:", err);
-            return res
-              .status(500)
-              .json({
-                success: false,
-                message: "Error database: " + err.message,
-              });
+            return res.status(500).json({
+              success: false,
+              message: "Error database: " + err.message,
+            });
           }
 
           res.json({ success: true, data: iuran || [] });

@@ -22,10 +22,19 @@ router.get("/", (req, res) => {
           return res.status(500).send("Database error");
         }
 
+        // Set active flags based on user role
+        const userRole = req.session.user.role;
+        const active = {
+          anggota: true,
+          isAdmin: userRole === "admin",
+          isAdminOrPengurus: userRole === "admin" || userRole === "pengurus",
+          isUser: userRole === "user",
+        };
+
         const layout = renderHTML("anggota.html", {
           title: "Data Anggota",
           user: req.session.user,
-          active: { anggota: true, isAdminOrPengurus: true },
+          active: active,
           content: "",
           organisasi: organisasi || {},
         });
@@ -140,10 +149,20 @@ router.get("/detail/:id", (req, res) => {
               }
 
               try {
+                // Set active flags based on user role
+                const userRole = req.session.user.role;
+                const active = {
+                  anggota: true,
+                  isAdmin: userRole === "admin",
+                  isAdminOrPengurus:
+                    userRole === "admin" || userRole === "pengurus",
+                  isUser: userRole === "user",
+                };
+
                 const layout = renderHTML("detailAnggota.html", {
                   title: `Detail Anggota - ${anggota.nama}`,
                   user: req.session.user,
-                  active: { anggota: true, isAdminOrPengurus: true },
+                  active: active,
                   content: "",
                   organisasi: organisasi || {},
                 });

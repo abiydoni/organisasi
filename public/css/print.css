@@ -1,17 +1,20 @@
-/* Sembunyikan kop surat di layar normal */
-.print-header,
-.print-only {
-  display: none !important;
+/* Sembunyikan elemen print di layar normal */
+@media screen {
+  .print-only,
+  .print-header,
+  #printHeader {
+    display: none !important;
+  }
 }
 
-/* Print Styles untuk Report - Format Sederhana dan Rapi - SAMA PERSIS DENGAN TAGIHAN */
+/* Print Styles untuk Tagihan - Desain Padat dan Menarik */
 @media print {
   @page {
-    margin: 1.5cm;
+    margin: 1cm;
     size: A4;
   }
 
-  /* Reset semua styling untuk print */
+  /* Reset styling */
   * {
     box-shadow: none !important;
     text-shadow: none !important;
@@ -20,10 +23,23 @@
   body {
     background: white !important;
     color: black !important;
-    font-size: 11pt !important;
+    font-size: 9pt !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* Sembunyikan elemen yang tidak perlu - SEMUA TOMBOL */
+  /* PRIORITAS TERTINGGI: Tampilkan kop surat di awal - sebelum rule lain */
+  #printHeader,
+  div#printHeader,
+  .print-header,
+  .print-only {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Sembunyikan elemen yang tidak perlu - TAPI JANGAN SEMBUNYIKAN KOP SURAT */
   .no-print,
   button,
   select,
@@ -31,271 +47,393 @@
   header,
   footer,
   aside,
-  .md\:hidden,
-  div[id*="pembayaranCardBody"],
-  #pembayaranCardBody,
   #modalDetailPembayaran,
   .modal,
-  a[href] {
-    display: none !important;
-  }
-
-  /* Sembunyikan icon tapi biarkan link dengan teks */
   i,
   .bx {
     display: none !important;
     visibility: hidden !important;
     width: 0 !important;
     height: 0 !important;
-  }
-
-  /* Tampilkan kop surat - PASTIKAN MUNCUL DI ATAS SEGALANYA - OVERRIDE SEMUA */
-  .print-header,
-  .print-only,
-  #printHeader,
-  div#printHeader,
-  div[id="printHeader"],
-  body > div:first-child[id="printHeader"],
-  html body div#printHeader,
-  html > body > div:first-child {
-    display: block !important;
-    visibility: visible !important;
-    position: relative !important;
-    opacity: 1 !important;
-    margin-bottom: 20px !important;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 10px !important;
-    page-break-after: avoid !important;
-    height: auto !important;
-    min-height: auto !important;
-    max-height: none !important;
-    width: 100% !important;
-    border-bottom: 2px solid #000 !important;
-  }
-
-  /* Kop Surat - Format Rapi - OVERRIDE INLINE STYLE */
-  #printHeader {
-    display: block !important;
-  }
-
-  #printHeader table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    border: none !important;
     margin: 0 !important;
-    display: table !important;
+    padding: 0 !important;
   }
 
-  #printHeader tr {
-    display: table-row !important;
-  }
-
-  #printHeader td {
-    padding: 5px 10px !important;
-    vertical-align: top !important;
-    border: none !important;
-    display: table-cell !important;
-    width: auto !important;
-  }
-
-  /* OVERRIDE INLINE STYLE untuk logo */
-  #printHeader img,
-  #printHeader img[style*="display: none"],
-  #printHeader img[style*="display:none"] {
-    max-width: 80px !important;
-    max-height: 80px !important;
-    object-fit: contain !important;
+  /* PASTIKAN KOP SURAT TIDAK TERMASUK DALAM ELEMEN YANG DISEMBUNYIKAN */
+  .no-print#printHeader,
+  .no-print.print-header,
+  .no-print.print-only {
     display: block !important;
     visibility: visible !important;
-    opacity: 1 !important;
   }
 
-  #printHeader h1 {
-    margin: 0 0 5px 0 !important;
-    font-size: 18pt !important;
-    font-weight: bold !important;
-    line-height: 1.2 !important;
-    color: black !important;
-  }
-
-  #printHeader p {
-    margin: 3px 0 !important;
-    font-size: 10pt !important;
-    line-height: 1.4 !important;
-    color: black !important;
-  }
-
-  #printHeader span {
-    color: black !important;
-  }
-
-  /* Tampilkan desktop table, sembunyikan mobile */
-  .hidden.md\:block {
-    display: block !important;
-  }
-
-  /* Sembunyikan header dengan tombol kembali */
-  .space-y-3 > div:first-child,
-  .space-y-4 > div:first-child {
+  /* Sembunyikan select dan label di filter tahun, tapi tampilkan grid */
+  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"] select,
+  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"] label {
     display: none !important;
   }
 
-  /* Judul Halaman - Sederhana */
-  h2 {
-    font-size: 14pt !important;
-    font-weight: bold !important;
-    margin: 15px 0 10px 0 !important;
-    page-break-after: avoid !important;
-    color: black !important;
-  }
-
-  h3 {
-    font-size: 12pt !important;
-    font-weight: bold !important;
-    margin: 10px 0 5px 0 !important;
-    page-break-after: avoid !important;
-    color: black !important;
-  }
-
-  /* Informasi Anggota - Format Sederhana Satu Baris Inline - SAMA DENGAN TAGIHAN */
-  /* Tagihan.html tidak pakai print-grid-info, jadi kita override grid biasa */
-  .print-grid-info,
-  .print-info-anggota .print-grid-info,
-  div.print-grid-info,
-  div[class*="print-grid-info"],
-  .grid.print-grid-info,
-  /* Override untuk grid biasa juga */
-  div[class*="grid"][class*="grid-cols"] {
+  /* Tampilkan tabel desktop di print */
+  .hidden.md\:block,
+  div.hidden.md\:block {
     display: block !important;
-    margin: 10px 0 15px 0 !important;
-    padding: 8px !important;
-    border: 1px solid #000 !important;
-    page-break-inside: avoid !important;
-    font-size: 10pt !important;
-    line-height: 1.8 !important;
-    grid-template-columns: none !important;
-    grid-template-rows: none !important;
-    grid: none !important;
+    visibility: visible !important;
   }
 
-  /* Ubah grid menjadi inline-block sederhana - OVERRIDE GRID CLASS */
-  .print-grid-info > div,
-  div.print-grid-info > div,
-  .grid.print-grid-info > div,
-  /* Override untuk grid biasa juga */
-  div[class*="grid"][class*="grid-cols"] > div {
-    display: inline-block !important;
-    width: auto !important;
-    margin-right: 15px !important;
-    margin-bottom: 0 !important;
-    margin-top: 0 !important;
-    vertical-align: baseline !important;
+  /* Sembunyikan mobile view */
+  .md\:hidden,
+  div.md\:hidden {
+    display: none !important;
+  }
+
+  /* ============================================
+     KOP SURAT - PASTIKAN MUNCUL DENGAN SANGAT AGRESIF
+     ============================================ */
+  /* Override SEMUA kemungkinan selector - sangat agresif dan prioritas tertinggi */
+  html body #printHeader,
+  html body div#printHeader,
+  html body div[id="printHeader"],
+  html body > div#printHeader,
+  html body > div.print-header,
+  html body > div.print-only,
+  html body main > div#printHeader,
+  html body main > div.print-header,
+  html body main > div.print-only,
+  html body .space-y-3 > div#printHeader,
+  html body .space-y-4 > div#printHeader,
+  html body #printHeader,
+  html body .print-header,
+  html body .print-only,
+  html body div.print-header,
+  html body div.print-only,
+  html body [id="printHeader"],
+  html body [class*="print-header"],
+  html body [class*="print-only"],
+  * #printHeader,
+  * div#printHeader,
+  * div[id="printHeader"],
+  body > div#printHeader,
+  body > div.print-header,
+  body > div.print-only,
+  main > div#printHeader,
+  main > div.print-header,
+  main > div.print-only,
+  .space-y-3 > div#printHeader,
+  .space-y-4 > div#printHeader,
+  #printHeader,
+  .print-header,
+  .print-only,
+  div.print-header,
+  div.print-only,
+  [id="printHeader"],
+  [class*="print-header"],
+  [class*="print-only"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin: 0 0 10px 0 !important;
     padding: 0 !important;
-    border: none !important;
-    grid-column: auto !important;
-    grid-row: auto !important;
-    grid-area: auto !important;
+    width: 100% !important;
+    page-break-after: avoid !important;
+    position: relative !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    clear: both !important;
   }
 
-  /* Label kecil di atas menjadi inline dengan nilai */
-  .print-grid-info > div > p.text-xs,
-  .print-grid-info > div > p[class*="text-xs"],
-  div[class*="grid"] > div > p.text-xs,
-  div[class*="grid"] > div > p[class*="text-xs"] {
-    display: inline !important;
-    margin-right: 5px !important;
-    margin-bottom: 0 !important;
-    margin-top: 0 !important;
-    font-weight: bold !important;
-    font-size: 10pt !important;
-    color: black !important;
-    vertical-align: baseline !important;
-    line-height: inherit !important;
-  }
-
-  /* Nilai menjadi inline setelah label */
-  .print-grid-info > div > p:not(.text-xs),
-  .print-grid-info > div > p[class*="text-sm"],
-  .print-grid-info > div > p[class*="text-base"],
-  div[class*="grid"] > div > p:not(.text-xs),
-  div[class*="grid"] > div > p[class*="text-sm"],
-  div[class*="grid"] > div > p[class*="text-base"] {
-    display: inline !important;
-    font-size: 10pt !important;
-    font-weight: normal !important;
-    color: black !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    margin-bottom: 0 !important;
-    margin-top: 0 !important;
-    vertical-align: baseline !important;
-    line-height: inherit !important;
-  }
-
-  .print-grid-info > div > span,
-  div[class*="grid"] > div > span {
-    display: inline !important;
-    font-size: 10pt !important;
-    font-weight: normal !important;
-    color: black !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    margin-bottom: 0 !important;
-    margin-top: 0 !important;
-    vertical-align: baseline !important;
-    line-height: inherit !important;
-    padding: 0 !important;
-    border: none !important;
-  }
-
-  /* Tambahkan separator setelah setiap item kecuali yang terakhir */
-  .print-grid-info > div:not(:last-child)::after,
-  div[class*="grid"][class*="grid-cols"] > div:not(:last-child)::after {
-    content: " | " !important;
-    margin-left: 5px !important;
-    color: black !important;
-  }
-
-  /* Grid untuk Riwayat Pembayaran dan Daftar Tarif bersebelahan - SAMA DENGAN TAGIHAN */
-  .print-grid-tarif,
-  div.print-grid-tarif,
-  .grid.print-grid-tarif,
-  /* Override untuk grid biasa juga */
-  div[class*="grid"][class*="grid-cols-2"],
-  div[class*="grid"][class*="lg:grid-cols-2"] {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 15px !important;
-    margin: 10px 0 15px 0 !important;
-    page-break-inside: avoid !important;
+  /* Pastikan semua child element terlihat - sangat agresif */
+  #printHeader > *,
+  #printHeader > div,
+  div#printHeader > *,
+  div#printHeader > div,
+  * #printHeader > *,
+  * #printHeader > div {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     width: 100% !important;
   }
 
-  .print-grid-tarif > div,
-  div[class*="grid"][class*="grid-cols-2"] > div,
-  div[class*="grid"][class*="lg:grid-cols-2"] > div {
+  #printHeader > div:first-child,
+  div#printHeader > div:first-child {
     display: block !important;
-    padding: 8px !important;
-    border: 1px solid #000 !important;
-    width: auto !important;
+    visibility: visible !important;
+    text-align: center !important;
+    border-bottom: 2px solid #000 !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 8px !important;
+    page-break-after: avoid !important;
   }
 
-  /* Tabel Sederhana dan Rapi - Format Standar dengan Alignment yang Benar - SAMA DENGAN TAGIHAN */
+  #printLogoContainer {
+    display: block !important;
+    visibility: visible !important;
+    text-align: center !important;
+    margin-bottom: 5px !important;
+    height: auto !important;
+  }
+
+  /* Logo - sangat agresif override */
+  #printLogo,
+  #printHeader img,
+  #printLogoContainer img,
+  img#printLogo,
+  #printHeader > div > div > img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-width: 70px !important;
+    max-height: 70px !important;
+    margin: 0 auto 5px auto !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  /* Override semua kemungkinan inline style untuk logo */
+  #printLogo[style],
+  #printHeader img[style],
+  img[style*="display"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  #printHeader h1,
+  #printHeader > div > h1,
+  #printOrgNama {
+    display: block !important;
+    visibility: visible !important;
+    margin: 0 0 3px 0 !important;
+    padding: 0 !important;
+    font-size: 16pt !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    text-transform: uppercase !important;
+    color: black !important;
+    line-height: 1.2 !important;
+  }
+
+  #printHeader p,
+  #printHeader > div > p,
+  #printOrgAlamat {
+    display: block !important;
+    visibility: visible !important;
+    margin: 2px 0 !important;
+    padding: 0 !important;
+    font-size: 9pt !important;
+    text-align: center !important;
+    color: black !important;
+    line-height: 1.3 !important;
+  }
+
+  #printHeader span,
+  #printOrgTelepon,
+  #printOrgEmail {
+    display: inline !important;
+    visibility: visible !important;
+    color: black !important;
+  }
+
+  /* Judul tabel untuk print */
+  h2.print-only {
+    display: block !important;
+    visibility: visible !important;
+    text-align: center !important;
+    font-size: 14pt !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    margin: 8px 0 6px 0 !important;
+    padding: 0 !important;
+    color: black !important;
+    page-break-after: avoid !important;
+  }
+
+  /* ============================================
+     INFORMASI ANGGOTA DAN DAFTAR TARIF - BERDAMPINGAN
+     ============================================ */
+  /* Buat container untuk informasi anggota dan grid daftar tarif menjadi flex row */
+  .space-y-3 > div:nth-child(2),
+  .space-y-4 > div:nth-child(2) {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    margin: 6px 0 !important;
+    align-items: flex-start !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Card informasi anggota - kolom kiri (lebih besar) */
+  .space-y-3 > div:nth-child(2) > div[class*="bg-white"]:first-child,
+  .space-y-4 > div:nth-child(2) > div[class*="bg-white"]:first-child {
+    flex: 2 !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 5px 6px !important;
+    border: 1px solid #000 !important;
+    font-size: 8.5pt !important;
+    line-height: 1.4 !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Sembunyikan h3 di informasi anggota */
+  .space-y-3 > div:nth-child(2) > div[class*="bg-white"]:first-child h3,
+  .space-y-4 > div:nth-child(2) > div[class*="bg-white"]:first-child h3 {
+    display: none !important;
+  }
+
+  /* Grid daftar tarif - kolom kanan (lebih kecil) */
+  .space-y-3
+    > div:nth-child(2)
+    > div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"],
+  .space-y-4
+    > div:nth-child(2)
+    > div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"] {
+    flex: 1 !important;
+    display: block !important;
+    margin: 0 !important;
+  }
+
+  /* Sembunyikan card riwayat pembayaran (div pertama dalam grid lg:grid-cols-2) */
+  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"]
+    > div:first-child {
+    display: none !important;
+  }
+
+  /* Informasi Anggota - styling internal */
+  div[class*="grid"][class*="grid-cols-3"] {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    font-size: 8.5pt !important;
+    line-height: 1.4 !important;
+  }
+
+  div[class*="grid"][class*="grid-cols-3"] > div {
+    display: inline-block !important;
+    width: auto !important;
+    margin-right: 10px !important;
+    padding: 0 !important;
+    border: none !important;
+    vertical-align: baseline !important;
+  }
+
+  div[class*="grid"][class*="grid-cols-3"] > div > p.text-xs {
+    display: inline !important;
+    margin-right: 3px !important;
+    font-weight: bold !important;
+    font-size: 8.5pt !important;
+  }
+
+  div[class*="grid"][class*="grid-cols-3"] > div > p:not(.text-xs) {
+    display: inline !important;
+    font-size: 8.5pt !important;
+    font-weight: normal !important;
+  }
+
+  div[class*="grid"][class*="grid-cols-3"] > div:not(:last-child)::after {
+    content: " | " !important;
+    margin-left: 3px !important;
+  }
+
+  /* Daftar Tarif - Kolom kanan (lebih kecil) */
+  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"]
+    > div:last-child {
+    display: block !important;
+    padding: 4px 5px !important;
+    border: 1px solid #000 !important;
+    background: white !important;
+    page-break-inside: avoid !important;
+    font-size: 8pt !important;
+  }
+
+  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"]
+    > div:last-child
+    h3 {
+    font-size: 9pt !important;
+    font-weight: bold !important;
+    margin: 0 0 3px 0 !important;
+    padding: 0 !important;
+    color: black !important;
+  }
+
+  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"]
+    > div:last-child
+    #tarifList {
+    max-height: none !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"]
+    > div:last-child
+    #tarifList
+    > div {
+    margin-bottom: 2px !important;
+    padding: 2px 3px !important;
+    border: 1px solid #ccc !important;
+    font-size: 7.5pt !important;
+    line-height: 1.2 !important;
+  }
+
+  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"]
+    > div:last-child
+    #tarifList
+    > div
+    p {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 7.5pt !important;
+    line-height: 1.2 !important;
+  }
+
+  div[class*="grid"][class*="grid-cols-3"] > div {
+    display: inline-block !important;
+    width: auto !important;
+    margin-right: 12px !important;
+    padding: 0 !important;
+    border: none !important;
+    vertical-align: baseline !important;
+  }
+
+  div[class*="grid"] > div > p.text-xs {
+    display: inline !important;
+    margin-right: 4px !important;
+    font-weight: bold !important;
+    font-size: 9pt !important;
+  }
+
+  div[class*="grid"] > div > p:not(.text-xs) {
+    display: inline !important;
+    font-size: 9pt !important;
+    font-weight: normal !important;
+  }
+
+  div[class*="grid"] > div:not(:last-child)::after {
+    content: " | " !important;
+    margin-left: 4px !important;
+  }
+
+  /* ============================================
+     TABEL PEMBAYARAN - PADAT DAN RAPI DENGAN GARIS JELAS
+     ============================================ */
   table {
     width: 100% !important;
     border-collapse: collapse !important;
-    border: 1px solid #000 !important;
-    margin: 10px 0 !important;
-    font-size: 10pt !important;
+    border: 2px solid #000 !important;
+    margin: 8px 0 !important;
+    font-size: 9pt !important;
     page-break-inside: auto !important;
-    table-layout: fixed !important;
+    border-spacing: 0 !important;
   }
 
-  /* Pastikan thead, tbody, tfoot terlihat */
   table thead {
     display: table-header-group !important;
     background: #e0e0e0 !important;
+    page-break-after: avoid !important;
   }
 
   table tbody {
@@ -306,138 +444,160 @@
     display: table-footer-group !important;
     background: #f0f0f0 !important;
     font-weight: bold !important;
+    border-top: 2px solid #000 !important;
+    page-break-before: avoid !important;
   }
 
-  /* Pastikan tr terlihat */
   table tr {
-    display: table-row !important;
+    border-bottom: 1px solid #000 !important;
   }
 
-  /* Pastikan semua kolom terlihat dan tidak terpotong */
+  table tr:last-child {
+    border-bottom: none !important;
+  }
+
   table th,
   table td {
-    overflow: visible !important;
-    white-space: normal !important;
-    word-wrap: break-word !important;
-    max-width: none !important;
-    display: table-cell !important;
     border: 1px solid #000 !important;
-    padding: 5px 6px !important;
-    font-size: 10pt !important;
-    line-height: 1.3 !important;
+    border-right: 1px solid #000 !important;
+    border-left: 1px solid #000 !important;
+    padding: 4px 6px !important;
+    font-size: 9pt !important;
+    display: table-cell !important;
     vertical-align: middle !important;
+    line-height: 1.3 !important;
   }
 
-  /* Header tabel - OVERRIDE INLINE STYLE */
   table th {
     background: #e0e0e0 !important;
     font-weight: bold !important;
-    padding: 6px 6px !important;
+    text-align: center !important;
+    border-top: 2px solid #000 !important;
+    border-bottom: 2px solid #000 !important;
   }
 
-  /* Kolom pertama (Bulan) - left align untuk header dan data - OVERRIDE INLINE */
+  table th:first-child {
+    border-left: 2px solid #000 !important;
+  }
+
+  table th:last-child {
+    border-right: 2px solid #000 !important;
+  }
+
+  table td:first-child {
+    border-left: 2px solid #000 !important;
+  }
+
+  table td:last-child {
+    border-right: 2px solid #000 !important;
+  }
+
+  table tbody tr:last-child td {
+    border-bottom: 2px solid #000 !important;
+  }
+
+  /* Kolom 1: Bulan - CENTER */
   table th:first-child,
   table thead th:first-child {
-    text-align: left !important;
-    width: 20% !important;
+    text-align: center !important;
+    width: 12% !important;
   }
 
   table td:first-child,
   table tbody td:first-child,
   table tfoot td:first-child {
-    text-align: left !important;
-    width: 20% !important;
+    text-align: center !important;
+    width: 12% !important;
   }
 
-  /* Kolom kedua (Daftar Tarif) - right align untuk header dan data - OVERRIDE INLINE */
+  /* Kolom 2: Daftar Tarif - RIGHT */
   table th:nth-child(2),
   table thead th:nth-child(2) {
     text-align: right !important;
-    width: 25% !important;
+    width: 22% !important;
   }
 
   table td:nth-child(2),
   table tbody td:nth-child(2),
   table tfoot td:nth-child(2) {
     text-align: right !important;
-    width: 25% !important;
+    width: 22% !important;
   }
 
-  /* Kolom ketiga (Bayar) - right align untuk header dan data - OVERRIDE INLINE */
+  /* Kolom 3: Bayar - RIGHT */
   table th:nth-child(3),
   table thead th:nth-child(3) {
     text-align: right !important;
-    width: 20% !important;
+    width: 22% !important;
   }
 
   table td:nth-child(3),
   table tbody td:nth-child(3),
   table tfoot td:nth-child(3) {
     text-align: right !important;
-    width: 20% !important;
+    width: 22% !important;
   }
 
-  /* Kolom keempat (Sisa) - right align untuk header dan data - OVERRIDE INLINE */
+  /* Kolom 4: Sisa - RIGHT */
   table th:nth-child(4),
   table thead th:nth-child(4) {
     text-align: right !important;
-    width: 20% !important;
+    width: 22% !important;
   }
 
   table td:nth-child(4),
   table tbody td:nth-child(4),
   table tfoot td:nth-child(4) {
     text-align: right !important;
-    width: 20% !important;
+    width: 22% !important;
   }
 
-  /* Kolom kelima (Status) - center align untuk header dan data - OVERRIDE INLINE */
+  /* Kolom 5: Status - CENTER */
   table th:nth-child(5),
   table thead th:nth-child(5) {
     text-align: center !important;
-    width: 15% !important;
+    width: 10% !important;
   }
 
   table td:nth-child(5),
   table tbody td:nth-child(5),
   table tfoot td:nth-child(5) {
     text-align: center !important;
-    width: 15% !important;
+    width: 10% !important;
   }
 
-  /* Pastikan link di tabel menampilkan teks */
-  table a {
-    color: black !important;
-    text-decoration: none !important;
-    display: inline !important;
-    font-weight: normal !important;
-    pointer-events: none !important;
-  }
-
-  table a i,
-  table a .bx,
-  table td i,
-  table td .bx,
-  table td i.bx,
-  table td .bx-info-circle {
+  /* Sembunyikan link, tampilkan teks bulan */
+  table tbody td:first-child a {
     display: none !important;
     visibility: hidden !important;
     width: 0 !important;
     height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
   }
 
-  /* Pastikan teks bulan muncul */
-  table tbody td:first-child,
-  table tbody td:first-child a {
+  table tbody td:first-child .print-text {
+    display: inline-block !important;
     font-weight: normal !important;
     color: black !important;
-    text-decoration: none !important;
+    visibility: visible !important;
   }
 
-  table tbody tr {
-    page-break-inside: avoid !important;
+  table tbody td:first-child > *:not(.print-text) {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Sembunyikan kolom terakhir di footer */
+  table tfoot td:last-child {
+    display: none !important;
+  }
+
+  /* Background dan warna - sederhana */
+  .bg-white,
+  .bg-gray-50,
+  .bg-gray-800,
+  .bg-gray-700,
+  .bg-gradient-to-r {
+    background: white !important;
   }
 
   table tbody tr:nth-child(even) {
@@ -448,110 +608,69 @@
     background: white !important;
   }
 
-  /* Background dan warna untuk print - semua putih */
-  .bg-white,
-  .bg-gray-50,
-  .bg-gray-800,
-  .bg-gray-700,
-  .bg-gradient-to-r,
-  .bg-green-50,
-  .bg-green-900,
-  .bg-red-50,
-  .bg-red-900,
-  .bg-yellow-50,
-  .bg-yellow-900 {
-    background: white !important;
-  }
-
-  .border-gray-300,
-  .border-gray-600,
-  .border-gray-700,
-  .border-gray-200 {
-    border-color: #000 !important;
-    border-width: 1px !important;
-  }
-
   .text-gray-800,
   .text-gray-700,
   .text-gray-600,
-  .text-gray-400,
-  .text-gray-200,
-  .text-gray-300,
   .text-blue-600,
-  .text-blue-400,
   .text-green-600,
-  .text-green-400,
-  .text-red-600,
-  .text-red-400,
-  .text-yellow-600,
-  .text-yellow-400,
-  .text-white {
+  .text-red-600 {
     color: black !important;
   }
 
-  /* Badge/Status menjadi sederhana */
-  .rounded-full,
-  .bg-gradient-to-r,
-  span[id*="Status"] {
-    background: white !important;
-    border: 1px solid #000 !important;
-    padding: 2px 6px !important;
-    border-radius: 0 !important;
-    display: inline-block !important;
-    font-size: 9pt !important;
+  /* Pastikan container tabel terlihat */
+  div[class*="bg-white"][class*="rounded-lg"],
+  div[class*="rounded-lg"][class*="shadow-md"] {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
   }
 
-  /* Padding dan margin sederhana */
-  .p-3,
-  .p-4,
-  .px-2,
-  .px-4,
-  .py-2,
-  .py-3 {
-    padding: 6px !important;
+  /* Pastikan tabel container terlihat */
+  div.hidden.md\:block table {
+    display: table !important;
+    visibility: visible !important;
+  }
+
+  /* Pastikan tbody dan tfoot terisi */
+  table tbody,
+  table tbody#pembayaranTableBody {
+    display: table-row-group !important;
+    visibility: visible !important;
+  }
+
+  table tbody tr {
+    display: table-row !important;
+    page-break-inside: avoid !important;
+    visibility: visible !important;
+  }
+
+  table tfoot,
+  table tfoot#pembayaranTableFooter {
+    display: table-footer-group !important;
+    visibility: visible !important;
+  }
+
+  /* Kurangi spacing umum */
+  .space-y-3 > * + *,
+  .space-y-4 > * + * {
+    margin-top: 6px !important;
   }
 
   .mb-3,
   .mb-4 {
-    margin-bottom: 8px !important;
+    margin-bottom: 6px !important;
   }
 
   .mt-2,
   .mt-3 {
-    margin-top: 8px !important;
+    margin-top: 4px !important;
   }
 
-  /* Pastikan semua konten terlihat */
-  .space-y-3,
-  .space-y-4 {
-    display: block !important;
-  }
-
-  .space-y-3 > *:not(:first-child),
-  .space-y-4 > *:not(:first-child) {
-    display: block !important;
-    margin-bottom: 10px !important;
-  }
-
-  /* Sembunyikan card/box styling kompleks */
-  .rounded-lg,
-  .rounded-xl,
-  .shadow-md,
-  .shadow-lg {
-    border: 1px solid #000 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
-
-  /* Sembunyikan kolom aksi - SAMA DENGAN TAGIHAN (tagihan tidak punya kolom aksi) */
-  table thead th:last-child,
-  table tbody td:last-child,
-  table tfoot td:last-child,
-  table th:nth-child(6),
-  table td:nth-child(6) {
-    display: none !important;
-    width: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
+  .p-3,
+  .p-4 {
+    padding: 4px !important;
   }
 }

@@ -54,10 +54,20 @@ router.get("/", (req, res) => {
               'SELECT * FROM tarif WHERE status = "aktif"',
               [],
               (err, tarif) => {
+                // Set active flags based on user role
+                const userRole = req.session.user.role;
+                const active = {
+                  iuran: true,
+                  isAdmin: userRole === "admin",
+                  isAdminOrPengurus:
+                    userRole === "admin" || userRole === "pengurus",
+                  isUser: userRole === "user",
+                };
+
                 const layout = renderHTML("iuran.html", {
                   title: "Informasi Pembayaran",
                   user: req.session.user,
-                  active: { iuran: true, isAdminOrPengurus: true },
+                  active: active,
                   content: "",
                   organisasi: organisasi || {},
                 });

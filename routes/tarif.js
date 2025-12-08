@@ -22,10 +22,19 @@ router.get("/", (req, res) => {
           return res.status(500).send("Database error");
         }
 
+        // Set active flags based on user role
+        const userRole = req.session.user.role;
+        const active = {
+          tarif: true,
+          isAdmin: userRole === "admin",
+          isAdminOrPengurus: userRole === "admin" || userRole === "pengurus",
+          isUser: userRole === "user",
+        };
+
         const layout = renderHTML("tarif.html", {
           title: "Data Tarif",
           user: req.session.user,
-          active: { tarif: true, isAdminOrPengurus: true },
+          active: active,
           content: "",
           organisasi: organisasi || {},
         });

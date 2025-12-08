@@ -105,7 +105,12 @@
                 timer: 1500,
                 showConfirmButton: false,
               }).then(() => {
-                window.location.href = "/tagihan";
+                // Redirect berdasarkan role
+                if (result.role === "user") {
+                  window.location.href = "/tagihan";
+                } else {
+                  window.location.href = "/dashboard";
+                }
               });
             } else {
               Swal.fire({

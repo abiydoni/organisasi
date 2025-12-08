@@ -1,54 +1,40 @@
-<!-- Kop Surat untuk Print -->
+<!-- Kop Surat untuk Print - Hanya muncul saat print -->
 <div id="printHeader" class="print-only print-header">
-  <table
-    style="width: 100%; border-bottom: 2px solid #000; margin-bottom: 15px"
-  >
-    <tr>
-      <td style="width: 20%; vertical-align: top; padding-right: 15px">
-        <img
-          id="printLogo"
-          src=""
-          alt="Logo"
-          style="max-width: 80px; max-height: 80px; display: none"
-        />
-      </td>
-      <td style="vertical-align: top">
-        <h1
-          id="printOrgNama"
-          style="margin: 0; font-size: 18pt; font-weight: bold"
-        >
-          -
-        </h1>
-        <p id="printOrgAlamat" style="margin: 5px 0; font-size: 10pt">-</p>
-        <p style="margin: 5px 0; font-size: 10pt">
-          Telp: <span id="printOrgTelepon">-</span> | Email:
-          <span id="printOrgEmail">-</span>
-        </p>
-      </td>
-    </tr>
-  </table>
+  <div>
+    <div id="printLogoContainer">
+      <img
+        id="printLogo"
+        src="{{organisasi.logo}}"
+        alt="Logo"
+        style="
+          max-width: 70px;
+          max-height: 70px;
+          margin: 0 auto 5px auto;
+          display: block;
+        "
+        onerror="this.style.display='none';"
+      />
+    </div>
+    <h1 id="printOrgNama">{{organisasi.nama}}</h1>
+    <p id="printOrgAlamat">{{organisasi.alamat}}</p>
+    <p>
+      Telp: <span id="printOrgTelepon">{{organisasi.telepon}}</span> | Email:
+      <span id="printOrgEmail">{{organisasi.email}}</span>
+    </p>
+  </div>
 </div>
 
 <div class="space-y-3 md:space-y-4">
-  <!-- Header dengan tombol kembali -->
+  <!-- Header -->
   <div class="flex items-center justify-between no-print">
-    <div class="flex items-center gap-2 md:gap-3">
-      <a
-        href="/dashboard"
-        class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
-        title="Kembali"
-      >
-        <i class="bx bx-arrow-back text-xl md:text-2xl"></i>
-      </a>
-      <div>
-        <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
-          <i class="bx bx-receipt text-blue-600 dark:text-blue-400"></i> Tagihan
-          Iuran Saya
-        </h2>
-        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-          Informasi dan riwayat pembayaran saya
-        </p>
-      </div>
+    <div>
+      <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
+        <i class="bx bx-receipt text-blue-600 dark:text-blue-400"></i> Tagihan
+        Iuran Saya
+      </h2>
+      <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+        Informasi dan riwayat pembayaran saya
+      </p>
     </div>
     <div class="flex gap-2 no-print">
       <button
@@ -186,6 +172,21 @@
   <div
     class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700"
   >
+    <!-- Judul Tabel untuk Print -->
+    <h2
+      class="print-only"
+      style="
+        display: none;
+        text-align: center;
+        font-size: 16pt;
+        font-weight: bold;
+        margin: 20px 0 15px 0;
+        text-transform: uppercase;
+      "
+    >
+      Tagihan Iuran Tahun <span id="printTahun"></span>
+    </h2>
+
     <!-- Desktop Table View -->
     <div class="hidden md:block">
       <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -292,6 +293,21 @@
 
 <!-- Print Styles -->
 <link rel="stylesheet" href="/css/print.css" media="print" />
+<style>
+  /* Pastikan kop surat tersembunyi di layar normal (bukan saat print) */
+  @media screen {
+    .print-only,
+    .print-header,
+    #printHeader {
+      display: none !important;
+    }
+
+    /* Sembunyikan print-text di layar normal */
+    .print-text {
+      display: none !important;
+    }
+  }
+</style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
@@ -494,18 +510,19 @@
       .map(
         (item) => `
           <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-medium">
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-medium text-center">
+                <span class="print-text">${item.namaBulan}</span>
                 <a
                   href="javascript:void(0)"
                   onclick="lihatDetailPembayaran(${item.bulan}, ${tahunSaatIni}, '${item.namaBulan}')"
-                  class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline font-semibold flex items-center gap-1"
+                  class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline font-semibold flex items-center gap-1 no-print"
                   title="Lihat Detail Pembayaran"
                 >
                   ${item.namaBulan}
                   <i class="bx bx-info-circle text-sm"></i>
                 </a>
               </td>
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold">
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right">
                 ${formatRupiah(item.totalTarif)}
               </td>
               <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right">
@@ -516,7 +533,7 @@
               }">
                 ${formatRupiah(item.sisa)}
               </td>
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap">
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-center">
                   <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${
                     item.status === "lunas"
                       ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200"
@@ -542,10 +559,10 @@
     if (tfoot) {
       tfoot.innerHTML = `
         <tr>
-          <td class="px-2 md:px-4 py-2 md:py-3 text-xs md:text-sm text-gray-800 dark:text-white font-bold">
+          <td class="px-2 md:px-4 py-2 md:py-3 text-xs md:text-sm text-gray-800 dark:text-white font-bold text-center">
             TOTAL
           </td>
-          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold">
+          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold text-right">
             ${formatRupiah(totalDaftarTarif)}
           </td>
           <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold text-right">
@@ -555,6 +572,9 @@
             totalSisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
           }">
             ${formatRupiah(totalSisa)}
+          </td>
+          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold text-center">
+            -
           </td>
         </tr>
       `;
@@ -632,119 +652,362 @@
     }
   }
 
-  // Fungsi untuk export ke PDF
+  // Fungsi untuk export ke PDF - Sama persis dengan print preview
   function exportToPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    try {
+      // Cek apakah jsPDF tersedia - untuk versi 2.5.1
+      let jsPDFClass;
+      console.log("Checking jsPDF availability...", window.jspdf);
 
-    // Header Organisasi
-    doc.setFontSize(18);
-    doc.text(organisasi.nama || "Organisasi", 14, 20);
-    doc.setFontSize(10);
-    doc.text(organisasi.alamat || "", 14, 28);
-    doc.text(
-      `Telp: ${organisasi.telepon || "-"} | Email: ${organisasi.email || "-"}`,
-      14,
-      34
-    );
-
-    // Data Anggota
-    doc.setFontSize(14);
-    doc.text("Data Anggota", 14, 45);
-    doc.setFontSize(10);
-    doc.text(`Nama: ${anggota.nama || "-"}`, 14, 52);
-    doc.text(`NIK: ${anggota.nik || "-"}`, 14, 58);
-    doc.text(`Alamat: ${anggota.alamat || "-"}`, 14, 64);
-    doc.text(`Telepon: ${anggota.telepon || "-"}`, 14, 70);
-    doc.text(`Email: ${anggota.email || "-"}`, 14, 76);
-
-    // Table Header
-    let y = 85;
-    doc.setFontSize(12);
-    doc.text(`Tagihan Iuran Tahun ${tahunSaatIni}`, 14, y);
-    y += 10;
-
-    // Table
-    doc.setFontSize(9);
-    doc.setFont(undefined, "bold");
-    doc.text("Bulan", 14, y);
-    doc.text("Tarif", 50, y);
-    doc.text("Bayar", 80, y);
-    doc.text("Sisa", 110, y);
-    doc.text("Status", 140, y);
-    y += 5;
-    doc.line(14, y, 200, y);
-    y += 5;
-
-    // Table rows
-    doc.setFont(undefined, "normal");
-    const tarifAktif = tarif.filter((t) => t.status === "aktif");
-    const totalSemuaTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
-    let totalBayar = 0;
-    let totalSisa = 0;
-
-    for (let bulan = 1; bulan <= 12; bulan++) {
-      if (y > 270) {
-        doc.addPage();
-        y = 20;
-      }
-
-      const semuaIuranBulan = iuran.filter(
-        (i) => i.bulan === bulan && i.tahun === tahunSaatIni
-      );
-      const jumlahBayar = semuaIuranBulan.reduce(
-        (sum, i) => sum + (parseInt(i.jumlah) || 0),
-        0
-      );
-      const sisa = Math.max(0, totalSemuaTarif - jumlahBayar);
-      let status;
-      if (semuaIuranBulan.length === 0 || jumlahBayar === 0) {
-        status = "Belum Bayar";
-      } else if (sisa > 0) {
-        status = "Belum Lunas";
+      if (window.jspdf && window.jspdf.jsPDF) {
+        jsPDFClass = window.jspdf.jsPDF;
+        console.log("Found jsPDF at window.jspdf.jsPDF");
+      } else if (window.jspdf && window.jspdf.default && window.jspdf.default.jsPDF) {
+        jsPDFClass = window.jspdf.default.jsPDF;
+        console.log("Found jsPDF at window.jspdf.default.jsPDF");
+      } else if (window.jsPDF) {
+        jsPDFClass = window.jsPDF;
+        console.log("Found jsPDF at window.jsPDF");
       } else {
-        status = "Lunas";
+        alert("Error: jsPDF library tidak ditemukan. Silakan refresh halaman.");
+        console.error("jsPDF tidak ditemukan. window.jspdf:", window.jspdf);
+        return;
       }
 
-      totalBayar += jumlahBayar;
-      totalSisa += sisa;
+      console.log("Creating jsPDF instance...");
+      const doc = new jsPDFClass();
+      console.log("jsPDF instance created successfully");
+      const pageWidth = doc.internal.pageSize.width;
+      const pageHeight = doc.internal.pageSize.height;
+      const margin = 10; // 1cm
+      let y = margin;
 
-      doc.text(bulanNames[bulan], 14, y);
-      doc.text(formatRupiah(totalSemuaTarif), 50, y);
-      doc.text(formatRupiah(jumlahBayar), 80, y);
-      doc.text(formatRupiah(sisa), 110, y);
-      doc.text(status, 140, y);
+      // ============================================
+      // KOP SURAT - DENGAN LOGO DI SAMPING
+      // ============================================
+      const logoSize = 20; // mm
+      const logoX = margin;
+      const logoY = margin;
+      const textStartX = margin + logoSize + 5; // 5mm gap setelah logo
+      const textWidth = pageWidth - textStartX - margin;
+      let currentY = margin;
+
+      // Logo (jika ada) - coba ambil dari DOM atau load
+      let logoLoaded = false;
+      if (organisasi.logo) {
+        try {
+          // Cek apakah logo sudah ada di DOM (dari loadPrintHeader) dan sudah loaded
+          const logoImg = document.getElementById("printLogo");
+          if (logoImg && logoImg.src && logoImg.complete && logoImg.naturalWidth > 0 && logoImg.naturalHeight > 0) {
+            try {
+              doc.addImage(logoImg, 'PNG', logoX, logoY, logoSize, logoSize);
+              logoLoaded = true;
+            } catch (e) {
+              console.warn("Error adding logo from DOM:", e);
+            }
+          }
+
+          // Jika belum ada di DOM atau belum loaded, coba load langsung
+          if (!logoLoaded) {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.src = organisasi.logo;
+
+            // Jika logo sudah cached dan complete, langsung tambahkan
+            if (img.complete && img.naturalWidth > 0 && img.naturalHeight > 0) {
+              try {
+                doc.addImage(img, 'PNG', logoX, logoY, logoSize, logoSize);
+                logoLoaded = true;
+              } catch (e) {
+                console.warn("Error adding cached logo:", e);
+              }
+            }
+            // Jika belum cached, kita skip logo untuk sekarang (bisa ditambahkan nanti dengan async)
+          }
+        } catch (e) {
+          console.warn("Error processing logo:", e);
+        }
+      }
+
+      // Nama Organisasi - di samping logo (atau center jika tidak ada logo)
+      doc.setFontSize(16);
+      doc.setFont(undefined, "bold");
+      const orgNama = (organisasi.nama || "-").toUpperCase();
+      const orgNamaWidth = doc.getTextWidth(orgNama);
+      let orgNamaX;
+      if (logoLoaded && organisasi.logo) {
+        // Center align dalam area text (setelah logo)
+        orgNamaX = textStartX + (textWidth - orgNamaWidth) / 2;
+      } else {
+        // Center align di seluruh halaman
+        orgNamaX = (pageWidth - orgNamaWidth) / 2;
+      }
+      doc.text(orgNama, orgNamaX, currentY);
+      currentY += 5;
+
+      // Alamat
+      doc.setFontSize(9);
+      doc.setFont(undefined, "normal");
+      const alamat = organisasi.alamat || "-";
+      const alamatWidth = doc.getTextWidth(alamat);
+      let alamatX;
+      if (logoLoaded && organisasi.logo) {
+        alamatX = textStartX + (textWidth - alamatWidth) / 2;
+      } else {
+        alamatX = (pageWidth - alamatWidth) / 2;
+      }
+      doc.text(alamat, alamatX, currentY);
+      currentY += 4;
+
+      // Telepon dan Email
+      const kontak = `Telp: ${organisasi.telepon || "-"} | Email: ${organisasi.email || "-"}`;
+      const kontakWidth = doc.getTextWidth(kontak);
+      let kontakX;
+      if (logoLoaded && organisasi.logo) {
+        kontakX = textStartX + (textWidth - kontakWidth) / 2;
+      } else {
+        kontakX = (pageWidth - kontakWidth) / 2;
+      }
+      doc.text(kontak, kontakX, currentY);
+      currentY += 6;
+
+      // Garis bawah kop surat
+      doc.line(margin, currentY, pageWidth - margin, currentY);
+      y = currentY + 5;
+
+      // ============================================
+      // INFORMASI ANGGOTA DAN DAFTAR TARIF BERDAMPINGAN
+      // ============================================
+      const leftColWidth = (pageWidth - 2 * margin) * 0.67; // 2/3 untuk info anggota
+      const rightColWidth = (pageWidth - 2 * margin) * 0.33; // 1/3 untuk daftar tarif
+      const colGap = 3;
+
+      // Informasi Anggota (Kiri)
+      const infoAnggotaX = margin;
+      const infoAnggotaY = y;
+      doc.setFontSize(8.5);
+      doc.setFont(undefined, "normal");
+
+      const infoItems = [
+        `Nama ${anggota.nama || "-"}`,
+        `NIK ${anggota.nik || "-"}`,
+        `Alamat ${anggota.alamat || "-"}`,
+        `Telepon ${anggota.telepon || "-"}`,
+        `Email ${anggota.email || "-"}`,
+        `Status ${anggota.status === "aktif" ? "Aktif" : "Tidak Aktif"}`
+      ];
+
+      let infoY = infoAnggotaY;
+      let infoText = "";
+      infoItems.forEach((item, idx) => {
+        if (idx > 0) infoText += " | ";
+        infoText += item;
+      });
+
+      // Wrap text untuk info anggota
+      let splitInfo;
+      try {
+        splitInfo = doc.splitTextToSize(infoText, leftColWidth);
+      } catch (e) {
+        // Fallback jika splitTextToSize tidak tersedia
+        splitInfo = [infoText];
+      }
+      splitInfo.forEach((line) => {
+        doc.text(line, infoAnggotaX, infoY);
+        infoY += 3.5;
+      });
+
+      // Daftar Tarif (Kanan)
+      const tarifX = margin + leftColWidth + colGap;
+      let tarifY = y;
+      doc.setFontSize(9);
+      doc.setFont(undefined, "bold");
+      doc.text("Daftar Tarif Aktif", tarifX, tarifY);
+      tarifY += 4;
+
+      doc.setFontSize(7.5);
+      doc.setFont(undefined, "normal");
+      const tarifAktif = tarif.filter((t) => t.status === "aktif");
+      tarifAktif.forEach((item) => {
+        const tarifText = `${item.nama}: ${formatRupiah(item.jumlah)}`;
+        let splitTarif;
+        try {
+          splitTarif = doc.splitTextToSize(tarifText, rightColWidth);
+        } catch (e) {
+          splitTarif = [tarifText];
+        }
+        splitTarif.forEach((line) => {
+          doc.text(line, tarifX, tarifY);
+          tarifY += 2.5;
+        });
+      });
+
+      // Gunakan y terbesar dari kedua kolom
+      y = Math.max(infoY, tarifY) + 3;
+
+      // ============================================
+      // JUDUL TABEL
+      // ============================================
+      doc.setFontSize(14);
+      doc.setFont(undefined, "bold");
+      const judulTabel = `TAGIHAN IURAN TAHUN ${tahunSaatIni}`;
+      const judulWidth = doc.getTextWidth(judulTabel);
+      doc.text(judulTabel, (pageWidth - judulWidth) / 2, y);
       y += 6;
+
+      // ============================================
+      // TABEL PEMBAYARAN
+      // ============================================
+      const colWidths = {
+        bulan: 18,
+        tarif: 35,
+        bayar: 35,
+        sisa: 35,
+        status: 25
+      };
+      const colPositions = {
+        bulan: margin,
+        tarif: margin + colWidths.bulan,
+        bayar: margin + colWidths.bulan + colWidths.tarif,
+        sisa: margin + colWidths.bulan + colWidths.tarif + colWidths.bayar,
+        status: margin + colWidths.bulan + colWidths.tarif + colWidths.bayar + colWidths.sisa
+      };
+
+      // Header Tabel
+      doc.setFontSize(9);
+      doc.setFont(undefined, "bold");
+      // Hitung posisi untuk alignment manual
+      const centerBulan = colPositions.bulan + colWidths.bulan / 2;
+      const rightTarif = colPositions.tarif + colWidths.tarif;
+      const rightBayar = colPositions.bayar + colWidths.bayar;
+      const rightSisa = colPositions.sisa + colWidths.sisa;
+      const centerStatus = colPositions.status + colWidths.status / 2;
+
+      // Center align: hitung posisi x dengan mengurangi setengah lebar text
+      const headerBulanText = "Bulan";
+      const headerBulanTextWidth = doc.getTextWidth(headerBulanText);
+      doc.text(headerBulanText, centerBulan - headerBulanTextWidth / 2, y);
+
+      // Right align: kurangi lebar text dari posisi kanan
+      const headerTarifText = "Daftar Tarif";
+      const headerTarifTextWidth = doc.getTextWidth(headerTarifText);
+      doc.text(headerTarifText, rightTarif - headerTarifTextWidth, y);
+
+      const headerBayarText = "Bayar";
+      const headerBayarTextWidth = doc.getTextWidth(headerBayarText);
+      doc.text(headerBayarText, rightBayar - headerBayarTextWidth, y);
+
+      const headerSisaText = "Sisa";
+      const headerSisaTextWidth = doc.getTextWidth(headerSisaText);
+      doc.text(headerSisaText, rightSisa - headerSisaTextWidth, y);
+
+      const headerStatusText = "Status";
+      const headerStatusTextWidth = doc.getTextWidth(headerStatusText);
+      doc.text(headerStatusText, centerStatus - headerStatusTextWidth / 2, y);
+      y += 3;
+
+      // Garis header
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 3;
+
+      // Data Tabel
+      doc.setFontSize(9);
+      doc.setFont(undefined, "normal");
+      const totalSemuaTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+      let totalDaftarTarif = 0;
+      let totalBayar = 0;
+      let totalSisa = 0;
+
+      for (let bulan = 1; bulan <= 12; bulan++) {
+        if (y > pageHeight - 30) {
+          doc.addPage();
+          y = margin;
+        }
+
+        const semuaIuranBulan = iuran.filter(
+          (i) => i.bulan === bulan && i.tahun === tahunSaatIni
+        );
+        const jumlahBayar = semuaIuranBulan.reduce(
+          (sum, i) => sum + (parseInt(i.jumlah) || 0),
+          0
+        );
+        const sisa = Math.max(0, totalSemuaTarif - jumlahBayar);
+
+        let status;
+        if (semuaIuranBulan.length === 0 || jumlahBayar === 0) {
+          status = "Belum Bayar";
+        } else if (sisa > 0) {
+          status = "Belum Lunas";
+        } else {
+          status = "Lunas";
+        }
+
+        totalDaftarTarif += totalSemuaTarif;
+        totalBayar += jumlahBayar;
+        totalSisa += sisa;
+
+        // Baris data - manual alignment
+        const bulanTextVal = bulanNames[bulan];
+        const bulanTextWidthVal = doc.getTextWidth(bulanTextVal);
+        doc.text(bulanTextVal, centerBulan - bulanTextWidthVal / 2, y);
+
+        const tarifTextVal = formatRupiah(totalSemuaTarif);
+        const tarifTextWidthVal = doc.getTextWidth(tarifTextVal);
+        doc.text(tarifTextVal, rightTarif - tarifTextWidthVal, y);
+
+        const bayarTextVal = formatRupiah(jumlahBayar);
+        const bayarTextWidthVal = doc.getTextWidth(bayarTextVal);
+        doc.text(bayarTextVal, rightBayar - bayarTextWidthVal, y);
+
+        const sisaTextVal = formatRupiah(sisa);
+        const sisaTextWidthVal = doc.getTextWidth(sisaTextVal);
+        doc.text(sisaTextVal, rightSisa - sisaTextWidthVal, y);
+
+        const statusTextWidthVal = doc.getTextWidth(status);
+        doc.text(status, centerStatus - statusTextWidthVal / 2, y);
+        y += 4;
+      }
+
+      // Footer Tabel (Total)
+      y += 2;
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 3;
+      doc.setFont(undefined, "bold");
+
+      // Manual alignment untuk footer
+      const totalText = "TOTAL";
+      const totalTextWidth = doc.getTextWidth(totalText);
+      doc.text(totalText, centerBulan - totalTextWidth / 2, y);
+
+      const totalTarifText = formatRupiah(totalDaftarTarif);
+      const totalTarifTextWidth = doc.getTextWidth(totalTarifText);
+      doc.text(totalTarifText, rightTarif - totalTarifTextWidth, y);
+
+      const totalBayarText = formatRupiah(totalBayar);
+      const totalBayarTextWidth = doc.getTextWidth(totalBayarText);
+      doc.text(totalBayarText, rightBayar - totalBayarTextWidth, y);
+
+      const totalSisaText = formatRupiah(totalSisa);
+      const totalSisaTextWidth = doc.getTextWidth(totalSisaText);
+      doc.text(totalSisaText, rightSisa - totalSisaTextWidth, y);
+
+      // Save PDF
+      const fileName = `Tagihan_Iuran_${(anggota.nama || "Anggota").replace(/[^a-zA-Z0-9]/g, "_")}_${tahunSaatIni}_${new Date().getTime()}.pdf`;
+      doc.save(fileName);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      console.error("Error details:", error.message);
+      console.error("Error stack:", error.stack);
+      console.error("Error name:", error.name);
+
+      let errorMsg = "Terjadi kesalahan saat membuat PDF.";
+      if (error.message) {
+        errorMsg += "\n\nDetail: " + error.message;
+      }
+      errorMsg += "\n\nSilakan buka Console (F12) untuk detail lebih lanjut atau gunakan fitur Print.";
+
+      alert(errorMsg);
     }
-
-    // Summary
-    y += 5;
-    doc.line(14, y, 200, y);
-    y += 5;
-    doc.setFont(undefined, "bold");
-    doc.text("TOTAL", 14, y);
-    doc.text(formatRupiah(totalSemuaTarif * 12), 50, y);
-    doc.text(formatRupiah(totalBayar), 80, y);
-    doc.text(formatRupiah(totalSisa), 110, y);
-
-    // Footer
-    const pageCount = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.text(
-        `Halaman ${i} dari ${pageCount}`,
-        14,
-        doc.internal.pageSize.height - 10
-      );
-      doc.text(
-        `Dicetak pada: ${new Date().toLocaleString("id-ID")}`,
-        100,
-        doc.internal.pageSize.height - 10
-      );
-    }
-
-    doc.save(`Tagihan_Iuran_${anggota.nama}_${tahunSaatIni}_${new Date().getTime()}.pdf`);
   }
 
   // Fungsi untuk lihat detail pembayaran
@@ -864,7 +1127,7 @@
 
   // Load kop surat untuk print
   function loadPrintHeader() {
-    // organisasi sudah tersedia dari layout.html (scope global)
+    // organisasi sudah dideklarasikan di layout.html (scope global)
     const orgData = typeof organisasi !== 'undefined' ? organisasi : (window.organisasi || {});
 
     if (orgData && orgData.nama) {
@@ -873,11 +1136,13 @@
       const orgTeleponEl = document.getElementById("printOrgTelepon");
       const orgEmailEl = document.getElementById("printOrgEmail");
       const logoImg = document.getElementById("printLogo");
+      const printTahunEl = document.getElementById("printTahun");
 
       if (orgNamaEl) orgNamaEl.textContent = orgData.nama || "-";
       if (orgAlamatEl) orgAlamatEl.textContent = orgData.alamat || "-";
       if (orgTeleponEl) orgTeleponEl.textContent = orgData.telepon || "-";
       if (orgEmailEl) orgEmailEl.textContent = orgData.email || "-";
+      if (printTahunEl) printTahunEl.textContent = tahunSaatIni || new Date().getFullYear();
 
       if (orgData.logo && logoImg) {
         logoImg.src = orgData.logo;
