@@ -157,7 +157,7 @@
         class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-2 md:mb-3 flex items-center gap-2"
       >
         <i class="bx bx-list-check text-blue-600 dark:text-blue-400"></i>
-        Daftar Tarif Aktif
+        Daftar Tarif Wajib Dibayar
       </h3>
       <div
         class="space-y-1.5 max-h-40 md:max-h-48 overflow-y-auto"
@@ -428,6 +428,7 @@
   const anggota = {{anggota}} || {};
   const iuran = {{iuran}} || [];
   const tarif = {{tarif}} || [];
+  const tarifAnggota = {{tarifAnggota}} || [];
   const tahunSaatIni = parseInt("{{tahun}}") || new Date().getFullYear();
 
   // Nama bulan
@@ -510,23 +511,24 @@
     });
   }
 
-  // Load daftar tarif - hanya yang aktif
+  // Load daftar tarif - tarif yang wajib dibayar oleh anggota ini
   function loadTarifList() {
     const tarifList = document.getElementById("tarifList");
-    if (!tarifList || !tarif || tarif.length === 0) {
-      tarifList.innerHTML = '<p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 py-2">Tidak ada tarif aktif</p>';
+    if (!tarifList) {
       return;
     }
 
-    // Filter hanya tarif yang aktif
-    const tarifAktif = tarif.filter((item) => item.status === "aktif");
+    // Gunakan tarif yang dikonfigurasi untuk anggota ini, atau semua tarif aktif sebagai default
+    const tarifWajib = tarifAnggota.length > 0
+      ? tarifAnggota
+      : tarif.filter((item) => item.status === "aktif");
 
-    if (tarifAktif.length === 0) {
-      tarifList.innerHTML = '<p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 py-2">Tidak ada tarif aktif</p>';
+    if (tarifWajib.length === 0) {
+      tarifList.innerHTML = '<p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 py-2">Tidak ada tarif yang dikonfigurasi. Semua tarif aktif akan digunakan sebagai default.</p>';
       return;
     }
 
-    tarifList.innerHTML = tarifAktif
+    tarifList.innerHTML = tarifWajib
       .map(
         (item) => `
           <div class="flex items-center justify-between p-1.5 md:p-2 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
@@ -543,15 +545,22 @@
         `
       )
       .join("");
+
+    // Tampilkan info jika menggunakan default
+    if (tarifAnggota.length === 0) {
+      tarifList.innerHTML += '<p class="text-xs text-gray-500 dark:text-gray-400 mt-2 italic">* Menggunakan semua tarif aktif sebagai default. Edit anggota untuk mengubah.</p>';
+    }
   }
 
   // Load tabel pembayaran
   function loadPembayaran() {
-    // Ambil semua tarif aktif
-    const tarifAktif = tarif.filter((t) => t.status === "aktif");
+    // Gunakan tarif yang dikonfigurasi untuk anggota ini, atau semua tarif aktif sebagai default
+    const tarifWajib = tarifAnggota.length > 0
+      ? tarifAnggota
+      : tarif.filter((t) => t.status === "aktif");
 
-    // Hitung total semua tarif aktif
-    const totalSemuaTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+    // Hitung total tarif wajib dibayar
+    const totalSemuaTarif = tarifWajib.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
 
     // Buat data untuk 12 bulan
     const bulanData = [];
@@ -599,7 +608,7 @@
       bulanData.push({
         bulan: bulan,
         namaBulan: bulanNames[bulan],
-        tarifAktif: tarifAktif,
+        tarifAktif: tarifWajib,
         totalTarif: totalSemuaTarif,
         jumlahBayar: jumlahBayar,
         sisa: sisa,
@@ -814,9 +823,11 @@
 
   // Fungsi untuk bayar iuran (buka modal)
   function bayarIuran(bulan, tahun, totalTarif) {
-    // Hitung total dari semua tarif aktif
-    const tarifAktif = tarif.filter((t) => t.status === "aktif");
-    const totalSemuaTarif = totalTarif || tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+    // Gunakan tarif yang dikonfigurasi untuk anggota ini, atau semua tarif aktif sebagai default
+    const tarifWajib = tarifAnggota.length > 0
+      ? tarifAnggota
+      : tarif.filter((t) => t.status === "aktif");
+    const totalSemuaTarif = totalTarif || tarifWajib.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
 
     // Cari semua iuran untuk bulan ini
     const semuaIuranBulan = iuran.filter(

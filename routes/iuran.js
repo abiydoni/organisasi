@@ -49,43 +49,60 @@ router.get("/", (req, res) => {
         (err, iuran) => {
           // Get all anggota (not just aktif)
           db.all("SELECT * FROM anggota ORDER BY nama", [], (err, anggota) => {
-            // Get all tarif
+            // Get all tarif aktif
             db.all(
               'SELECT * FROM tarif WHERE status = "aktif"',
               [],
               (err, tarif) => {
-                // Set active flags based on user role
-                const userRole = req.session.user.role;
-                const active = {
-                  iuran: true,
-                  isAdmin: userRole === "admin",
-                  isAdminOrPengurus:
-                    userRole === "admin" || userRole === "pengurus",
-                  isUser: userRole === "user",
-                };
+                // Get anggota_tarif mapping untuk semua anggota
+                db.all(
+                  `SELECT at.anggota_id, at.tarif_id, t.* 
+                   FROM anggota_tarif at
+                   INNER JOIN tarif t ON at.tarif_id = t.id
+                   WHERE t.status = "aktif"`,
+                  [],
+                  (err, anggotaTarifMapping) => {
+                    // Set active flags based on user role
+                    const userRole = req.session.user.role;
+                    const active = {
+                      iuran: true,
+                      isAdmin: userRole === "admin",
+                      isAdminOrPengurus:
+                        userRole === "admin" || userRole === "pengurus",
+                      isUser: userRole === "user",
+                    };
 
-                const layout = renderHTML("iuran.html", {
-                  title: "Informasi Pembayaran",
-                  user: req.session.user,
-                  active: active,
-                  content: "",
-                  organisasi: organisasi || {},
-                });
-                // Replace template variables
-                const iuranJson = JSON.stringify(iuran || []);
-                const anggotaJson = JSON.stringify(anggota || []);
-                const tarifJson = JSON.stringify(tarif || []);
-                const organisasiJson = JSON.stringify(organisasi || {});
-                let html = layout.replace(/\{\{iuran\}\}/g, iuranJson);
-                html = html.replace(/\{\{anggota\}\}/g, anggotaJson);
-                html = html.replace(/\{\{tarif\}\}/g, tarifJson);
-                html = html.replace(/\{\{organisasi\}\}/g, organisasiJson);
-                html = html.replace(/\{\{tahun\}\}/g, tahun);
-                html = html.replace(
-                  /\{\{user\.nama\}\}/g,
-                  req.session.user.nama || ""
+                    const layout = renderHTML("iuran.html", {
+                      title: "Informasi Pembayaran",
+                      user: req.session.user,
+                      active: active,
+                      content: "",
+                      organisasi: organisasi || {},
+                    });
+                    // Replace template variables
+                    const iuranJson = JSON.stringify(iuran || []);
+                    const anggotaJson = JSON.stringify(anggota || []);
+                    const tarifJson = JSON.stringify(tarif || []);
+                    const anggotaTarifJson = JSON.stringify(
+                      anggotaTarifMapping || []
+                    );
+                    const organisasiJson = JSON.stringify(organisasi || {});
+                    let html = layout.replace(/\{\{iuran\}\}/g, iuranJson);
+                    html = html.replace(/\{\{anggota\}\}/g, anggotaJson);
+                    html = html.replace(/\{\{tarif\}\}/g, tarifJson);
+                    html = html.replace(
+                      /\{\{anggotaTarif\}\}/g,
+                      anggotaTarifJson
+                    );
+                    html = html.replace(/\{\{organisasi\}\}/g, organisasiJson);
+                    html = html.replace(/\{\{tahun\}\}/g, tahun);
+                    html = html.replace(
+                      /\{\{user\.nama\}\}/g,
+                      req.session.user.nama || ""
+                    );
+                    res.send(html);
+                  }
                 );
-                res.send(html);
               }
             );
           });

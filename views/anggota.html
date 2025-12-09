@@ -77,109 +77,131 @@
   class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
 >
   <div
-    class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-5 md:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700"
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-4 w-full max-w-md mx-4 border border-gray-200 dark:border-gray-700"
   >
     <h3
-      class="text-xl font-bold text-gray-800 dark:text-white mb-4"
+      class="text-lg font-bold text-gray-800 dark:text-white mb-3"
       id="modalTitle"
     >
       Tambah Anggota
     </h3>
-    <form id="anggotaForm" class="space-y-3 md:space-y-4">
+    <form id="anggotaForm" class="space-y-2.5">
       <input type="hidden" id="anggotaId" />
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+      <div class="grid grid-cols-2 gap-2">
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
             >Nama *</label
           >
           <input
             type="text"
             id="nama"
             required
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
           />
         </div>
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
             >NIK</label
           >
           <input
             type="text"
             id="nik"
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
           />
         </div>
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
             >Alamat</label
           >
           <input
             type="text"
             id="alamat"
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
           />
         </div>
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
             >Telepon</label
           >
           <input
             type="text"
             id="telepon"
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
           />
         </div>
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
             >Email</label
           >
           <input
             type="email"
             id="email"
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
           />
         </div>
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
             >Tanggal Bergabung</label
           >
           <input
             type="date"
             id="tanggal_bergabung"
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
           />
         </div>
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
             >Status</label
           >
           <select
             id="status"
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            class="w-full px-2.5 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
           >
             <option value="aktif">Aktif</option>
             <option value="tidak aktif">Tidak Aktif</option>
           </select>
         </div>
       </div>
-      <div class="flex justify-end gap-3">
+
+      <!-- Pilihan Tarif Wajib Dibayar -->
+      <div class="col-span-2">
+        <label
+          class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
+        >
+          <i
+            class="bx bx-list-check text-blue-600 dark:text-blue-400 text-sm"
+          ></i>
+          Jenis Iuran Wajib Dibayar
+        </label>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
+          Pilih jenis iuran (kosongkan = semua tarif aktif)
+        </p>
+        <div
+          id="tarifCheckboxContainer"
+          class="max-h-32 overflow-y-auto border border-gray-300 dark:border-gray-600 rounded p-2 bg-gray-50 dark:bg-gray-700 space-y-1.5"
+        >
+          <!-- Checkbox tarif akan diisi oleh JavaScript -->
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 col-span-2 pt-1">
         <button
           type="button"
           onclick="closeModal()"
-          class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-200 font-medium"
+          class="px-3 py-1.5 text-xs bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded transition-all duration-200 font-medium"
         >
           Batal
         </button>
         <button
           type="submit"
-          class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+          class="px-3 py-1.5 text-xs bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded transition-all duration-200 font-medium shadow-sm hover:shadow"
         >
           Simpan
         </button>
@@ -191,6 +213,40 @@
 <script>
   // Load anggota data
   const anggota = {{anggota}} || [];
+  const tarif = {{tarif}} || [];
+
+  // Load tarif checkbox
+  function loadTarifCheckbox(selectedTarifIds = []) {
+    const container = document.getElementById("tarifCheckboxContainer");
+    if (!container) return;
+
+    const tarifAktif = tarif.filter((t) => t.status === "aktif");
+
+    if (tarifAktif.length === 0) {
+      container.innerHTML = '<p class="text-xs text-gray-500 dark:text-gray-400 py-1 text-center">Tidak ada tarif aktif</p>';
+      return;
+    }
+
+    container.innerHTML = tarifAktif
+      .map(
+        (t) => `
+          <label class="flex items-center p-1.5 rounded border border-gray-200 dark:border-gray-600 hover:bg-white dark:hover:bg-gray-600 cursor-pointer transition-colors">
+            <input
+              type="checkbox"
+              name="tarif_ids"
+              value="${t.id}"
+              ${selectedTarifIds.includes(parseInt(t.id)) ? "checked" : ""}
+              class="mr-2 w-3.5 h-3.5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-800 dark:text-white truncate">${t.nama}</p>
+              <p class="text-xs font-semibold text-blue-600 dark:text-blue-400">Rp ${new Intl.NumberFormat("id-ID").format(t.jumlah || 0)}</p>
+            </div>
+          </label>
+        `
+      )
+      .join("");
+  }
 
   function loadAnggota() {
     const tbody = document.getElementById("anggotaTableBody");
@@ -237,13 +293,16 @@
       .join("");
   }
 
-  function openModal(id = null) {
+  async function openModal(id = null) {
     document.getElementById("anggotaModal").classList.remove("hidden");
     document.getElementById("anggotaForm").reset();
     document.getElementById("anggotaId").value = id || "";
     document.getElementById("modalTitle").textContent = id
       ? "Edit Anggota"
       : "Tambah Anggota";
+
+    // Load tarif checkbox (kosong untuk tambah baru)
+    loadTarifCheckbox([]);
 
     if (id) {
       const item = anggota.find((a) => a.id === id);
@@ -256,6 +315,17 @@
         document.getElementById("tanggal_bergabung").value =
           item.tanggal_bergabung || "";
         document.getElementById("status").value = item.status || "aktif";
+
+        // Load tarif yang sudah dipilih untuk anggota ini
+        try {
+          const response = await API.get(`/anggota/${id}/tarif`);
+          if (response.success && response.data) {
+            const selectedTarifIds = response.data.map((t) => parseInt(t.id));
+            loadTarifCheckbox(selectedTarifIds);
+          }
+        } catch (error) {
+          console.error("Error loading tarif anggota:", error);
+        }
       }
     }
   }
@@ -295,6 +365,11 @@
     .addEventListener("submit", async (e) => {
       e.preventDefault();
       const id = document.getElementById("anggotaId").value;
+
+      // Ambil semua checkbox tarif yang dicentang
+      const tarifCheckboxes = document.querySelectorAll('input[name="tarif_ids"]:checked');
+      const tarif_ids = Array.from(tarifCheckboxes).map(cb => parseInt(cb.value));
+
       const data = {
         nama: document.getElementById("nama").value,
         nik: document.getElementById("nik").value,
@@ -303,6 +378,7 @@
         email: document.getElementById("email").value,
         tanggal_bergabung: document.getElementById("tanggal_bergabung").value,
         status: document.getElementById("status").value,
+        tarif_ids: tarif_ids,
       };
 
       const url = id ? `/anggota/update/${id}` : "/anggota/create";

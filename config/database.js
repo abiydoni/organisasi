@@ -125,6 +125,17 @@ function initializeDatabase() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
+
+    // Tabel Anggota Tarif (relasi anggota dengan tarif yang wajib dibayar)
+    db.run(`CREATE TABLE IF NOT EXISTS anggota_tarif (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      anggota_id INTEGER NOT NULL,
+      tarif_id INTEGER NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (anggota_id) REFERENCES anggota(id) ON DELETE CASCADE,
+      FOREIGN KEY (tarif_id) REFERENCES tarif(id) ON DELETE CASCADE,
+      UNIQUE(anggota_id, tarif_id)
+    )`);
   });
 }
 

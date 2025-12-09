@@ -497,17 +497,35 @@
   const iuran = {{iuran}} || [];
   const anggota = {{anggota}} || [];
   const tarif = {{tarif}} || [];
+  const anggotaTarif = {{anggotaTarif}} || [];
   const tahunSaatIni = parseInt("{{tahun}}") || new Date().getFullYear();
 
-  // Hitung total tarif aktif
-  const totalTarif = tarif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+  // Buat mapping tarif per anggota
+  const tarifPerAnggota = {};
+  anggota.forEach(a => {
+    const tarifAnggota = anggotaTarif.filter(at => parseInt(at.anggota_id) === parseInt(a.id));
+    tarifPerAnggota[a.id] = tarifAnggota;
+  });
+
+  // Fungsi untuk mendapatkan total tarif per anggota
+  function getTotalTarifAnggota(anggotaId) {
+    // Jika anggota tidak ada di mapping atau tidak ada tarif yang dikonfigurasi,
+    // gunakan semua tarif aktif sebagai default (backward compatibility)
+    const tarifAnggota = tarifPerAnggota[anggotaId];
+    if (!tarifAnggota || tarifAnggota.length === 0) {
+      // Default: semua tarif aktif
+      return tarif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+    }
+    // Gunakan tarif yang dikonfigurasi untuk anggota ini
+    return tarifAnggota.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+  }
 
   // Debug log
   console.log("Data loaded:", {
     iuranCount: iuran.length,
     anggotaCount: anggota.length,
     tarifCount: tarif.length,
-    totalTarif: totalTarif,
+    anggotaTarifCount: anggotaTarif.length,
     tahunSaatIni: tahunSaatIni
   });
 
@@ -558,8 +576,11 @@
       0
     );
 
-    // Bandingkan dengan total tarif
-    if (totalTarif > 0 && totalBayar >= totalTarif) {
+    // Dapatkan total tarif untuk anggota ini
+    const totalTarifAnggota = getTotalTarifAnggota(anggotaId);
+
+    // Bandingkan dengan total tarif anggota
+    if (totalTarifAnggota > 0 && totalBayar >= totalTarifAnggota) {
       return "lunas";
     } else if (totalBayar > 0) {
       return "belum lunas";
@@ -595,6 +616,8 @@
     console.log("Loading iuran table...");
     console.log("Anggota count:", anggota ? anggota.length : 0);
     console.log("Iuran count:", iuran ? iuran.length : 0);
+    console.log("Tarif count:", tarif ? tarif.length : 0);
+    console.log("Anggota Tarif count:", anggotaTarif ? anggotaTarif.length : 0);
 
     if (!anggota || anggota.length === 0) {
       tbody.innerHTML = `
@@ -606,6 +629,8 @@
       `;
       return;
     }
+
+    try {
 
     const rows = anggota.map((a, index) => {
       // Generate cells untuk setiap bulan (1-12)
@@ -660,6 +685,16 @@
 
     tbody.innerHTML = rows.join("");
     console.log("Table loaded with", rows.length, "rows");
+    } catch (error) {
+      console.error("Error loading iuran table:", error);
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="14" class="px-6 py-4 text-center text-sm text-red-500 dark:text-red-400">
+            Error memuat data: ${error.message}
+          </td>
+        </tr>
+      `;
+    }
   }
 
   function formatNumber(num) {
@@ -784,8 +819,12 @@
       if (response.success && response.data) {
         const pembayaranList = response.data;
 
-        // Tampilkan daftar tarif
-        const tarifList = tarif.filter(t => t.status === "aktif");
+        // Tampilkan daftar tarif untuk anggota ini
+        const tarifAnggota = tarifPerAnggota[anggotaId] || [];
+        // Jika tidak ada tarif yang dikonfigurasi, gunakan semua tarif aktif sebagai default
+        const tarifList = tarifAnggota.length > 0
+          ? tarifAnggota
+          : tarif.filter(t => t.status === "aktif");
         const tarifHtml = tarifList.map(t => `
           <div class="flex justify-between items-center leading-tight py-0.5">
             <span class="text-[10px] text-gray-700 dark:text-gray-300">${t.nama}</span>
@@ -794,7 +833,7 @@
         `).join("");
         document.getElementById("detailDaftarTarif").innerHTML = tarifHtml || "<p class='text-[10px] text-gray-500 leading-tight'>Tidak ada tarif aktif</p>";
 
-        const totalTarifAmount = tarifList.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+        const totalTarifAmount = getTotalTarifAnggota(anggotaId);
         document.getElementById("detailTotalTarif").textContent = `Rp ${formatNumber(totalTarifAmount)}`;
 
         // Tampilkan riwayat pembayaran
@@ -831,7 +870,11 @@
         document.getElementById("ringkasanSisa").textContent = `Rp ${formatNumber(sisa)}`;
       } else {
         // Jika tidak ada pembayaran
-        const tarifList = tarif.filter(t => t.status === "aktif");
+        const tarifAnggota = tarifPerAnggota[anggotaId] || [];
+        // Jika tidak ada tarif yang dikonfigurasi, gunakan semua tarif aktif sebagai default
+        const tarifList = tarifAnggota.length > 0
+          ? tarifAnggota
+          : tarif.filter(t => t.status === "aktif");
         const tarifHtml = tarifList.map(t => `
           <div class="flex justify-between items-center leading-tight py-0.5">
             <span class="text-[10px] text-gray-700 dark:text-gray-300">${t.nama}</span>
@@ -840,7 +883,7 @@
         `).join("");
         document.getElementById("detailDaftarTarif").innerHTML = tarifHtml || "<p class='text-[10px] text-gray-500 leading-tight'>Tidak ada tarif aktif</p>";
 
-        const totalTarifAmount = tarifList.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+        const totalTarifAmount = getTotalTarifAnggota(anggotaId);
         document.getElementById("detailTotalTarif").textContent = `Rp ${formatNumber(totalTarifAmount)}`;
 
         document.getElementById("detailPembayaranBody").innerHTML = `
@@ -882,7 +925,8 @@
     console.log("Anggota:", anggota);
     console.log("Iuran:", iuran);
     console.log("Tarif:", tarif);
-    console.log("Total Tarif:", totalTarif);
+    console.log("Anggota Tarif:", anggotaTarif);
+    console.log("Tarif Per Anggota:", tarifPerAnggota);
 
     loadTahunFilter();
     loadIuran();
