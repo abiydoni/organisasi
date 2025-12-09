@@ -58,15 +58,15 @@ router.get("/data", (req, res) => {
 });
 
 router.post("/create", (req, res) => {
-  const { nama, jumlah, keterangan, status } = req.body;
+  const { nama, jumlah, keterangan, status, frekuensi } = req.body;
 
   if (!nama || !jumlah) {
     return res.json({ success: false, message: "Nama dan jumlah wajib diisi" });
   }
 
   db.run(
-    "INSERT INTO tarif (nama, jumlah, keterangan, status) VALUES (?, ?, ?, ?)",
-    [nama, jumlah, keterangan || "", status || "aktif"],
+    "INSERT INTO tarif (nama, jumlah, frekuensi, keterangan, status) VALUES (?, ?, ?, ?, ?)",
+    [nama, jumlah, frekuensi || "bulanan", keterangan || "", status || "aktif"],
     function (err) {
       if (err) {
         return res.json({ success: false, message: "Error simpan data" });
@@ -78,15 +78,22 @@ router.post("/create", (req, res) => {
 
 router.put("/update/:id", (req, res) => {
   const { id } = req.params;
-  const { nama, jumlah, keterangan, status } = req.body;
+  const { nama, jumlah, frekuensi, keterangan, status } = req.body;
 
   if (!nama || !jumlah) {
     return res.json({ success: false, message: "Nama dan jumlah wajib diisi" });
   }
 
   db.run(
-    "UPDATE tarif SET nama=?, jumlah=?, keterangan=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
-    [nama, jumlah, keterangan || "", status || "aktif", id],
+    "UPDATE tarif SET nama=?, jumlah=?, frekuensi=?, keterangan=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
+    [
+      nama,
+      jumlah,
+      frekuensi || "bulanan",
+      keterangan || "",
+      status || "aktif",
+      id,
+    ],
     (err) => {
       if (err) {
         return res.json({ success: false, message: "Error update data" });

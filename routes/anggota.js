@@ -309,10 +309,10 @@ router.get("/detail/:id", (req, res) => {
   );
 });
 
-// Endpoint untuk mengambil detail pembayaran per bulan
+// Endpoint untuk mengambil detail pembayaran per bulan atau berdasarkan frekuensi/tarif_id
 router.get("/detail/:id/pembayaran", (req, res) => {
   const { id } = req.params;
-  const { bulan, tahun } = req.query;
+  const { bulan, tahun, frekuensi, tarif_id } = req.query;
 
   // Validate parameters
   if (!id || isNaN(parseInt(id))) {
@@ -320,32 +320,50 @@ router.get("/detail/:id/pembayaran", (req, res) => {
       .status(400)
       .json({ success: false, message: "ID anggota tidak valid" });
   }
-  if (!bulan || isNaN(parseInt(bulan)) || bulan < 1 || bulan > 12) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Bulan tidak valid" });
-  }
-  if (!tahun || isNaN(parseInt(tahun))) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Tahun tidak valid" });
-  }
 
-  // Get all iuran for this month and year
-  db.all(
-    "SELECT * FROM iuran WHERE anggota_id=? AND bulan=? AND tahun=? ORDER BY tanggal_bayar DESC, created_at DESC",
-    [id, bulan, tahun],
-    (err, iuran) => {
-      if (err) {
-        console.error("Error fetching iuran detail:", err);
-        return res
-          .status(500)
-          .json({ success: false, message: "Error database: " + err.message });
-      }
+  let query = "SELECT * FROM iuran WHERE anggota_id=?";
+  let params = [id];
 
-      res.json({ success: true, data: iuran || [] });
+  // Jika ada frekuensi dan tarif_id, gunakan filter berdasarkan itu
+  if (frekuensi && tarif_id) {
+    query += " AND frekuensi=? AND tarif_id=?";
+    params.push(frekuensi, tarif_id);
+
+    // Jika tahun juga diberikan (untuk tahunan), tambahkan filter tahun
+    if (tahun && !isNaN(parseInt(tahun))) {
+      query += " AND tahun=?";
+      params.push(tahun);
     }
-  );
+  } else {
+    // Fallback ke logika lama: bulan dan tahun wajib
+    if (!bulan || isNaN(parseInt(bulan)) || bulan < 1 || bulan > 12) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Bulan tidak valid" });
+    }
+    if (!tahun || isNaN(parseInt(tahun))) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Tahun tidak valid" });
+    }
+
+    query += " AND bulan=? AND tahun=?";
+    params.push(bulan, tahun);
+  }
+
+  query += " ORDER BY tanggal_bayar DESC, created_at DESC";
+
+  // Get all iuran based on filters
+  db.all(query, params, (err, iuran) => {
+    if (err) {
+      console.error("Error fetching iuran detail:", err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Error database: " + err.message });
+    }
+
+    res.json({ success: true, data: iuran || [] });
+  });
 });
 
 // Endpoint untuk mendapatkan tarif yang wajib dibayar oleh anggota

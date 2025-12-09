@@ -96,12 +96,22 @@ function initializeDatabase() {
       bulan INTEGER NOT NULL,
       tahun INTEGER NOT NULL,
       jumlah INTEGER NOT NULL,
+      frekuensi TEXT DEFAULT 'bulanan',
+      tarif_id INTEGER,
       tanggal_bayar DATE,
       status TEXT DEFAULT 'lunas',
       keterangan TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (anggota_id) REFERENCES anggota(id)
+      FOREIGN KEY (anggota_id) REFERENCES anggota(id),
+      FOREIGN KEY (tarif_id) REFERENCES tarif(id)
     )`);
+
+    // Migrasi kolom frekuensi dan tarif_id jika belum ada
+    db.run(
+      `ALTER TABLE iuran ADD COLUMN frekuensi TEXT DEFAULT 'bulanan'`,
+      () => {}
+    );
+    db.run(`ALTER TABLE iuran ADD COLUMN tarif_id INTEGER`, () => {});
 
     // Tabel Buku Kas
     db.run(`CREATE TABLE IF NOT EXISTS buku_kas (
@@ -120,11 +130,18 @@ function initializeDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nama TEXT NOT NULL,
       jumlah INTEGER NOT NULL,
+      frekuensi TEXT DEFAULT 'bulanan', -- bulanan | tahunan | seumur_hidup
       keterangan TEXT,
       status TEXT DEFAULT 'aktif',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
+
+    // Migrasi kolom frekuensi jika belum ada
+    db.run(
+      `ALTER TABLE tarif ADD COLUMN frekuensi TEXT DEFAULT 'bulanan'`,
+      () => {}
+    );
 
     // Tabel Anggota Tarif (relasi anggota dengan tarif yang wajib dibayar)
     db.run(`CREATE TABLE IF NOT EXISTS anggota_tarif (

@@ -131,6 +131,8 @@ router.post("/create", (req, res) => {
     bulan,
     tahun,
     jumlah,
+    frekuensi,
+    tarif_id,
     tanggal_bayar,
     status,
     keterangan,
@@ -146,13 +148,15 @@ router.post("/create", (req, res) => {
   );
 
   db.run(
-    `INSERT INTO iuran (anggota_id, bulan, tahun, jumlah, tanggal_bayar, status, keterangan) 
-    VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO iuran (anggota_id, bulan, tahun, jumlah, frekuensi, tarif_id, tanggal_bayar, status, keterangan) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       anggotaIdInt,
       bulan,
       tahun,
       jumlah,
+      frekuensi || "bulanan",
+      tarif_id || null,
       tanggal_bayar,
       status || "lunas",
       keterangan,
@@ -253,14 +257,27 @@ router.put("/update/:id", (req, res) => {
     bulan,
     tahun,
     jumlah,
+    frekuensi,
+    tarif_id,
     tanggal_bayar,
     status,
     keterangan,
   } = req.body;
 
   db.run(
-    `UPDATE iuran SET anggota_id=?, bulan=?, tahun=?, jumlah=?, tanggal_bayar=?, status=?, keterangan=? WHERE id=?`,
-    [anggota_id, bulan, tahun, jumlah, tanggal_bayar, status, keterangan, id],
+    `UPDATE iuran SET anggota_id=?, bulan=?, tahun=?, jumlah=?, frekuensi=?, tarif_id=?, tanggal_bayar=?, status=?, keterangan=? WHERE id=?`,
+    [
+      anggota_id,
+      bulan,
+      tahun,
+      jumlah,
+      frekuensi || "bulanan",
+      tarif_id || null,
+      tanggal_bayar,
+      status,
+      keterangan,
+      id,
+    ],
     (err) => {
       if (err) {
         return res.json({ success: false, message: "Error update data" });
@@ -297,7 +314,7 @@ router.delete("/delete/:id", (req, res) => {
                 "Error mengambil data anggota:",
                 err,
                 "anggota_id:",
-                anggota_id
+                iuranData.anggota_id
               );
             }
 
@@ -306,7 +323,7 @@ router.delete("/delete/:id", (req, res) => {
               "Nama anggota untuk buku_kas:",
               namaAnggota,
               "dari anggota_id:",
-              anggota_id
+              iuranData.anggota_id
             );
             const namaBulan = getNamaBulan(iuranData.bulan);
             const keteranganBukuKas = `Pembatalan iuran ${namaBulan} - ${namaAnggota}`;

@@ -502,21 +502,53 @@
 
   // Buat mapping tarif per anggota
   const tarifPerAnggota = {};
-  anggota.forEach(a => {
-    const tarifAnggota = anggotaTarif.filter(at => parseInt(at.anggota_id) === parseInt(a.id));
+  const tarifPerAnggotaByFreq = {};
+  anggota.forEach((a) => {
+    const tarifAnggota = anggotaTarif.filter(
+      (at) => parseInt(at.anggota_id) === parseInt(a.id)
+    );
     tarifPerAnggota[a.id] = tarifAnggota;
+    const groups = { bulanan: [], tahunan: [], seumur_hidup: [] };
+    tarifAnggota.forEach((t) => {
+      const freq = (t.frekuensi || "bulanan").toLowerCase();
+      if (groups[freq]) {
+        groups[freq].push(t);
+      } else {
+        groups.bulanan.push(t);
+      }
+    });
+    tarifPerAnggotaByFreq[a.id] = groups;
   });
 
-  // Fungsi untuk mendapatkan total tarif per anggota
-  function getTotalTarifAnggota(anggotaId) {
-    // Jika anggota tidak ada di mapping atau tidak ada tarif yang dikonfigurasi,
-    // gunakan semua tarif aktif sebagai default (backward compatibility)
-    const tarifAnggota = tarifPerAnggota[anggotaId];
-    if (!tarifAnggota || tarifAnggota.length === 0) {
-      // Default: semua tarif aktif
-      return tarif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+  function formatFrekuensi(freq) {
+    switch ((freq || "bulanan").toLowerCase()) {
+      case "tahunan":
+        return "Tahunan";
+      case "seumur_hidup":
+        return "Sekali Seumur Hidup";
+      default:
+        return "Bulanan";
     }
-    // Gunakan tarif yang dikonfigurasi untuk anggota ini
+  }
+
+  function getTarifByFreq(anggotaId, freq) {
+    const groups = tarifPerAnggotaByFreq[anggotaId] || {};
+    if (freq === "all" || !freq) {
+      return tarifPerAnggota[anggotaId] || [];
+    }
+    return groups[freq] || [];
+  }
+
+  // Fungsi untuk mendapatkan total tarif per anggota
+  function getTotalTarifAnggota(anggotaId, frekuensi = "all") {
+    const tarifAnggota = getTarifByFreq(anggotaId, frekuensi);
+    if (!tarifAnggota || tarifAnggota.length === 0) {
+      // Default: semua tarif aktif jika tidak ada konfigurasi
+      const fallback = frekuensi === "all"
+        ? tarif
+        : tarif.filter((t) => (t.frekuensi || "bulanan") === frekuensi);
+      return fallback.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+    }
     return tarifAnggota.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
   }
 
@@ -558,6 +590,12 @@
       return "belum bayar";
     }
 
+    const totalTarifBulanan = getTotalTarifAnggota(anggotaId, "bulanan");
+
+    if (totalTarifBulanan === 0) {
+      return "tidak ada tarif";
+    }
+
     // Cari semua iuran untuk anggota, bulan, dan tahun ini
     const iuranBulan = iuran.filter((i) => {
       const match = parseInt(i.anggota_id) === parseInt(anggotaId) &&
@@ -576,8 +614,8 @@
       0
     );
 
-    // Dapatkan total tarif untuk anggota ini
-    const totalTarifAnggota = getTotalTarifAnggota(anggotaId);
+    // Dapatkan total tarif bulanan untuk anggota ini
+    const totalTarifAnggota = totalTarifBulanan;
 
     // Bandingkan dengan total tarif anggota
     if (totalTarifAnggota > 0 && totalBayar >= totalTarifAnggota) {
@@ -600,6 +638,8 @@
         return "bg-yellow-500 dark:bg-yellow-600";
       case "belum bayar":
         return "bg-red-500 dark:bg-red-600";
+      case "tidak ada tarif":
+        return "bg-gray-400 dark:bg-gray-500";
       default:
         return "bg-red-500 dark:bg-red-600";
     }
@@ -652,6 +692,8 @@
           bgColor = "#10b981"; // green-500
         } else if (status === "belum lunas") {
           bgColor = "#eab308"; // yellow-500
+        } else if (status === "tidak ada tarif") {
+          bgColor = "#9ca3af"; // gray-400
         } else {
           bgColor = "#ef4444"; // red-500
         }
@@ -827,7 +869,7 @@
           : tarif.filter(t => t.status === "aktif");
         const tarifHtml = tarifList.map(t => `
           <div class="flex justify-between items-center leading-tight py-0.5">
-            <span class="text-[10px] text-gray-700 dark:text-gray-300">${t.nama}</span>
+            <span class="text-[10px] text-gray-700 dark:text-gray-300">${t.nama} <span class="text-[9px] text-gray-500">(${formatFrekuensi(t.frekuensi)})</span></span>
             <span class="text-[10px] font-semibold text-gray-800 dark:text-white">Rp ${formatNumber(t.jumlah)}</span>
           </div>
         `).join("");
@@ -877,7 +919,7 @@
           : tarif.filter(t => t.status === "aktif");
         const tarifHtml = tarifList.map(t => `
           <div class="flex justify-between items-center leading-tight py-0.5">
-            <span class="text-[10px] text-gray-700 dark:text-gray-300">${t.nama}</span>
+            <span class="text-[10px] text-gray-700 dark:text-gray-300">${t.nama} <span class="text-[9px] text-gray-500">(${formatFrekuensi(t.frekuensi)})</span></span>
             <span class="text-[10px] font-semibold text-gray-800 dark:text-white">Rp ${formatNumber(t.jumlah)}</span>
           </div>
         `).join("");
