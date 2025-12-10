@@ -29,6 +29,7 @@ const API = {
       }
     } catch (error) {
       console.error("API Error:", error);
+      console.error("Error stack:", error.stack);
       return { success: false, message: "Terjadi kesalahan: " + error.message };
     }
   },

@@ -36,69 +36,55 @@
         Informasi dan riwayat pembayaran saya
       </p>
     </div>
-    <div class="flex gap-2 no-print">
-      <button
-        onclick="window.print()"
-        class="px-3 md:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition text-sm md:text-base flex items-center gap-1"
-      >
-        <i class="bx bx-printer"></i>
-        <span class="hidden sm:inline">Print</span>
-      </button>
-      <button
-        onclick="exportToPDF()"
-        class="px-3 md:px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition text-sm md:text-base flex items-center gap-1"
-      >
-        <i class="bx bx-file"></i>
-        <span class="hidden sm:inline">PDF</span>
-      </button>
-    </div>
   </div>
 
   <!-- Informasi Anggota dan Daftar Tarif Aktif -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
     <!-- Informasi Anggota -->
     <div
-      class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-3 md:p-4"
+      class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-2"
     >
       <h3
-        class="text-sm md:text-base font-semibold text-gray-800 dark:text-white mb-3"
+        class="text-xs font-medium text-gray-800 dark:text-white mb-1.5 pb-1 border-b border-gray-200 dark:border-gray-700"
       >
         Informasi Anggota
       </h3>
-      <div class="space-y-2.5">
+      <div class="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
         <div>
-          <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Nama</p>
-          <p class="text-sm text-gray-800 dark:text-white" id="anggotaNama">
-            -
-          </p>
+          <span class="text-gray-500 dark:text-gray-400">Nama:</span>
+          <span class="text-gray-800 dark:text-white block" id="anggotaNama"
+            >-</span
+          >
         </div>
         <div>
-          <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">NIK</p>
-          <p class="text-sm text-gray-800 dark:text-white" id="anggotaNik">-</p>
+          <span class="text-gray-500 dark:text-gray-400">NIK:</span>
+          <span class="text-gray-800 dark:text-white block" id="anggotaNik"
+            >-</span
+          >
         </div>
         <div>
-          <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Alamat</p>
-          <p class="text-sm text-gray-800 dark:text-white" id="anggotaAlamat">
-            -
-          </p>
+          <span class="text-gray-500 dark:text-gray-400">Alamat:</span>
+          <span class="text-gray-800 dark:text-white block" id="anggotaAlamat"
+            >-</span
+          >
         </div>
         <div>
-          <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Telepon</p>
-          <p class="text-sm text-gray-800 dark:text-white" id="anggotaTelepon">
-            -
-          </p>
+          <span class="text-gray-500 dark:text-gray-400">Telepon:</span>
+          <span class="text-gray-800 dark:text-white block" id="anggotaTelepon"
+            >-</span
+          >
         </div>
         <div>
-          <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Email</p>
-          <p class="text-sm text-gray-800 dark:text-white" id="anggotaEmail">
-            -
-          </p>
+          <span class="text-gray-500 dark:text-gray-400">Email:</span>
+          <span class="text-gray-800 dark:text-white block" id="anggotaEmail"
+            >-</span
+          >
         </div>
         <div>
-          <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Status</p>
+          <span class="text-gray-500 dark:text-gray-400">Status:</span>
           <span
             id="anggotaStatus"
-            class="inline-block px-2 py-0.5 text-xs font-medium rounded"
+            class="inline-block px-1.5 py-0.5 text-xs font-medium rounded mt-0.5"
           >
             -
           </span>
@@ -108,14 +94,14 @@
 
     <!-- Daftar Tarif Aktif -->
     <div
-      class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-3 md:p-4"
+      class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-2"
     >
       <h3
-        class="text-sm md:text-base font-semibold text-gray-800 dark:text-white mb-3"
+        class="text-xs font-medium text-gray-800 dark:text-white mb-1.5 pb-1 border-b border-gray-200 dark:border-gray-700"
       >
         Daftar Tarif Aktif
       </h3>
-      <div class="space-y-2" id="tarifList">
+      <div class="space-y-1" id="tarifList">
         <!-- Daftar tarif akan diisi oleh JavaScript -->
       </div>
     </div>
@@ -147,24 +133,73 @@
 
   <!-- Iuran Tahunan dan Seumur Hidup -->
   <div id="sectionTahunanSeumur" class="hidden">
-    <h3
-      class="text-lg md:text-xl font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2"
-    >
-      <i class="bx bx-calendar-check text-blue-600 dark:text-blue-400"></i>
-      Iuran Tahunan & Sekali Seumur Hidup
-    </h3>
     <div
-      id="cardTahunanSeumurContainer"
-      class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4"
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700"
     >
-      <!-- Card akan diisi oleh JavaScript -->
+      <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+        <h3
+          class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
+        >
+          <i class="bx bx-calendar-check text-blue-600 dark:text-blue-400"></i>
+          Iuran Lain
+        </h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead
+            class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+          >
+            <tr>
+              <th
+                class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Jenis Iuran
+              </th>
+              <th
+                class="px-2 md:px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Tarif
+              </th>
+              <th
+                class="px-2 md:px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Bayar
+              </th>
+              <th
+                class="px-2 md:px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Sisa
+              </th>
+              <th
+                class="px-2 md:px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            id="tahunanSeumurTableBody"
+            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+          >
+            <!-- Data akan diisi oleh JavaScript -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
-  <!-- Tabel Pembayaran Per Bulan -->
+  <!-- Iuran Bulanan -->
   <div
     class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700"
   >
+    <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+      <h3
+        class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
+      >
+        <i class="bx bx-calendar text-blue-600 dark:text-blue-400"></i>
+        Iuran Bulanan
+      </h3>
+    </div>
     <!-- Judul Tabel untuk Print -->
     <h2
       class="print-only"
@@ -180,8 +215,8 @@
       Tagihan Iuran Tahun <span id="printTahun"></span>
     </h2>
 
-    <!-- Desktop Table View -->
-    <div class="hidden md:block">
+    <!-- Tabel Pembayaran -->
+    <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead
           class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
@@ -193,9 +228,9 @@
               Bulan
             </th>
             <th
-              class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
-              Daftar Tarif
+              Tarif
             </th>
             <th
               class="px-2 md:px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
@@ -208,7 +243,7 @@
               Sisa
             </th>
             <th
-              class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Status
             </th>
@@ -227,14 +262,6 @@
           <!-- Total akan diisi oleh JavaScript -->
         </tfoot>
       </table>
-    </div>
-
-    <!-- Mobile Card View -->
-    <div
-      id="pembayaranCardBody"
-      class="md:hidden divide-y divide-gray-200 dark:divide-gray-700"
-    >
-      <!-- Data akan diisi oleh JavaScript -->
     </div>
   </div>
 </div>
@@ -284,8 +311,68 @@
   </div>
 </div>
 
-<!-- Print Styles -->
+<!-- Print Styles - Load dengan prioritas tinggi -->
 <link rel="stylesheet" href="/css/print.css" media="print" />
+<style media="print">
+  /* Force override - Pastikan semua terlihat */
+  @media print {
+    html,
+    body {
+      display: block !important;
+      visibility: visible !important;
+    }
+
+    body > div:not(.no-print) {
+      display: block !important;
+      visibility: visible !important;
+    }
+
+    .space-y-3,
+    .space-y-4 {
+      display: block !important;
+      visibility: visible !important;
+    }
+
+    .space-y-3 > *,
+    .space-y-4 > * {
+      display: block !important;
+      visibility: visible !important;
+    }
+
+    .hidden,
+    .md\:hidden {
+      display: block !important;
+      visibility: visible !important;
+    }
+
+    .md\:block {
+      display: block !important;
+      visibility: visible !important;
+    }
+
+    table {
+      display: table !important;
+      visibility: visible !important;
+    }
+
+    table thead {
+      display: table-header-group !important;
+    }
+    table tbody {
+      display: table-row-group !important;
+    }
+    table tfoot {
+      display: table-footer-group !important;
+    }
+    table tr {
+      display: table-row !important;
+    }
+    table th,
+    table td {
+      display: table-cell !important;
+    }
+  }
+</style>
 <style>
   /* Pastikan kop surat tersembunyi di layar normal (bukan saat print) */
   @media screen {
@@ -301,39 +388,58 @@
     }
   }
 
-  /* Print Styles - Prioritas Tinggi */
+  /* Print Styles - INLINE dengan prioritas sangat tinggi */
   @media print {
-    /* OVERRIDE SEMUA - Pastikan semua konten terlihat */
-    * {
+    /* OVERRIDE MUTLAK - Pastikan semua terlihat */
+    html,
+    body {
+      display: block !important;
       visibility: visible !important;
       opacity: 1 !important;
+      width: 100% !important;
+      height: auto !important;
     }
 
-    /* Override Tailwind hidden dengan cara yang sangat agresif */
+    /* Override semua hidden */
     .hidden,
     .md\:hidden,
     .sm\:hidden,
     .lg\:hidden,
-    [class*="hidden"]:not(.no-print):not(.modal) {
+    [class*="hidden"] {
       display: block !important;
       visibility: visible !important;
       opacity: 1 !important;
     }
 
-    /* Pastikan md:block terlihat */
-    .md\:block,
-    .hidden.md\:block {
+    .md\:block {
       display: block !important;
       visibility: visible !important;
-      opacity: 1 !important;
     }
 
-    /* Pastikan semua container terlihat */
-    body,
+    /* Container utama - SANGAT AGRESIF */
     body > div,
     div.space-y-3,
     div.space-y-4,
-    div[class*="space-y"],
+    div[class*="space-y"] {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      width: 100% !important;
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
+    }
+
+    /* Semua child */
+    div.space-y-3 > *,
+    div.space-y-4 > *,
+    div[class*="space-y"] > * {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* Cards */
     div[class*="bg-white"],
     div[class*="rounded"],
     div[class*="border"],
@@ -345,25 +451,11 @@
       height: auto !important;
     }
 
-    /* Pastikan semua child terlihat */
-    div.space-y-3 > *,
-    div.space-y-4 > *,
-    div[class*="space-y"] > * {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-    }
-
-    /* Pastikan tabel terlihat */
-    table,
-    table * {
-      display: revert !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-    }
-
+    /* Tabel */
     table {
       display: table !important;
+      visibility: visible !important;
+      width: 100% !important;
     }
 
     table thead {
@@ -387,7 +479,7 @@
       display: table-cell !important;
     }
 
-    /* Pastikan semua text terlihat */
+    /* Text */
     h1,
     h2,
     h3,
@@ -395,19 +487,15 @@
     h5,
     h6,
     p,
-    span,
     div,
-    a {
+    span {
       display: block !important;
       visibility: visible !important;
-      opacity: 1 !important;
       color: black !important;
     }
 
     span,
-    a,
-    .inline,
-    .inline-block {
+    a {
       display: inline !important;
     }
 
@@ -416,24 +504,74 @@
     button,
     select,
     nav,
-    aside,
-    .modal {
+    aside {
       display: none !important;
-      visibility: hidden !important;
     }
   }
 </style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-  // Load data
-  const anggota = {{anggota}} || {};
-  const iuran = {{iuran}} || [];
-  const semuaIuran = {{semuaIuran}} || [];
-  const tarif = {{tarif}} || [];
-  const tarifAnggota = {{tarifAnggota}} || [];
-  // organisasi sudah dideklarasikan di layout.html
-  const tahunSaatIni = parseInt("{{tahun}}") || new Date().getFullYear();
+  // Load data dengan error handling yang lebih aman
+  let anggota = {};
+  let iuran = [];
+  let semuaIuran = [];
+  let tarif = [];
+  let tarifAnggota = [];
+  let tahunSaatIni = new Date().getFullYear();
+
+  // Load data - menggunakan pola yang sama dengan detailAnggota.html
+  try {
+    anggota = {{anggota}} || {};
+    if (!anggota || typeof anggota !== 'object' || Array.isArray(anggota)) {
+      anggota = {};
+    }
+  } catch(e) {
+    anggota = {};
+  }
+
+  try {
+    iuran = {{iuran}} || [];
+    if (!Array.isArray(iuran)) {
+      iuran = [];
+    }
+  } catch(e) {
+    iuran = [];
+  }
+
+  try {
+    semuaIuran = {{semuaIuran}} || [];
+    if (!Array.isArray(semuaIuran)) {
+      semuaIuran = [];
+    }
+  } catch(e) {
+    semuaIuran = [];
+  }
+
+  try {
+    tarif = {{tarif}} || [];
+    if (!Array.isArray(tarif)) {
+      tarif = [];
+    }
+  } catch(e) {
+    tarif = [];
+  }
+
+  try {
+    tarifAnggota = {{tarifAnggota}} || [];
+    if (!Array.isArray(tarifAnggota)) {
+      tarifAnggota = [];
+    }
+  } catch(e) {
+    tarifAnggota = [];
+  }
+
+  try {
+    const tahunStr = "{{tahun}}";
+    tahunSaatIni = tahunStr && !isNaN(parseInt(tahunStr)) ? parseInt(tahunStr) : new Date().getFullYear();
+  } catch(e) {
+    tahunSaatIni = new Date().getFullYear();
+  }
+
 
   // Nama bulan
     const bulanNames = [
@@ -452,9 +590,9 @@
       "Desember",
     ];
 
-  // Format rupiah
+  // Format rupiah - tanpa mata uang
   function formatRupiah(angka) {
-    return "Rp " + new Intl.NumberFormat("id-ID").format(angka || 0);
+    return new Intl.NumberFormat("id-ID").format(angka || 0);
   }
 
   // Format tanggal (dd/mm/yy)
@@ -482,11 +620,11 @@
       const statusEl = document.getElementById("anggotaStatus");
       if (anggota.status === "aktif") {
         statusEl.className =
-          "inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+          "inline-block px-1.5 py-0.5 text-xs font-medium rounded bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 mt-0.5";
         statusEl.textContent = "Aktif";
         } else {
         statusEl.className =
-          "inline-block px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+          "inline-block px-1.5 py-0.5 text-xs font-medium rounded bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 mt-0.5";
         statusEl.textContent = "Tidak Aktif";
       }
     }
@@ -519,7 +657,7 @@
   function loadTarifList() {
     const tarifList = document.getElementById("tarifList");
     if (!tarifList || !tarif || tarif.length === 0) {
-      tarifList.innerHTML = '<p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 py-2">Tidak ada tarif aktif</p>';
+      tarifList.innerHTML = '<p class="text-xs text-gray-500 dark:text-gray-400 py-1">Tidak ada tarif aktif</p>';
       return;
     }
 
@@ -527,21 +665,16 @@
     const tarifAktif = tarif.filter((item) => item.status === "aktif");
 
     if (tarifAktif.length === 0) {
-      tarifList.innerHTML = '<p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 py-2">Tidak ada tarif aktif</p>';
+      tarifList.innerHTML = '<p class="text-xs text-gray-500 dark:text-gray-400 py-1">Tidak ada tarif aktif</p>';
       return;
     }
 
     tarifList.innerHTML = tarifAktif
       .map(
         (item) => `
-          <div class="flex items-start justify-between py-1.5 border-b border-gray-100 dark:border-gray-700 last:border-0">
-            <div class="flex-1 min-w-0 pr-2">
-              <p class="text-sm text-gray-800 dark:text-white">${item.nama}</p>
-              ${item.keterangan ? `<p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">${item.keterangan}</p>` : ""}
-            </div>
-            <div class="text-right flex-shrink-0">
-              <p class="text-sm text-gray-800 dark:text-white">${formatRupiah(item.jumlah)}</p>
-            </div>
+          <div class="flex items-center justify-between py-0.5 border-b border-gray-100 dark:border-gray-700 last:border-0">
+            <span class="text-xs text-gray-800 dark:text-white flex-1 min-w-0 pr-1 truncate">${item.nama}</span>
+            <span class="text-xs text-gray-800 dark:text-white font-medium flex-shrink-0">${formatRupiah(item.jumlah)}</span>
           </div>
         `
       )
@@ -550,6 +683,19 @@
 
   // Load tabel pembayaran
   function loadPembayaran() {
+    // Cek apakah data ter-load
+    if (!tarif || tarif.length === 0) {
+      const tbody = document.getElementById("pembayaranTableBody");
+      if (tbody) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-gray-500 dark:text-gray-400">Tidak ada data tarif</td></tr>';
+      }
+      return;
+    }
+
+    if (!iuran || !Array.isArray(iuran)) {
+      iuran = [];
+    }
+
     // Ambil hanya tarif aktif dengan frekuensi bulanan (atau NULL/kosong yang dianggap bulanan)
     const tarifAktif = tarif.filter((t) => {
       if (t.status !== "aktif") return false;
@@ -627,648 +773,85 @@
 
     // Desktop table view
     const tbody = document.getElementById("pembayaranTableBody");
-    if (tbody) {
+    if (!tbody) {
+      return;
+    }
+
+    if (bulanData.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-gray-500 dark:text-gray-400">Tidak ada data pembayaran</td></tr>';
+      return;
+    }
+
       tbody.innerHTML = bulanData
       .map(
         (item) => `
-          <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-medium text-center">
-                <span class="print-text">${item.namaBulan}</span>
+          <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150">
+              <td class="px-2 md:px-4 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-medium">
                 <a
                   href="javascript:void(0)"
                   onclick="lihatDetailPembayaran(${item.bulan}, ${tahunSaatIni}, '${item.namaBulan}')"
-                  class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline font-semibold flex items-center gap-1 no-print"
+                  class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline flex items-center gap-1"
                   title="Lihat Detail Pembayaran"
                 >
                   ${item.namaBulan}
-                  <i class="bx bx-info-circle text-sm"></i>
+                  <i class="bx bx-info-circle text-xs"></i>
                 </a>
               </td>
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right">
+              <td class="px-2 md:px-4 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold text-right">
                 ${formatRupiah(item.totalTarif)}
               </td>
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right">
+              <td class="px-2 md:px-4 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold text-right">
                 ${formatRupiah(item.jumlahBayar)}
               </td>
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right ${
+              <td class="px-2 md:px-4 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold text-right ${
                 item.sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
               }">
                 ${formatRupiah(item.sisa)}
               </td>
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-center">
-                  <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${
+              <td class="px-2 md:px-4 py-2 whitespace-nowrap text-center">
+                  <span class="px-1.5 py-0.5 text-[10px] font-semibold rounded-full ${
                     item.status === "lunas"
-                      ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200"
+                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                       : item.status === "belum bayar"
-                      ? "bg-gradient-to-r from-red-100 to-red-200 text-red-800 dark:from-red-900 dark:to-red-800 dark:text-red-200"
-                      : "bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 dark:from-yellow-900 dark:to-yellow-800 dark:text-yellow-200"
+                      ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                      : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
                   }">${
                     item.status === "lunas"
                       ? "Lunas"
                       : item.status === "belum bayar"
-                      ? "Belum Bayar"
-                      : "Belum Lunas"
+                      ? "Belum"
+                      : "Sebagian"
                   }</span>
               </td>
           </tr>
       `
       )
       .join("");
-    }
 
     // Footer dengan total
     const tfoot = document.getElementById("pembayaranTableFooter");
     if (tfoot) {
       tfoot.innerHTML = `
         <tr>
-          <td class="px-2 md:px-4 py-2 md:py-3 text-xs md:text-sm text-gray-800 dark:text-white font-bold text-center">
+          <td class="px-2 md:px-4 py-2 text-xs text-gray-800 dark:text-white font-bold text-center">
             TOTAL
           </td>
-          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold text-right">
+          <td class="px-2 md:px-4 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-white font-bold text-right">
             ${formatRupiah(totalDaftarTarif)}
           </td>
-          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold text-right">
+          <td class="px-2 md:px-4 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-white font-bold text-right">
             ${formatRupiah(totalBayar)}
           </td>
-          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm font-bold text-right ${
+          <td class="px-2 md:px-4 py-2 whitespace-nowrap text-xs font-bold text-right ${
             totalSisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
           }">
             ${formatRupiah(totalSisa)}
           </td>
-          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold text-center">
+          <td class="px-2 md:px-4 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-white font-bold text-center">
             -
           </td>
         </tr>
       `;
-    }
-
-    // Mobile card view
-    const cardBody = document.getElementById("pembayaranCardBody");
-    if (cardBody) {
-    cardBody.innerHTML = bulanData
-      .map(
-        (item) => `
-          <div class="p-2 md:p-3 hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150">
-            <div class="flex items-center justify-between mb-2">
-              <a
-                href="javascript:void(0)"
-                onclick="lihatDetailPembayaran(${item.bulan}, ${tahunSaatIni}, '${item.namaBulan}')"
-                class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline flex items-center gap-1"
-                title="Lihat Detail Pembayaran"
-              >
-                ${item.namaBulan}
-                <i class="bx bx-info-circle text-xs"></i>
-              </a>
-              <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${
-                item.status === "lunas"
-                  ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200"
-                  : item.status === "belum bayar"
-                  ? "bg-gradient-to-r from-red-100 to-red-200 text-red-800 dark:from-red-900 dark:to-red-800 dark:text-red-200"
-                  : "bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 dark:from-yellow-900 dark:to-yellow-800 dark:text-yellow-200"
-              }">${
-                item.status === "lunas"
-                  ? "Lunas"
-                  : item.status === "belum bayar"
-                  ? "Belum Bayar"
-                  : "Belum Lunas"
-              }</span>
-            </div>
-            <div class="space-y-1.5 text-xs">
-              <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-gray-400">Tarif:</span>
-                <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(item.totalTarif)}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-gray-400">Bayar:</span>
-                <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(item.jumlahBayar)}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-gray-400">Sisa:</span>
-                <span class="font-semibold ${
-                  item.sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
-                }">${formatRupiah(item.sisa)}</span>
-              </div>
-            </div>
-          </div>
-      `
-      )
-      .join("") +
-      `
-      <div class="p-2 md:p-3 bg-gray-50 dark:bg-gray-700 font-bold border-t-2 border-gray-300 dark:border-gray-600">
-        <div class="space-y-1 text-xs">
-          <div class="flex justify-between items-center">
-            <span class="text-gray-800 dark:text-white">Total Daftar Tarif:</span>
-            <span class="text-gray-800 dark:text-white font-bold">${formatRupiah(totalDaftarTarif)}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-800 dark:text-white">Total Bayar:</span>
-            <span class="text-gray-800 dark:text-white font-bold">${formatRupiah(totalBayar)}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-800 dark:text-white">Total Sisa:</span>
-            <span class="font-bold ${totalSisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}">${formatRupiah(totalSisa)}</span>
-          </div>
-        </div>
-      </div>
-      `;
-    }
-  }
-
-  // Fungsi untuk export ke PDF - Sama persis dengan print preview
-  function exportToPDF() {
-    try {
-      // Cek apakah jsPDF tersedia - untuk versi 2.5.1
-      let jsPDFClass;
-      console.log("Checking jsPDF availability...", window.jspdf);
-
-      if (window.jspdf && window.jspdf.jsPDF) {
-        jsPDFClass = window.jspdf.jsPDF;
-        console.log("Found jsPDF at window.jspdf.jsPDF");
-      } else if (window.jspdf && window.jspdf.default && window.jspdf.default.jsPDF) {
-        jsPDFClass = window.jspdf.default.jsPDF;
-        console.log("Found jsPDF at window.jspdf.default.jsPDF");
-      } else if (window.jsPDF) {
-        jsPDFClass = window.jsPDF;
-        console.log("Found jsPDF at window.jsPDF");
-      } else {
-        alert("Error: jsPDF library tidak ditemukan. Silakan refresh halaman.");
-        console.error("jsPDF tidak ditemukan. window.jspdf:", window.jspdf);
-        return;
-      }
-
-      console.log("Creating jsPDF instance...");
-      const doc = new jsPDFClass();
-      console.log("jsPDF instance created successfully");
-      const pageWidth = doc.internal.pageSize.width;
-      const pageHeight = doc.internal.pageSize.height;
-      const margin = 10; // 1cm
-      let y = margin;
-
-      // ============================================
-      // KOP SURAT - DENGAN LOGO DI SAMPING
-      // ============================================
-      const logoSize = 20; // mm
-      const logoX = margin;
-      const logoY = margin;
-      const textStartX = margin + logoSize + 5; // 5mm gap setelah logo
-      const textWidth = pageWidth - textStartX - margin;
-      let currentY = margin;
-
-      // Logo (jika ada) - coba ambil dari DOM atau load
-      let logoLoaded = false;
-      if (organisasi.logo) {
-        try {
-          // Cek apakah logo sudah ada di DOM (dari loadPrintHeader) dan sudah loaded
-          const logoImg = document.getElementById("printLogo");
-          if (logoImg && logoImg.src && logoImg.complete && logoImg.naturalWidth > 0 && logoImg.naturalHeight > 0) {
-            try {
-              doc.addImage(logoImg, 'PNG', logoX, logoY, logoSize, logoSize);
-              logoLoaded = true;
-            } catch (e) {
-              console.warn("Error adding logo from DOM:", e);
-            }
-          }
-
-          // Jika belum ada di DOM atau belum loaded, coba load langsung
-          if (!logoLoaded) {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.src = organisasi.logo;
-
-            // Jika logo sudah cached dan complete, langsung tambahkan
-            if (img.complete && img.naturalWidth > 0 && img.naturalHeight > 0) {
-              try {
-                doc.addImage(img, 'PNG', logoX, logoY, logoSize, logoSize);
-                logoLoaded = true;
-              } catch (e) {
-                console.warn("Error adding cached logo:", e);
-              }
-            }
-            // Jika belum cached, kita skip logo untuk sekarang (bisa ditambahkan nanti dengan async)
-          }
-        } catch (e) {
-          console.warn("Error processing logo:", e);
-        }
-      }
-
-      // Nama Organisasi - di samping logo (atau center jika tidak ada logo)
-      doc.setFontSize(16);
-      doc.setFont(undefined, "bold");
-      const orgNama = (organisasi.nama || "-").toUpperCase();
-      const orgNamaWidth = doc.getTextWidth(orgNama);
-      let orgNamaX;
-      if (logoLoaded && organisasi.logo) {
-        // Center align dalam area text (setelah logo)
-        orgNamaX = textStartX + (textWidth - orgNamaWidth) / 2;
-      } else {
-        // Center align di seluruh halaman
-        orgNamaX = (pageWidth - orgNamaWidth) / 2;
-      }
-      doc.text(orgNama, orgNamaX, currentY);
-      currentY += 5;
-
-      // Alamat
-      doc.setFontSize(9);
-      doc.setFont(undefined, "normal");
-      const alamat = organisasi.alamat || "-";
-      const alamatWidth = doc.getTextWidth(alamat);
-      let alamatX;
-      if (logoLoaded && organisasi.logo) {
-        alamatX = textStartX + (textWidth - alamatWidth) / 2;
-      } else {
-        alamatX = (pageWidth - alamatWidth) / 2;
-      }
-      doc.text(alamat, alamatX, currentY);
-      currentY += 4;
-
-      // Telepon dan Email
-      const kontak = `Telp: ${organisasi.telepon || "-"} | Email: ${organisasi.email || "-"}`;
-      const kontakWidth = doc.getTextWidth(kontak);
-      let kontakX;
-      if (logoLoaded && organisasi.logo) {
-        kontakX = textStartX + (textWidth - kontakWidth) / 2;
-      } else {
-        kontakX = (pageWidth - kontakWidth) / 2;
-      }
-      doc.text(kontak, kontakX, currentY);
-      currentY += 6;
-
-      // Garis bawah kop surat
-      doc.line(margin, currentY, pageWidth - margin, currentY);
-      y = currentY + 5;
-
-      // ============================================
-      // INFORMASI ANGGOTA DAN DAFTAR TARIF BERDAMPINGAN
-      // ============================================
-      const leftColWidth = (pageWidth - 2 * margin) * 0.67; // 2/3 untuk info anggota
-      const rightColWidth = (pageWidth - 2 * margin) * 0.33; // 1/3 untuk daftar tarif
-      const colGap = 3;
-
-      // Informasi Anggota (Kiri)
-      const infoAnggotaX = margin;
-      const infoAnggotaY = y;
-      doc.setFontSize(8.5);
-      doc.setFont(undefined, "normal");
-
-      const infoItems = [
-        `Nama ${anggota.nama || "-"}`,
-        `NIK ${anggota.nik || "-"}`,
-        `Alamat ${anggota.alamat || "-"}`,
-        `Telepon ${anggota.telepon || "-"}`,
-        `Email ${anggota.email || "-"}`,
-        `Status ${anggota.status === "aktif" ? "Aktif" : "Tidak Aktif"}`
-      ];
-
-      let infoY = infoAnggotaY;
-      let infoText = "";
-      infoItems.forEach((item, idx) => {
-        if (idx > 0) infoText += " | ";
-        infoText += item;
-      });
-
-      // Wrap text untuk info anggota
-      let splitInfo;
-      try {
-        splitInfo = doc.splitTextToSize(infoText, leftColWidth);
-      } catch (e) {
-        // Fallback jika splitTextToSize tidak tersedia
-        splitInfo = [infoText];
-      }
-      splitInfo.forEach((line) => {
-        doc.text(line, infoAnggotaX, infoY);
-        infoY += 3.5;
-      });
-
-      // Daftar Tarif (Kanan)
-      const tarifX = margin + leftColWidth + colGap;
-      let tarifY = y;
-      doc.setFontSize(9);
-      doc.setFont(undefined, "bold");
-      doc.text("Daftar Tarif Aktif", tarifX, tarifY);
-      tarifY += 4;
-
-      doc.setFontSize(7.5);
-      doc.setFont(undefined, "normal");
-      const tarifAktif = tarif.filter((t) => t.status === "aktif");
-      // Filter hanya tarif bulanan untuk ditampilkan di daftar tarif
-      const tarifAktifBulanan = tarifAktif.filter((t) => {
-        const freq = (t.frekuensi || "bulanan").toLowerCase();
-        return freq === "bulanan" || !t.frekuensi || t.frekuensi === "";
-      });
-      tarifAktifBulanan.forEach((item) => {
-        const tarifText = `${item.nama}: ${formatRupiah(item.jumlah)}`;
-        let splitTarif;
-        try {
-          splitTarif = doc.splitTextToSize(tarifText, rightColWidth);
-        } catch (e) {
-          splitTarif = [tarifText];
-        }
-        splitTarif.forEach((line) => {
-          doc.text(line, tarifX, tarifY);
-          tarifY += 2.5;
-        });
-      });
-
-      // Gunakan y terbesar dari kedua kolom
-      y = Math.max(infoY, tarifY) + 3;
-
-      // ============================================
-      // IURAN TAHUNAN & SEUMUR HIDUP (jika ada)
-      // ============================================
-      // Gunakan tarifAnggota yang sudah ada di halaman
-      const tarifTahunan = (tarifAnggota || []).filter((t) => {
-        if (!t || t.status !== "aktif") return false;
-        const freq = (t.frekuensi || "bulanan").toLowerCase();
-        return freq === "tahunan" || freq === "seumur_hidup";
-      });
-
-      if (tarifTahunan.length > 0) {
-        // Cek apakah perlu halaman baru
-        if (y > pageHeight - 40) {
-          doc.addPage();
-          y = margin;
-        }
-
-        doc.setFontSize(11);
-        doc.setFont(undefined, "bold");
-        doc.text("Iuran Tahunan & Sekali Seumur Hidup", margin, y);
-        y += 5;
-
-        // Group tarif per frekuensi
-        const tarifTahunanGroup = tarifTahunan.filter((t) => {
-          const freq = (t.frekuensi || "bulanan").toLowerCase();
-          return freq === "tahunan";
-        });
-        const tarifSeumurGroup = tarifTahunan.filter((t) => {
-          const freq = (t.frekuensi || "bulanan").toLowerCase();
-          return freq === "seumur_hidup";
-        });
-
-        // Hitung jumlah kolom (maksimal 2)
-        const totalCards = tarifTahunanGroup.length + tarifSeumurGroup.length;
-        const cardsPerRow = Math.min(2, totalCards);
-        const cardWidth = (pageWidth - 2 * margin - (cardsPerRow - 1) * 3) / cardsPerRow;
-
-        let cardX = margin;
-        let cardY = y;
-        let currentRow = 0;
-
-        // Fungsi untuk render card
-        const renderCard = (tarifItem, frekuensi) => {
-          if (cardY > pageHeight - 30) {
-            doc.addPage();
-            cardY = margin;
-            cardX = margin;
-            currentRow = 0;
-          }
-
-          // Cari iuran untuk tarif ini berdasarkan frekuensi
-          // Untuk tahunan, cari iuran di tahun saat ini
-          // Untuk seumur hidup, cari semua iuran
-          const iuranTarif = semuaIuran.filter((i) => {
-            const iFreq = (i.frekuensi || "bulanan").toLowerCase();
-            const tarifFreq = (frekuensi || "bulanan").toLowerCase();
-            if (frekuensi === "tahunan") {
-              return parseInt(i.tarif_id) === parseInt(tarifItem.id) &&
-                     iFreq === tarifFreq &&
-                     parseInt(i.tahun) === tahunSaatIni;
-            } else {
-              return parseInt(i.tarif_id) === parseInt(tarifItem.id) && iFreq === tarifFreq;
-            }
-          });
-          const totalBayar = iuranTarif.reduce((sum, i) => sum + (parseInt(i.jumlah) || 0), 0);
-          const totalTarif = parseInt(tarifItem.jumlah) || 0;
-          const sisa = Math.max(0, totalTarif - totalBayar);
-          const status = sisa === 0 ? "Lunas" : totalBayar === 0 ? "Belum Bayar" : "Belum Lunas";
-
-          // Border card
-          doc.setDrawColor(0, 0, 0);
-          doc.setLineWidth(0.1);
-          doc.rect(cardX, cardY, cardWidth, 20);
-
-          // Isi card
-          doc.setFontSize(9);
-          doc.setFont(undefined, "bold");
-          const namaTarif = tarifItem.nama || "-";
-          let splitNama;
-          try {
-            splitNama = doc.splitTextToSize(namaTarif, cardWidth - 2);
-          } catch (e) {
-            splitNama = [namaTarif];
-          }
-          let textY = cardY + 3;
-          splitNama.forEach((line) => {
-            doc.text(line, cardX + 1, textY);
-            textY += 2.5;
-          });
-
-          doc.setFontSize(7.5);
-          doc.setFont(undefined, "normal");
-          textY += 1;
-          doc.text(`Total: ${formatRupiah(totalTarif)}`, cardX + 1, textY);
-          textY += 2.5;
-          doc.text(`Bayar: ${formatRupiah(totalBayar)}`, cardX + 1, textY);
-          textY += 2.5;
-          doc.text(`Sisa: ${formatRupiah(sisa)}`, cardX + 1, textY);
-          textY += 2.5;
-          doc.text(`Status: ${status}`, cardX + 1, textY);
-
-          // Pindah ke card berikutnya
-          currentRow++;
-          if (currentRow >= cardsPerRow) {
-            cardY += 22;
-            cardX = margin;
-            currentRow = 0;
-          } else {
-            cardX += cardWidth + 3;
-          }
-        };
-
-        // Render tarif tahunan
-        tarifTahunanGroup.forEach((t) => {
-          renderCard(t, "tahunan");
-        });
-
-        // Render tarif seumur hidup
-        tarifSeumurGroup.forEach((t) => {
-          renderCard(t, "seumur_hidup");
-        });
-
-        // Update y position
-        if (currentRow === 0) {
-          y = cardY;
-        } else {
-          y = cardY + 22;
-        }
-        y += 5;
-      }
-
-      // ============================================
-      // JUDUL TABEL
-      // ============================================
-      doc.setFontSize(14);
-      doc.setFont(undefined, "bold");
-      const judulTabel = `TAGIHAN IURAN TAHUN ${tahunSaatIni}`;
-      const judulWidth = doc.getTextWidth(judulTabel);
-      doc.text(judulTabel, (pageWidth - judulWidth) / 2, y);
-      y += 6;
-
-      // ============================================
-      // TABEL PEMBAYARAN
-      // ============================================
-      const colWidths = {
-        bulan: 18,
-        tarif: 35,
-        bayar: 35,
-        sisa: 35,
-        status: 25
-      };
-      const colPositions = {
-        bulan: margin,
-        tarif: margin + colWidths.bulan,
-        bayar: margin + colWidths.bulan + colWidths.tarif,
-        sisa: margin + colWidths.bulan + colWidths.tarif + colWidths.bayar,
-        status: margin + colWidths.bulan + colWidths.tarif + colWidths.bayar + colWidths.sisa
-      };
-
-      // Header Tabel
-      doc.setFontSize(9);
-      doc.setFont(undefined, "bold");
-      // Hitung posisi untuk alignment manual
-      const centerBulan = colPositions.bulan + colWidths.bulan / 2;
-      const rightTarif = colPositions.tarif + colWidths.tarif;
-      const rightBayar = colPositions.bayar + colWidths.bayar;
-      const rightSisa = colPositions.sisa + colWidths.sisa;
-      const centerStatus = colPositions.status + colWidths.status / 2;
-
-      // Center align: hitung posisi x dengan mengurangi setengah lebar text
-      const headerBulanText = "Bulan";
-      const headerBulanTextWidth = doc.getTextWidth(headerBulanText);
-      doc.text(headerBulanText, centerBulan - headerBulanTextWidth / 2, y);
-
-      // Right align: kurangi lebar text dari posisi kanan
-      const headerTarifText = "Daftar Tarif";
-      const headerTarifTextWidth = doc.getTextWidth(headerTarifText);
-      doc.text(headerTarifText, rightTarif - headerTarifTextWidth, y);
-
-      const headerBayarText = "Bayar";
-      const headerBayarTextWidth = doc.getTextWidth(headerBayarText);
-      doc.text(headerBayarText, rightBayar - headerBayarTextWidth, y);
-
-      const headerSisaText = "Sisa";
-      const headerSisaTextWidth = doc.getTextWidth(headerSisaText);
-      doc.text(headerSisaText, rightSisa - headerSisaTextWidth, y);
-
-      const headerStatusText = "Status";
-      const headerStatusTextWidth = doc.getTextWidth(headerStatusText);
-      doc.text(headerStatusText, centerStatus - headerStatusTextWidth / 2, y);
-      y += 3;
-
-      // Garis header
-      doc.line(margin, y, pageWidth - margin, y);
-      y += 3;
-
-      // Data Tabel - hanya tarif bulanan
-      // Menggunakan tarifAktifBulanan yang sudah dideklarasikan sebelumnya
-      doc.setFontSize(9);
-      doc.setFont(undefined, "normal");
-      const totalTarifBulanan = tarifAktifBulanan.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
-      let totalDaftarTarif = 0;
-      let totalBayar = 0;
-      let totalSisa = 0;
-
-      for (let bulan = 1; bulan <= 12; bulan++) {
-        if (y > pageHeight - 30) {
-          doc.addPage();
-          y = margin;
-        }
-
-        // Filter hanya iuran bulanan (NULL/kosong dianggap bulanan)
-        const semuaIuranBulan = iuran.filter((i) => {
-          if (i.bulan !== bulan || i.tahun !== tahunSaatIni) return false;
-          const freq = (i.frekuensi || "bulanan").toLowerCase();
-          return freq === "bulanan" || !i.frekuensi || i.frekuensi === "";
-        });
-        const jumlahBayar = semuaIuranBulan.reduce(
-          (sum, i) => sum + (parseInt(i.jumlah) || 0),
-          0
-        );
-        const sisa = Math.max(0, totalTarifBulanan - jumlahBayar);
-
-        let status;
-        if (semuaIuranBulan.length === 0 || jumlahBayar === 0) {
-          status = "Belum Bayar";
-        } else if (sisa > 0) {
-          status = "Belum Lunas";
-        } else {
-          status = "Lunas";
-        }
-
-        totalDaftarTarif += totalTarifBulanan;
-        totalBayar += jumlahBayar;
-        totalSisa += sisa;
-
-        // Baris data - manual alignment
-        const bulanTextVal = bulanNames[bulan];
-        const bulanTextWidthVal = doc.getTextWidth(bulanTextVal);
-        doc.text(bulanTextVal, centerBulan - bulanTextWidthVal / 2, y);
-
-        const tarifTextVal = formatRupiah(totalTarifBulanan);
-        const tarifTextWidthVal = doc.getTextWidth(tarifTextVal);
-        doc.text(tarifTextVal, rightTarif - tarifTextWidthVal, y);
-
-        const bayarTextVal = formatRupiah(jumlahBayar);
-        const bayarTextWidthVal = doc.getTextWidth(bayarTextVal);
-        doc.text(bayarTextVal, rightBayar - bayarTextWidthVal, y);
-
-        const sisaTextVal = formatRupiah(sisa);
-        const sisaTextWidthVal = doc.getTextWidth(sisaTextVal);
-        doc.text(sisaTextVal, rightSisa - sisaTextWidthVal, y);
-
-        const statusTextWidthVal = doc.getTextWidth(status);
-        doc.text(status, centerStatus - statusTextWidthVal / 2, y);
-        y += 4;
-      }
-
-      // Footer Tabel (Total)
-      y += 2;
-      doc.line(margin, y, pageWidth - margin, y);
-      y += 3;
-      doc.setFont(undefined, "bold");
-
-      // Manual alignment untuk footer
-      const totalText = "TOTAL";
-      const totalTextWidth = doc.getTextWidth(totalText);
-      doc.text(totalText, centerBulan - totalTextWidth / 2, y);
-
-      const totalTarifText = formatRupiah(totalDaftarTarif);
-      const totalTarifTextWidth = doc.getTextWidth(totalTarifText);
-      doc.text(totalTarifText, rightTarif - totalTarifTextWidth, y);
-
-      const totalBayarText = formatRupiah(totalBayar);
-      const totalBayarTextWidth = doc.getTextWidth(totalBayarText);
-      doc.text(totalBayarText, rightBayar - totalBayarTextWidth, y);
-
-      const totalSisaText = formatRupiah(totalSisa);
-      const totalSisaTextWidth = doc.getTextWidth(totalSisaText);
-      doc.text(totalSisaText, rightSisa - totalSisaTextWidth, y);
-
-      // Save PDF
-      const fileName = `Tagihan_Iuran_${(anggota.nama || "Anggota").replace(/[^a-zA-Z0-9]/g, "_")}_${tahunSaatIni}_${new Date().getTime()}.pdf`;
-      doc.save(fileName);
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      console.error("Error details:", error.message);
-      console.error("Error stack:", error.stack);
-      console.error("Error name:", error.name);
-
-      let errorMsg = "Terjadi kesalahan saat membuat PDF.";
-      if (error.message) {
-        errorMsg += "\n\nDetail: " + error.message;
-      }
-      errorMsg += "\n\nSilakan buka Console (F12) untuk detail lebih lanjut atau gunakan fitur Print.";
-
-      alert(errorMsg);
     }
   }
 
@@ -1297,8 +880,17 @@
       // Fetch detail pembayaran
       const response = await API.get(`/tagihan/pembayaran?bulan=${bulan}&tahun=${tahun}`);
 
-      if (response.success && response.data) {
-        const pembayaranList = response.data;
+      // Handle jika response tidak valid
+      if (!response) {
+        throw new Error("Response kosong dari server");
+      }
+
+      if (response.success === false) {
+        throw new Error(response.message || "Gagal memuat data");
+      }
+
+      if (response && response.success && response.data !== undefined) {
+        const pembayaranList = Array.isArray(response.data) ? response.data : [];
 
         // Filter hanya iuran bulanan (NULL/kosong dianggap bulanan)
         const pembayaranBulanan = pembayaranList.filter((p) => {
@@ -1323,6 +915,7 @@
             const freq = (t.frekuensi || "bulanan").toLowerCase();
             return freq === "bulanan" || !t.frekuensi || t.frekuensi === "";
           });
+
           const totalTarif = tarifBulananAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
           const sisa = Math.max(0, totalTarif - totalBayar);
 
@@ -1367,6 +960,121 @@
             </div>
           `;
         }
+        } else {
+        modalContent.innerHTML = `
+          <div class="text-center py-8">
+            <i class="bx bx-error-circle text-4xl text-red-400 mb-2"></i>
+            <p class="text-red-600 dark:text-red-400">Gagal memuat data pembayaran</p>
+            <p class="text-xs text-gray-500 mt-2">Response: ${JSON.stringify(response)}</p>
+          </div>
+        `;
+      }
+    } catch (error) {
+      modalContent.innerHTML = `
+        <div class="text-center py-8">
+          <i class="bx bx-error-circle text-4xl text-red-400 mb-2"></i>
+          <p class="text-red-600 dark:text-red-400">Terjadi kesalahan saat memuat data</p>
+          <p class="text-xs text-gray-500 mt-2">${error.message || "Unknown error"}</p>
+        </div>
+      `;
+    }
+  }
+
+
+  // Fungsi untuk lihat detail iuran lain (tahunan/seumur hidup)
+  async function lihatDetailIuranLain(tarifId, jenis, namaTarif) {
+    const modal = document.getElementById("modalDetailPembayaran");
+    const modalTitle = document.getElementById("modalDetailTitle");
+    const modalContent = document.getElementById("modalDetailContent");
+
+    // Set title
+    modalTitle.textContent = `Detail Pembayaran - ${namaTarif}`;
+
+    // Show modal
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+
+    // Show loading
+    modalContent.innerHTML = `
+      <div class="text-center py-8">
+        <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+        <p class="mt-2 text-xs text-gray-600 dark:text-gray-400">Memuat data...</p>
+      </div>
+    `;
+
+    try {
+      // Tentukan frekuensi berdasarkan jenis
+      const frekuensi = jenis === "Tahunan" ? "tahunan" : "seumur_hidup";
+      const tahunParam = jenis === "Tahunan" ? `&tahun=${tahunSaatIni}` : "";
+
+      // Fetch detail pembayaran menggunakan endpoint tagihan
+      const response = await API.get(`/tagihan/pembayaran-lain?frekuensi=${frekuensi}&tarif_id=${tarifId}${tahunParam}`);
+
+      if (!response) {
+        throw new Error("Response kosong dari server");
+      }
+
+      if (response.success === false) {
+        throw new Error(response.message || "Gagal memuat data");
+      }
+
+      if (response && response.success && response.data !== undefined) {
+        const pembayaranList = Array.isArray(response.data) ? response.data : [];
+
+        if (pembayaranList.length === 0) {
+          modalContent.innerHTML = `
+            <div class="text-center py-8">
+              <i class="bx bx-info-circle text-3xl text-gray-400 dark:text-gray-500 mb-2"></i>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Belum ada pembayaran untuk iuran ini</p>
+            </div>
+          `;
+        } else {
+          const totalBayar = pembayaranList.reduce((sum, p) => sum + (parseInt(p.jumlah) || 0), 0);
+          const tarifItem = tarifAnggota.find(t => parseInt(t.id) === parseInt(tarifId));
+          const totalTarif = tarifItem ? parseInt(tarifItem.jumlah || 0) : 0;
+          const sisa = Math.max(0, totalTarif - totalBayar);
+
+          modalContent.innerHTML = `
+            <!-- Tabel Pembayaran -->
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">No</th>
+                    <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Jumlah Pembayaran</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Tanggal Pembayaran</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  ${pembayaranList.map((p, index) => {
+                    const tanggal = p.tanggal_bayar ? formatTanggal(p.tanggal_bayar) : "-";
+                    return `
+                      <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">${index + 1}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-gray-800 dark:text-gray-200 text-right">${formatRupiah(p.jumlah)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">${tanggal}</td>
+                      </tr>
+                    `;
+                  }).join("")}
+                </tbody>
+                <tfoot class="bg-gray-50 dark:bg-gray-700 border-t-2 border-gray-300 dark:border-gray-600">
+                  <tr>
+                    <td colspan="3" class="px-3 py-3 space-y-1">
+                      <div class="flex justify-between items-center text-sm">
+                        <span class="font-semibold text-gray-700 dark:text-gray-300">Total Sudah Dibayar:</span>
+                        <span class="font-bold text-green-600 dark:text-green-400">${formatRupiah(totalBayar)}</span>
+                      </div>
+                      <div class="flex justify-between items-center text-sm">
+                        <span class="font-semibold text-gray-700 dark:text-gray-300">Sisa yang Harus Dibayar:</span>
+                        <span class="font-bold ${sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}">${formatRupiah(sisa)}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          `;
+        }
       } else {
         modalContent.innerHTML = `
           <div class="text-center py-8">
@@ -1376,16 +1084,15 @@
         `;
       }
     } catch (error) {
-      console.error("Error fetching detail pembayaran:", error);
       modalContent.innerHTML = `
         <div class="text-center py-8">
           <i class="bx bx-error-circle text-4xl text-red-400 mb-2"></i>
           <p class="text-red-600 dark:text-red-400">Terjadi kesalahan saat memuat data</p>
+          <p class="text-xs text-gray-500 mt-2">${error.message || "Unknown error"}</p>
         </div>
       `;
     }
   }
-
 
   // Fungsi untuk close modal
   function closeModalDetailPembayaran(event) {
@@ -1445,12 +1152,11 @@
     return groups;
   }
 
-  // Load data iuran tahunan dan seumur hidup (tanpa tombol)
+  // Load data iuran tahunan dan seumur hidup (dalam bentuk tabel)
   function loadTahunanSeumur() {
     try {
-      const container = document.getElementById("cardTahunanSeumurContainer");
-      if (!container) {
-        console.warn("Container cardTahunanSeumurContainer tidak ditemukan");
+      const tbody = document.getElementById("tahunanSeumurTableBody");
+      if (!tbody) {
         return;
       }
 
@@ -1458,120 +1164,99 @@
       const tarifTahunan = groupedTarif.tahunan || [];
       const tarifSeumur = groupedTarif.seumur_hidup || [];
 
-      let cardsHTML = "";
+      // Gabungkan semua tarif tahunan dan seumur hidup
+      const allTarif = [
+        ...tarifTahunan.map(t => ({ ...t, jenis: 'Tahunan' })),
+        ...tarifSeumur.map(t => ({ ...t, jenis: 'Sekali' }))
+      ];
 
-      // === IURAN TAHUNAN ===
-      tarifTahunan.forEach((tarif) => {
-        if (!tarif || !tarif.id) return;
+      if (allTarif.length === 0) {
+        const section = document.getElementById("sectionTahunanSeumur");
+        if (section) {
+          section.classList.add("hidden");
+        }
+        return;
+      }
 
-        // Cari iuran tahunan untuk tarif ini di tahun ini
-        const iuranTahunan = semuaIuran.filter(
-          (i) =>
-            i.tahun === tahunSaatIni &&
-            (i.frekuensi || "bulanan").toLowerCase() === "tahunan" &&
-            parseInt(i.tarif_id) === parseInt(tarif.id)
-        );
+      tbody.innerHTML = allTarif
+        .map((tarif) => {
+          if (!tarif || !tarif.id) return "";
 
-        const sudahBayar = iuranTahunan.reduce(
-          (sum, i) => sum + (parseInt(i.jumlah) || 0),
-          0
-        );
+          let sudahBayar = 0;
+          let sisa = 0;
+          let status = "Belum Bayar";
+          let statusClass = "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200";
 
-        const sisa = Math.max(0, parseInt(tarif.jumlah || 0) - sudahBayar);
-        const status = sisa === 0 ? "Lunas" : sudahBayar > 0 ? "Belum Lunas" : "Belum Bayar";
-        const statusClass = sisa === 0
-          ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
-          : sudahBayar > 0
-          ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
-          : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200";
+          if (tarif.jenis === "Tahunan") {
+            // Cari iuran tahunan untuk tarif ini di tahun ini
+            const iuranTahunan = semuaIuran.filter(
+              (i) =>
+                i.tahun === tahunSaatIni &&
+                (i.frekuensi || "bulanan").toLowerCase() === "tahunan" &&
+                parseInt(i.tarif_id) === parseInt(tarif.id)
+            );
 
-        cardsHTML += `
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4">
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                <i class="bx bx-calendar text-blue-600 dark:text-blue-400"></i>
-                ${tarif.nama || "-"}
-              </h3>
-              <span class="text-xs px-2 py-1 rounded ${statusClass}">${status}</span>
-            </div>
-            <div class="space-y-1 text-sm text-gray-700 dark:text-gray-200">
-              <div class="flex justify-between">
-                <span>Total Tarif</span>
-                <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(tarif.jumlah)}</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Sudah Bayar</span>
-                <span class="font-semibold text-green-600 dark:text-green-400">${formatRupiah(sudahBayar)}</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Sisa</span>
-                <span class="font-semibold text-red-600 dark:text-red-400">${formatRupiah(sisa)}</span>
-              </div>
-            </div>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-              ${tarif.keterangan || ""} ${sisa === 0 ? `Sudah lunas untuk tahun ${tahunSaatIni}.` : `Sisa pembayaran untuk tahun ${tahunSaatIni}.`}
-            </p>
-          </div>
-        `;
-      });
+            sudahBayar = iuranTahunan.reduce(
+              (sum, i) => sum + (parseInt(i.jumlah) || 0),
+              0
+            );
+          } else {
+            // Cari iuran seumur hidup untuk tarif ini
+            const iuranSeumur = semuaIuran.filter(
+              (i) =>
+                (i.frekuensi || "bulanan").toLowerCase() === "seumur_hidup" &&
+                parseInt(i.tarif_id) === parseInt(tarif.id)
+            );
 
-      // === IURAN SEUMUR HIDUP ===
-      tarifSeumur.forEach((tarif) => {
-        if (!tarif || !tarif.id) return;
+            sudahBayar = iuranSeumur.reduce(
+              (sum, i) => sum + (parseInt(i.jumlah) || 0),
+              0
+            );
+          }
 
-        // Cari iuran seumur hidup untuk tarif ini
-        const iuranSeumur = semuaIuran.filter(
-          (i) =>
-            (i.frekuensi || "bulanan").toLowerCase() === "seumur_hidup" &&
-            parseInt(i.tarif_id) === parseInt(tarif.id)
-        );
+          sisa = Math.max(0, parseInt(tarif.jumlah || 0) - sudahBayar);
+          status = sisa === 0 ? "Lunas" : sudahBayar > 0 ? "Sebagian" : "Belum";
+          statusClass = sisa === 0
+            ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
+            : sudahBayar > 0
+            ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
+            : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200";
 
-        const sudahBayar = iuranSeumur.reduce(
-          (sum, i) => sum + (parseInt(i.jumlah) || 0),
-          0
-        );
-
-        const sisa = Math.max(0, parseInt(tarif.jumlah || 0) - sudahBayar);
-        const status = sisa === 0 ? "Lunas" : sudahBayar > 0 ? "Belum Lunas" : "Belum Bayar";
-        const statusClass = sisa === 0
-          ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
-          : sudahBayar > 0
-          ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
-          : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200";
-
-        cardsHTML += `
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4">
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                <i class="bx bx-check-shield text-blue-600 dark:text-blue-400"></i>
-                ${tarif.nama || "-"}
-              </h3>
-              <span class="text-xs px-2 py-1 rounded ${statusClass}">${status}</span>
-            </div>
-            <div class="space-y-1 text-sm text-gray-700 dark:text-gray-200">
-              <div class="flex justify-between">
-                <span>Total Tarif</span>
-                <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(tarif.jumlah)}</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Sudah Bayar</span>
-                <span class="font-semibold text-green-600 dark:text-green-400">${formatRupiah(sudahBayar)}</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Sisa</span>
-                <span class="font-semibold text-red-600 dark:text-red-400">${formatRupiah(sisa)}</span>
-              </div>
-            </div>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-              ${tarif.keterangan || ""} ${sisa === 0 ? "Sudah lunas." : "Sisa pembayaran sekali seumur hidup."}
-            </p>
-          </div>
-        `;
-      });
+          return `
+            <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150">
+              <td class="px-2 md:px-4 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-medium">
+                <a
+                  href="javascript:void(0)"
+                  onclick="lihatDetailIuranLain(${tarif.id}, '${tarif.jenis}', '${(tarif.nama || "-").replace(/'/g, "&#39;")}')"
+                  class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline flex items-center gap-1"
+                  title="Lihat Detail Pembayaran"
+                >
+                  ${tarif.nama || "-"}
+                  <i class="bx bx-info-circle text-xs"></i>
+                </a>
+              </td>
+              <td class="px-2 md:px-4 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold text-right">
+                ${formatRupiah(tarif.jumlah)}
+              </td>
+              <td class="px-2 md:px-4 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold text-right">
+                ${formatRupiah(sudahBayar)}
+              </td>
+              <td class="px-2 md:px-4 py-2 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold text-right ${
+                sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
+              }">
+                ${formatRupiah(sisa)}
+              </td>
+              <td class="px-2 md:px-4 py-2 whitespace-nowrap text-center">
+                <span class="px-1.5 py-0.5 text-[10px] font-semibold rounded-full ${statusClass}">${status}</span>
+              </td>
+            </tr>
+          `;
+        })
+        .filter(html => html !== "")
+        .join("");
 
       const section = document.getElementById("sectionTahunanSeumur");
-      if (cardsHTML) {
-        container.innerHTML = cardsHTML;
+      if (allTarif.length > 0) {
         if (section) {
           section.classList.remove("hidden");
         }
@@ -1581,23 +1266,57 @@
         }
       }
     } catch (error) {
-      console.error("Error loading tahunan/seumur hidup:", error);
-      const container = document.getElementById("cardTahunanSeumurContainer");
       const section = document.getElementById("sectionTahunanSeumur");
-      if (container) {
-        container.innerHTML = '<div class="col-span-2 text-center text-red-500 dark:text-red-400 py-4 text-sm">Terjadi kesalahan saat memuat data.</div>';
-      }
       if (section) {
-        section.classList.remove("hidden");
+        section.classList.add("hidden");
       }
     }
   }
 
-  // Load semua data
+  // Load semua data dengan error handling dan delay untuk memastikan DOM ready
+  function initPage() {
+    try {
   loadAnggotaInfo();
+    } catch (error) {
+      console.error("Error loading anggota info:", error);
+    }
+
+    try {
   loadTahunFilter();
+    } catch (error) {
+      console.error("Error loading tahun filter:", error);
+    }
+
+    try {
   loadTarifList();
-  loadTahunanSeumur();
+    } catch (error) {
+      console.error("Error loading tarif list:", error);
+    }
+
+    try {
   loadPembayaran();
+    } catch (error) {
+      console.error("Error loading pembayaran:", error);
+    }
+
+    try {
+      loadTahunanSeumur();
+    } catch (error) {
+      console.error("Error loading tahunan/seumur:", error);
+    }
+
+    try {
   loadPrintHeader();
+    } catch (error) {
+      console.error("Error loading print header:", error);
+    }
+  }
+
+  // Tunggu DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPage);
+  } else {
+    // DOM sudah ready
+    setTimeout(initPage, 100);
+  }
 </script>

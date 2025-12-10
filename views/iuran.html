@@ -525,7 +525,7 @@
       case "tahunan":
         return "Tahunan";
       case "seumur_hidup":
-        return "Sekali Seumur Hidup";
+        return "Sekali";
       default:
         return "Bulanan";
     }
@@ -705,8 +705,8 @@
               style="width: 32px; height: 32px; background-color: ${bgColor}; border-radius: 0.25rem; margin: 0 auto; cursor: pointer; transition: opacity 0.2s;"
               onmouseover="this.style.opacity='0.8'"
               onmouseout="this.style.opacity='1'"
-              ondblclick="showDetailPembayaran(${a.id}, ${bulan}, ${tahunSaatIni})"
-              title="${statusText} - Double click untuk detail"
+              onclick="showDetailPembayaran(${a.id}, ${bulan}, ${tahunSaatIni})"
+              title="${statusText} - Klik untuk detail"
             ></div>
           </td>
         `);

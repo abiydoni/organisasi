@@ -47,9 +47,10 @@
       </div>
       <button
         onclick="openModal()"
-        class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white rounded-lg transition-all duration-300 text-sm md:text-base font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2 justify-center"
+        class="w-auto sm:w-auto px-3 py-2.5 sm:px-5 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white rounded-lg transition-all duration-300 text-sm md:text-base font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2 justify-center"
       >
-        <i class="bx bx-plus text-lg"></i> <span>Tambah Transaksi</span>
+        <i class="bx bx-plus text-xl sm:text-lg"></i>
+        <span class="hidden sm:inline">Tambah Transaksi</span>
       </button>
     </div>
   </div>
@@ -66,7 +67,7 @@
         id="stat-debet"
         class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mt-2"
       >
-        Rp 0
+        0
       </p>
     </div>
     <div
@@ -81,7 +82,7 @@
         id="stat-kredit"
         class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mt-2"
       >
-        Rp 0
+        0
       </p>
     </div>
     <div
@@ -96,7 +97,7 @@
         id="stat-saldo"
         class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mt-2"
       >
-        Rp 0
+        0
       </p>
     </div>
   </div>
@@ -154,41 +155,41 @@
 <!-- Modal -->
 <div
   id="bukuKasModal"
-  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4"
 >
   <div
-    class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-5 md:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700"
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-4 sm:p-5 md:p-6 w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700"
   >
     <h3
-      class="text-xl font-bold text-gray-800 dark:text-white mb-4"
+      class="text-lg sm:text-xl font-bold text-gray-800 dark:text-white mb-3 sm:mb-4"
       id="modalTitle"
     >
       Tambah Transaksi
     </h3>
-    <form id="bukuKasForm" class="space-y-3 md:space-y-4">
+    <form id="bukuKasForm" class="space-y-3 sm:space-y-4">
       <input type="hidden" id="bukuKasId" />
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2"
             >Tanggal *</label
           >
           <input
             type="date"
             id="tanggal"
             required
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
           />
         </div>
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2"
             >Kategori *</label
           >
           <select
             id="kategori"
             required
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
             onchange="handleKategoriChange()"
           >
             <option value="">Pilih Kategori</option>
@@ -198,8 +199,8 @@
         </div>
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >Debet (Rp) *</label
+            class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2"
+            >Debet *</label
           >
           <input
             type="number"
@@ -208,14 +209,14 @@
             step="1"
             value="0"
             required
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
             oninput="validateAmounts()"
           />
         </div>
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >Kredit (Rp) *</label
+            class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2"
+            >Kredit *</label
           >
           <input
             type="number"
@@ -224,33 +225,33 @@
             step="1"
             value="0"
             required
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
             oninput="validateAmounts()"
           />
         </div>
         <div class="md:col-span-2">
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2"
             >Keterangan</label
           >
           <textarea
             id="keterangan"
             rows="2"
-            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
           ></textarea>
         </div>
       </div>
-      <div class="flex justify-end gap-3">
+      <div class="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-2">
         <button
           type="button"
           onclick="closeModal()"
-          class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-200 font-medium"
+          class="w-full sm:w-auto px-4 sm:px-5 py-2 sm:py-2.5 text-sm sm:text-base bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-200 font-medium"
         >
           Batal
         </button>
         <button
           type="submit"
-          class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+          class="w-full sm:w-auto px-4 sm:px-5 py-2 sm:py-2.5 text-sm sm:text-base bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all duration-200 font-medium shadow-md hover:shadow-lg"
         >
           Simpan
         </button>
@@ -418,15 +419,15 @@
                     ${keteranganTambahan ? `<span class="text-[9px] text-gray-500 dark:text-gray-400 italic" title="${keteranganTambahan}">${truncateText(keteranganTambahan, 40)}</span>` : ''}
                   </div>
                 </td>
-                <td class="px-2 md:px-3 py-1.5 whitespace-nowrap text-xs font-semibold text-green-600 dark:text-green-400 text-right">
-                    ${item.debet > 0 ? "Rp " + formatNumber(item.debet) : "-"}
-                </td>
-                <td class="px-2 md:px-3 py-1.5 whitespace-nowrap text-xs font-semibold text-red-600 dark:text-red-400 text-right">
-                    ${item.kredit > 0 ? "Rp " + formatNumber(item.kredit) : "-"}
-                </td>
-                <td class="px-2 md:px-3 py-1.5 whitespace-nowrap text-xs font-bold text-blue-600 dark:text-blue-400 text-right">
-                    Rp ${formatNumber(item.saldo || 0)}
-                </td>
+              <td class="px-2 md:px-3 py-1.5 whitespace-nowrap text-xs font-semibold text-green-600 dark:text-green-400 text-right">
+                  ${item.debet > 0 ? formatNumber(item.debet) : "-"}
+              </td>
+              <td class="px-2 md:px-3 py-1.5 whitespace-nowrap text-xs font-semibold text-red-600 dark:text-red-400 text-right">
+                  ${item.kredit > 0 ? formatNumber(item.kredit) : "-"}
+              </td>
+              <td class="px-2 md:px-3 py-1.5 whitespace-nowrap text-xs font-bold text-blue-600 dark:text-blue-400 text-right">
+                  ${formatNumber(item.saldo || 0)}
+              </td>
             </tr>
         `;
         }
@@ -442,7 +443,7 @@
   }
 
   function formatRupiah(angka) {
-    return "Rp " + formatNumber(angka);
+    return formatNumber(angka);
   }
 
   function formatDate(dateStr) {
