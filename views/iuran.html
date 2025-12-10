@@ -552,10 +552,7 @@
     return tarifAnggota.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
   }
 
-  // Debug log
-  console.log("Data loaded:", {
-    iuranCount: iuran.length,
-    anggotaCount: anggota.length,
+  // Data loaded
     tarifCount: tarif.length,
     anggotaTarifCount: anggotaTarif.length,
     tahunSaatIni: tahunSaatIni
@@ -653,12 +650,6 @@
       return;
     }
 
-    console.log("Loading iuran table...");
-    console.log("Anggota count:", anggota ? anggota.length : 0);
-    console.log("Iuran count:", iuran ? iuran.length : 0);
-    console.log("Tarif count:", tarif ? tarif.length : 0);
-    console.log("Anggota Tarif count:", anggotaTarif ? anggotaTarif.length : 0);
-
     if (!anggota || anggota.length === 0) {
       tbody.innerHTML = `
         <tr>
@@ -679,12 +670,6 @@
         const status = getStatusPembayaran(a.id, bulan, tahunSaatIni);
         const statusClass = getStatusClass(status);
         const statusText = status === "lunas" ? "Lunas" : status === "belum lunas" ? "Belum Lunas" : "Belum Bayar";
-
-        // Debug untuk anggota pertama, bulan pertama
-        if (index === 0 && bulan === 1) {
-          console.log(`Debug - Anggota: ${a.nama}, ID: ${a.id}, Bulan: ${bulan}, Tahun: ${tahunSaatIni}, Status: ${status}, Class: ${statusClass}`);
-          console.log(`Iuran untuk anggota ini:`, iuran.filter(i => parseInt(i.anggota_id) === parseInt(a.id)));
-        }
 
         // Tentukan warna berdasarkan status
         let bgColor;
@@ -726,7 +711,6 @@
     });
 
     tbody.innerHTML = rows.join("");
-    console.log("Table loaded with", rows.length, "rows");
     } catch (error) {
       console.error("Error loading iuran table:", error);
       tbody.innerHTML = `
@@ -963,13 +947,6 @@
 
   // Load data saat halaman dimuat
   function init() {
-    console.log("Initializing...");
-    console.log("Anggota:", anggota);
-    console.log("Iuran:", iuran);
-    console.log("Tarif:", tarif);
-    console.log("Anggota Tarif:", anggotaTarif);
-    console.log("Tarif Per Anggota:", tarifPerAnggota);
-
     loadTahunFilter();
     loadIuran();
   }

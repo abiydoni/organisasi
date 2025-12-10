@@ -22,80 +22,52 @@
   </div>
 
   <!-- Informasi & Tarif berdampingan -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
     <!-- Informasi Anggota -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3 md:p-3 print-info-anggota"
+      class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-2 print-info-anggota"
     >
       <h3
-        class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-2 flex items-center gap-2"
+        class="text-xs font-medium text-gray-800 dark:text-white mb-1.5 pb-1 border-b border-gray-200 dark:border-gray-700"
       >
-        <i class="bx bx-info-circle text-blue-600 dark:text-blue-400"></i>
         Informasi Anggota
       </h3>
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 print-grid-info"
-      >
+      <div class="grid grid-cols-2 gap-x-3 gap-y-1 text-xs print-grid-info">
         <div>
-          <p class="text-[11px] text-gray-500 dark:text-gray-400 mb-0.5">
-            Nama
-          </p>
-          <p
-            class="text-sm md:text-sm font-semibold text-gray-800 dark:text-white"
-            id="anggotaNama"
+          <span class="text-gray-500 dark:text-gray-400">Nama:</span>
+          <span class="text-gray-800 dark:text-white block" id="anggotaNama"
+            >-</span
           >
-            -
-          </p>
         </div>
         <div>
-          <p class="text-[11px] text-gray-500 dark:text-gray-400 mb-0.5">NIK</p>
-          <p
-            class="text-sm md:text-sm text-gray-800 dark:text-white"
-            id="anggotaNik"
+          <span class="text-gray-500 dark:text-gray-400">NIK:</span>
+          <span class="text-gray-800 dark:text-white block" id="anggotaNik"
+            >-</span
           >
-            -
-          </p>
         </div>
         <div>
-          <p class="text-[11px] text-gray-500 dark:text-gray-400 mb-0.5">
-            Alamat
-          </p>
-          <p
-            class="text-sm md:text-sm text-gray-800 dark:text-white"
-            id="anggotaAlamat"
+          <span class="text-gray-500 dark:text-gray-400">Alamat:</span>
+          <span class="text-gray-800 dark:text-white block" id="anggotaAlamat"
+            >-</span
           >
-            -
-          </p>
         </div>
         <div>
-          <p class="text-[11px] text-gray-500 dark:text-gray-400 mb-0.5">
-            Telepon
-          </p>
-          <p
-            class="text-sm md:text-sm text-gray-800 dark:text-white"
-            id="anggotaTelepon"
+          <span class="text-gray-500 dark:text-gray-400">Telepon:</span>
+          <span class="text-gray-800 dark:text-white block" id="anggotaTelepon"
+            >-</span
           >
-            -
-          </p>
         </div>
         <div>
-          <p class="text-[11px] text-gray-500 dark:text-gray-400 mb-0.5">
-            Email
-          </p>
-          <p
-            class="text-sm md:text-sm text-gray-800 dark:text-white"
-            id="anggotaEmail"
+          <span class="text-gray-500 dark:text-gray-400">Email:</span>
+          <span class="text-gray-800 dark:text-white block" id="anggotaEmail"
+            >-</span
           >
-            -
-          </p>
         </div>
         <div>
-          <p class="text-[11px] text-gray-500 dark:text-gray-400 mb-0.5">
-            Status
-          </p>
+          <span class="text-gray-500 dark:text-gray-400">Status:</span>
           <span
             id="anggotaStatus"
-            class="inline-block px-2 py-0.5 text-[11px] font-semibold rounded-full"
+            class="inline-block px-1.5 py-0.5 text-xs font-medium rounded mt-0.5"
           >
             -
           </span>
@@ -105,18 +77,14 @@
 
     <!-- Daftar Tarif -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4"
+      class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-2"
     >
       <h3
-        class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-2 md:mb-3 flex items-center gap-2"
+        class="text-xs font-medium text-gray-800 dark:text-white mb-1.5 pb-1 border-b border-gray-200 dark:border-gray-700"
       >
-        <i class="bx bx-list-check text-blue-600 dark:text-blue-400"></i>
-        Daftar Tarif Wajib Dibayar
+        Daftar Tarif Aktif
       </h3>
-      <div
-        class="space-y-1.5 max-h-40 md:max-h-48 overflow-y-auto"
-        id="tarifList"
-      >
+      <div class="space-y-1" id="tarifList">
         <!-- Daftar tarif akan diisi oleh JavaScript -->
       </div>
     </div>
@@ -124,13 +92,12 @@
 
   <!-- Filter Tahun -->
   <div
-    class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4 mt-3"
+    class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-3 md:p-4"
   >
     <div class="flex flex-col gap-2">
       <h3
-        class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
+        class="text-sm md:text-base font-semibold text-gray-800 dark:text-white"
       >
-        <i class="bx bx-calendar text-blue-600 dark:text-blue-400"></i>
         Riwayat Pembayaran
       </h3>
       <div class="flex items-center gap-2">
@@ -139,10 +106,72 @@
         >
         <select
           id="tahunFilter"
-          class="flex-1 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+          class="flex-1 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
         >
           <!-- Options akan diisi oleh JavaScript -->
         </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Iuran Tahunan dan Seumur Hidup -->
+  <div id="sectionTahunanSeumur" class="hidden">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700"
+    >
+      <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+        <h3
+          class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
+        >
+          <i class="bx bx-calendar-check text-blue-600 dark:text-blue-400"></i>
+          Iuran Lain
+        </h3>
+      </div>
+      <div class="overflow-x-auto -mx-2 md:mx-0 px-2 md:px-0">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead
+            class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+          >
+            <tr>
+              <th
+                class="px-2 md:px-4 py-1.5 md:py-2 text-left text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Jenis Iuran
+              </th>
+              <th
+                class="px-2 md:px-4 py-1.5 md:py-2 text-right text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Tarif
+              </th>
+              <th
+                class="px-2 md:px-4 py-1.5 md:py-2 text-right text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Bayar
+              </th>
+              <th
+                class="px-2 md:px-4 py-1.5 md:py-2 text-right text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Sisa
+              </th>
+              <th
+                class="px-2 md:px-4 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Status
+              </th>
+              <th
+                class="px-2 md:px-4 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              >
+                Aksi
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            id="tahunanSeumurTableBody"
+            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+          >
+            <!-- Data akan diisi oleh JavaScript -->
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -151,40 +180,47 @@
   <div
     class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700"
   >
-    <!-- Desktop Table View -->
-    <div class="hidden md:block">
+    <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+      <h3
+        class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
+      >
+        <i class="bx bx-calendar text-blue-600 dark:text-blue-400"></i>
+        Iuran Bulanan
+      </h3>
+    </div>
+    <div class="overflow-x-auto -mx-2 md:mx-0 px-2 md:px-0">
       <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead
           class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
         >
           <tr>
             <th
-              class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-1.5 md:py-2 text-left text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Bulan
             </th>
             <th
-              class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-1.5 md:py-2 text-right text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
-              Daftar Tarif
+              Tarif
             </th>
             <th
-              class="px-2 md:px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-1.5 md:py-2 text-right text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Bayar
             </th>
             <th
-              class="px-2 md:px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-1.5 md:py-2 text-right text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Sisa
             </th>
             <th
-              class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Status
             </th>
             <th
-              class="px-2 md:px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Aksi
             </th>
@@ -204,55 +240,41 @@
         </tfoot>
       </table>
     </div>
-
-    <!-- Mobile Card View -->
-    <div
-      id="pembayaranCardBody"
-      class="md:hidden divide-y divide-gray-200 dark:divide-gray-700"
-    >
-      <!-- Data akan diisi oleh JavaScript -->
-    </div>
-  </div>
-
-  <!-- Ringkasan Tahunan & Sekali -->
-  <div
-    id="cardTahunanSeumurContainer"
-    class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4"
-  >
-    <!-- Card akan diisi oleh JavaScript -->
   </div>
 </div>
 
 <!-- Modal Detail Pembayaran -->
 <div
   id="modalDetailPembayaran"
-  class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+  class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-2 md:p-4"
   onclick="closeModalDetailPembayaran(event)"
 >
   <div
-    class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col"
+    class="bg-white dark:bg-gray-800 rounded-lg md:rounded-xl shadow-2xl max-w-full md:max-w-2xl w-full max-h-[95vh] md:max-h-[80vh] overflow-hidden flex flex-col"
     onclick="event.stopPropagation()"
   >
     <!-- Header Modal -->
     <div
-      class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+      class="flex items-center justify-between p-2 md:p-4 border-b border-gray-200 dark:border-gray-700"
     >
       <h3
-        class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
+        class="text-sm md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-1 md:gap-2"
       >
-        <i class="bx bx-info-circle text-blue-600 dark:text-blue-400"></i>
-        <span id="modalDetailTitle">Detail Pembayaran</span>
+        <i
+          class="bx bx-info-circle text-blue-600 dark:text-blue-400 text-base md:text-lg"
+        ></i>
+        <span id="modalDetailTitle" class="truncate">Detail Pembayaran</span>
       </h3>
       <button
         onclick="closeModalDetailPembayaran()"
-        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+        class="p-1 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors flex-shrink-0"
       >
-        <i class="bx bx-x text-xl"></i>
+        <i class="bx bx-x text-lg md:text-xl"></i>
       </button>
     </div>
 
     <!-- Content Modal -->
-    <div class="flex-1 overflow-y-auto p-4">
+    <div class="flex-1 overflow-y-auto p-2 md:p-4">
       <div id="modalDetailContent">
         <!-- Loading state -->
         <div class="text-center py-8">
@@ -413,16 +435,12 @@
 </div>
 
 <script>
-  console.log("Script started");
-
   // Load data dengan error handling
   let anggota = {};
   let iuran = [];
   let tarif = [];
   let tarifAnggota = [];
   let tahunSaatIni = new Date().getFullYear();
-
-  console.log("Variables initialized");
 
   try {
     // Parse data dengan aman - backend sudah me-stringify JSON
@@ -431,40 +449,33 @@
       anggota = {};
     }
   } catch(e) {
-    console.warn("Error parsing anggota:", e);
     anggota = {};
   }
 
   try {
     iuran = {{iuran}} || [];
     if (!Array.isArray(iuran)) {
-      console.warn("iuran is not an array:", typeof iuran);
       iuran = [];
     }
   } catch(e) {
-    console.warn("Error parsing iuran:", e);
     iuran = [];
   }
 
   try {
     tarif = {{tarif}} || [];
     if (!Array.isArray(tarif)) {
-      console.warn("tarif is not an array:", typeof tarif);
       tarif = [];
     }
   } catch(e) {
-    console.warn("Error parsing tarif:", e);
     tarif = [];
   }
 
   try {
     tarifAnggota = {{tarifAnggota}} || [];
     if (!Array.isArray(tarifAnggota)) {
-      console.warn("tarifAnggota is not an array:", typeof tarifAnggota);
       tarifAnggota = [];
     }
   } catch(e) {
-    console.warn("Error parsing tarifAnggota:", e);
     tarifAnggota = [];
   }
 
@@ -472,20 +483,11 @@
     const tahunStr = "{{tahun}}";
     tahunSaatIni = tahunStr && !isNaN(parseInt(tahunStr)) ? parseInt(tahunStr) : new Date().getFullYear();
   } catch(e) {
-    console.warn("Error parsing tahun:", e);
     tahunSaatIni = new Date().getFullYear();
   }
 
   // Gunakan hanya tarif yang dipilih anggota; jika kosong, tampilkan info kosong
   const tarifDipakai = tarifAnggota && Array.isArray(tarifAnggota) && tarifAnggota.length > 0 ? tarifAnggota : [];
-
-  console.log("Data loaded:", {
-    anggota: !!anggota,
-    iuranCount: iuran.length,
-    tarifCount: tarif.length,
-    tarifAnggotaCount: tarifAnggota.length,
-    tahunSaatIni: tahunSaatIni
-  });
 
   function formatFrekuensi(freq) {
     switch ((freq || "bulanan").toLowerCase()) {
@@ -563,11 +565,11 @@
       const statusEl = document.getElementById("anggotaStatus");
       if (anggota.status === "aktif") {
         statusEl.className =
-          "inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+          "inline-block px-1.5 py-0.5 text-xs font-medium rounded bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 mt-0.5";
         statusEl.textContent = "Aktif";
       } else {
         statusEl.className =
-          "inline-block px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+          "inline-block px-1.5 py-0.5 text-xs font-medium rounded bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 mt-0.5";
         statusEl.textContent = "Tidak Aktif";
       }
     }
@@ -609,24 +611,16 @@
     );
 
     if (selectedAktif.length === 0) {
-      tarifList.innerHTML =
-        '<p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 py-2">Belum ada tarif aktif yang dipilih untuk anggota ini.</p>';
+      tarifList.innerHTML = '<p class="text-xs text-gray-500 dark:text-gray-400 py-1">Tidak ada tarif aktif</p>';
       return;
     }
 
     tarifList.innerHTML = selectedAktif
       .map(
         (item) => `
-          <div class="flex items-center justify-between py-1 text-sm md:text-base text-gray-800 dark:text-gray-100">
-            <div class="min-w-0">
-              <p class="font-medium truncate">${item.nama}</p>
-              <p class="text-xs text-gray-500 dark:text-gray-400">
-                ${formatFrekuensi(item.frekuensi)} • ${item.keterangan || "-"}
-              </p>
-            </div>
-            <div class="text-right flex-shrink-0 ml-2">
-              <p class="font-semibold">${formatRupiah(item.jumlah)}</p>
-            </div>
+          <div class="flex items-center justify-between py-0.5 border-b border-gray-100 dark:border-gray-700 last:border-0">
+            <span class="text-xs text-gray-800 dark:text-white flex-1 min-w-0 pr-1 truncate">${item.nama}</span>
+            <span class="text-xs text-gray-800 dark:text-white font-medium flex-shrink-0">${formatRupiah(item.jumlah)}</span>
           </div>
         `
       )
@@ -716,30 +710,30 @@
       .map(
         (item) => `
           <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-medium">
+              <td class="px-2 md:px-4 py-1.5 md:py-3 text-[10px] md:text-sm text-gray-800 dark:text-gray-200 font-medium">
                 <a
                   href="javascript:void(0)"
                   onclick="lihatDetailPembayaran(${item.bulan}, ${tahunSaatIni}, '${item.namaBulan}')"
-                  class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline font-semibold flex items-center gap-1"
+                  class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline font-semibold flex items-center gap-0.5 md:gap-1"
                   title="Lihat Detail Pembayaran"
                 >
-                  ${item.namaBulan}
-                  <i class="bx bx-info-circle text-sm"></i>
+                  <span class="truncate max-w-[60px] md:max-w-none">${item.namaBulan}</span>
+                  <i class="bx bx-info-circle text-[10px] md:text-sm flex-shrink-0"></i>
                 </a>
               </td>
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold">
+              <td class="px-2 md:px-4 py-1.5 md:py-3 text-[10px] md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right whitespace-nowrap">
                 ${formatRupiah(item.totalTarif)}
               </td>
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right">
+              <td class="px-2 md:px-4 py-1.5 md:py-3 text-[10px] md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right whitespace-nowrap">
                 ${formatRupiah(item.jumlahBayar)}
               </td>
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right ${
+              <td class="px-2 md:px-4 py-1.5 md:py-3 text-[10px] md:text-sm text-gray-800 dark:text-gray-200 font-semibold text-right whitespace-nowrap ${
                 item.sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
               }">
                 ${formatRupiah(item.sisa)}
               </td>
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap">
-                  <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${
+              <td class="px-2 md:px-4 py-1.5 md:py-3 text-center">
+                  <span class="px-1 md:px-2 py-0.5 text-[9px] md:text-xs font-semibold rounded-full ${
                     item.status === "lunas"
                       ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200"
                       : item.status === "belum bayar"
@@ -757,26 +751,26 @@
                       : "Belum Lunas"
                   }</span>
               </td>
-              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-center">
+              <td class="px-1 md:px-4 py-1.5 md:py-3 text-center">
                 ${
                   item.status === "lunas" && item.iuranId
                     ? `
                       <button
                         onclick="hapusIuran(${item.iuranId}, ${item.bulan}, ${tahunSaatIni})"
-                        class="px-2 py-1 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded transition-all duration-200 flex items-center gap-1 mx-auto"
+                        class="px-1 md:px-2 py-0.5 md:py-1 text-[10px] md:text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded transition-all duration-200 flex items-center gap-0.5 md:gap-1 mx-auto"
                         title="Hapus Pembayaran"
                       >
-                        <i class="bx bx-trash"></i>
+                        <i class="bx bx-trash text-[10px] md:text-xs"></i>
                         <span class="hidden sm:inline">Hapus</span>
                       </button>
                     `
                     : `
                       <button
                         onclick="bayarIuran(${item.bulan}, ${tahunSaatIni}, ${item.totalTarif})"
-                        class="px-2 py-1 text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded transition-all duration-200 flex items-center gap-1 mx-auto"
+                        class="px-1 md:px-2 py-0.5 md:py-1 text-[10px] md:text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded transition-all duration-200 flex items-center gap-0.5 md:gap-1 mx-auto"
                         title="Bayar Iuran"
                       >
-                        <i class="bx bx-check"></i>
+                        <i class="bx bx-check text-[10px] md:text-xs"></i>
                         <span class="hidden sm:inline">Bayar</span>
                       </button>
                     `
@@ -793,121 +787,26 @@
     if (tfoot) {
       tfoot.innerHTML = `
         <tr>
-          <td class="px-2 md:px-4 py-2 md:py-3 text-xs md:text-sm text-gray-800 dark:text-white font-bold">
+          <td class="px-2 md:px-4 py-1.5 md:py-3 text-[10px] md:text-sm text-gray-800 dark:text-white font-bold">
             TOTAL
           </td>
-          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold">
+          <td class="px-2 md:px-4 py-1.5 md:py-3 text-[10px] md:text-sm text-gray-800 dark:text-white font-bold text-right whitespace-nowrap">
             ${formatRupiah(totalDaftarTarif)}
           </td>
-          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-white font-bold text-right">
+          <td class="px-2 md:px-4 py-1.5 md:py-3 text-[10px] md:text-sm text-gray-800 dark:text-white font-bold text-right whitespace-nowrap">
             ${formatRupiah(totalBayar)}
           </td>
-          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs md:text-sm font-bold text-right ${
+          <td class="px-2 md:px-4 py-1.5 md:py-3 text-[10px] md:text-sm font-bold text-right whitespace-nowrap ${
             totalSisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
           }">
             ${formatRupiah(totalSisa)}
           </td>
-          <td class="px-2 md:px-4 py-2 md:py-3"></td>
-          <td class="px-2 md:px-4 py-2 md:py-3"></td>
+          <td class="px-2 md:px-4 py-1.5 md:py-3"></td>
+          <td class="px-2 md:px-4 py-1.5 md:py-3"></td>
         </tr>
       `;
     }
 
-    // Mobile card view
-    const cardBody = document.getElementById("pembayaranCardBody");
-    if (cardBody) {
-    cardBody.innerHTML = bulanData
-      .map(
-        (item) => `
-          <div class="p-2 md:p-3 hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150">
-            <div class="flex items-center justify-between mb-2">
-              <a
-                href="javascript:void(0)"
-                onclick="lihatDetailPembayaran(${item.bulan}, ${tahunSaatIni}, '${item.namaBulan}')"
-                class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline flex items-center gap-1"
-                title="Lihat Detail Pembayaran"
-              >
-                ${item.namaBulan}
-                <i class="bx bx-info-circle text-xs"></i>
-              </a>
-              <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${
-                item.status === "lunas"
-                  ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200"
-                  : item.status === "belum bayar"
-                  ? "bg-gradient-to-r from-red-100 to-red-200 text-red-800 dark:from-red-900 dark:to-red-800 dark:text-red-200"
-                  : "bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 dark:from-yellow-900 dark:to-yellow-800 dark:text-yellow-200"
-              }">${
-                item.status === "lunas"
-                  ? "Lunas"
-                  : item.status === "belum bayar"
-                  ? "Belum Bayar"
-                  : "Belum Lunas"
-              }</span>
-            </div>
-            <div class="space-y-1.5 text-xs">
-              <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-gray-400">Tarif:</span>
-                <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(item.totalTarif)}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-gray-400">Bayar:</span>
-                <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(item.jumlahBayar)}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-gray-400">Sisa:</span>
-                <span class="font-semibold ${
-                  item.sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
-                }">${formatRupiah(item.sisa)}</span>
-              </div>
-            </div>
-            <div class="mt-2 flex justify-end">
-              ${
-                item.status === "lunas" && item.iuranId
-                  ? `
-                    <button
-                      onclick="hapusIuran(${item.iuranId}, ${item.bulan}, ${tahunSaatIni})"
-                      class="px-3 py-1.5 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-all duration-200 flex items-center gap-1"
-                      title="Hapus Pembayaran"
-                    >
-                      <i class="bx bx-trash"></i>
-                      <span>Hapus</span>
-                    </button>
-                  `
-                  : `
-                    <button
-                      onclick="bayarIuran(${item.bulan}, ${tahunSaatIni}, ${item.totalTarif})"
-                      class="px-3 py-1.5 text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-all duration-200 flex items-center gap-1"
-                      title="Bayar Iuran"
-                    >
-                      <i class="bx bx-check"></i>
-                      <span>Bayar</span>
-                    </button>
-                  `
-              }
-            </div>
-          </div>
-      `
-      )
-      .join("") +
-      `
-      <div class="p-2 md:p-3 bg-gray-50 dark:bg-gray-700 font-bold border-t-2 border-gray-300 dark:border-gray-600">
-        <div class="space-y-1 text-xs">
-          <div class="flex justify-between items-center">
-            <span class="text-gray-800 dark:text-white">Total Daftar Tarif:</span>
-            <span class="text-gray-800 dark:text-white font-bold">${formatRupiah(totalDaftarTarif)}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-800 dark:text-white">Total Bayar:</span>
-            <span class="text-gray-800 dark:text-white font-bold">${formatRupiah(totalBayar)}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-800 dark:text-white">Total Sisa:</span>
-            <span class="font-bold ${totalSisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}">${formatRupiah(totalSisa)}</span>
-          </div>
-        </div>
-      </div>
-      `;
-    }
   }
 
   // Fungsi untuk bayar iuran (buka modal)
@@ -1355,9 +1254,8 @@
   // Load data iuran tahunan dan seumur hidup
   function loadTahunanSeumur() {
     try {
-      const container = document.getElementById("cardTahunanSeumurContainer");
-      if (!container) {
-        console.warn("Container cardTahunanSeumurContainer tidak ditemukan");
+      const tbody = document.getElementById("tahunanSeumurTableBody");
+      if (!tbody) {
         return;
       }
 
@@ -1365,161 +1263,166 @@
       const tarifTahunan = groupedTarif.tahunan || [];
       const tarifSeumur = groupedTarif.seumur_hidup || [];
 
-      let cardsHTML = "";
+      // Gabungkan semua tarif tahunan dan seumur hidup
+      const allTarif = [
+        ...tarifTahunan.map(t => ({ ...t, jenis: 'Tahunan' })),
+        ...tarifSeumur.map(t => ({ ...t, jenis: 'Sekali' }))
+      ];
 
-    // === IURAN TAHUNAN ===
-    tarifTahunan.forEach((tarif) => {
-      if (!tarif || !tarif.id) return; // Skip jika tarif tidak valid
+      if (allTarif.length === 0) {
+        const section = document.getElementById("sectionTahunanSeumur");
+        if (section) {
+          section.classList.add("hidden");
+        }
+        return;
+      }
 
-      // Cari iuran tahunan untuk tarif ini di tahun ini
-      const iuranTahunan = iuran.filter(
-        (i) =>
-          i.tahun === tahunSaatIni &&
-          (i.frekuensi || "bulanan").toLowerCase() === "tahunan" &&
-          parseInt(i.tarif_id) === parseInt(tarif.id)
-      );
+      // Tampilkan section
+      const section = document.getElementById("sectionTahunanSeumur");
+      if (section) {
+        section.classList.remove("hidden");
+      }
 
-      const sudahBayar = iuranTahunan.reduce(
-        (sum, i) => sum + (parseInt(i.jumlah) || 0),
-        0
-      );
+      tbody.innerHTML = allTarif
+        .map((tarif) => {
+          if (!tarif || !tarif.id) return "";
 
-      const sisa = Math.max(0, parseInt(tarif.jumlah || 0) - sudahBayar);
-      const status = sisa === 0 ? "Lunas" : sudahBayar > 0 ? "Belum Lunas" : "Belum Bayar";
-      const statusClass = sisa === 0
-        ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
-        : sudahBayar > 0
-        ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
-        : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200";
+          let sudahBayar = 0;
+          let sisa = 0;
+          let status = "Belum";
+          let statusClass = "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200";
 
-      // Escape nama tarif untuk menghindari masalah dengan karakter khusus
-      const tarifNamaEscaped = String(tarif.nama || "").replace(/'/g, "&#39;").replace(/"/g, "&quot;").replace(/`/g, "&#96;");
-      const tarifKeteranganEscaped = String(tarif.keterangan || "").replace(/'/g, "&#39;").replace(/"/g, "&quot;").replace(/`/g, "&#96;");
+          if (tarif.jenis === "Tahunan") {
+            // Cari iuran tahunan untuk tarif ini di tahun ini
+            const iuranTahunan = iuran.filter(
+              (i) =>
+                i.tahun === tahunSaatIni &&
+                (i.frekuensi || "bulanan").toLowerCase() === "tahunan" &&
+                parseInt(i.tarif_id) === parseInt(tarif.id)
+            );
 
-      cardsHTML += `
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4">
-          <div class="flex items-center justify-between mb-2">
-            <h3 class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
-              <i class="bx bx-calendar text-blue-600 dark:text-blue-400"></i>
-              ${tarif.nama || "-"}
-            </h3>
-            <span class="text-xs px-2 py-1 rounded ${statusClass}">${status}</span>
-          </div>
-          <div class="space-y-1 text-sm text-gray-700 dark:text-gray-200">
-            <div class="flex justify-between">
-              <span>Total Tarif</span>
-              <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(tarif.jumlah)}</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Sudah Bayar</span>
-              <span class="font-semibold text-green-600 dark:text-green-400">${formatRupiah(sudahBayar)}</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Sisa</span>
-              <span class="font-semibold text-red-600 dark:text-red-400">${formatRupiah(sisa)}</span>
-            </div>
-          </div>
-          <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-            ${tarif.keterangan || ""} ${sisa === 0 ? `Sudah lunas untuk tahun ${tahunSaatIni}.` : `Sisa pembayaran untuk tahun ${tahunSaatIni}.`}
-          </p>
-          <div class="mt-3 flex justify-end gap-2">
-            <button
-              onclick="lihatDetailTahunanSeumur('tahunan', ${tarif.id}, '${tarifNamaEscaped}', ${tahunSaatIni})"
-              class="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
-            >
-              Detail
-            </button>
-            <button
-              onclick="bayarTahunanSeumur('tahunan', ${tarif.id}, '${tarifNamaEscaped}')"
-              class="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded ${sisa === 0 ? "opacity-50 cursor-not-allowed" : ""}"
-              ${sisa === 0 ? "disabled" : ""}
-            >
-              Bayar
-            </button>
-          </div>
-        </div>
-      `;
-    });
+            sudahBayar = iuranTahunan.reduce(
+              (sum, i) => sum + (parseInt(i.jumlah) || 0),
+              0
+            );
+          } else {
+            // Cari iuran seumur hidup untuk tarif ini
+            const iuranSeumur = iuran.filter(
+              (i) =>
+                (i.frekuensi || "bulanan").toLowerCase() === "seumur_hidup" &&
+                parseInt(i.tarif_id) === parseInt(tarif.id)
+            );
 
-    // === IURAN SEUMUR HIDUP ===
-    tarifSeumur.forEach((tarif) => {
-      if (!tarif || !tarif.id) return; // Skip jika tarif tidak valid
+            sudahBayar = iuranSeumur.reduce(
+              (sum, i) => sum + (parseInt(i.jumlah) || 0),
+              0
+            );
+          }
 
-      // Cari iuran seumur hidup untuk tarif ini
-      const iuranSeumur = iuran.filter(
-        (i) =>
-          (i.frekuensi || "bulanan").toLowerCase() === "seumur_hidup" &&
-          parseInt(i.tarif_id) === parseInt(tarif.id)
-      );
+          sisa = Math.max(0, parseInt(tarif.jumlah || 0) - sudahBayar);
+          status = sisa === 0 ? "Lunas" : sudahBayar > 0 ? "Belum Lunas" : "Belum Bayar";
+          statusClass = sisa === 0
+            ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
+            : sudahBayar > 0
+            ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
+            : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200";
 
-      const sudahBayar = iuranSeumur.reduce(
-        (sum, i) => sum + (parseInt(i.jumlah) || 0),
-        0
-      );
+          // Escape nama tarif
+          const tarifNamaEscaped = String(tarif.nama || "").replace(/'/g, "&#39;").replace(/"/g, "&quot;").replace(/`/g, "&#96;");
+          const frekuensi = tarif.jenis === "Tahunan" ? "tahunan" : "seumur_hidup";
+          const tahunParam = tarif.jenis === "Tahunan" ? tahunSaatIni : "null";
 
-      const sisa = Math.max(0, parseInt(tarif.jumlah || 0) - sudahBayar);
-      const status = sisa === 0 ? "Lunas" : sudahBayar > 0 ? "Belum Lunas" : "Belum Bayar";
-      const statusClass = sisa === 0
-        ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
-        : sudahBayar > 0
-        ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
-        : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200";
+          // Cari iuranId untuk tombol hapus (ambil yang terbaru jika sudah lunas)
+          let iuranId = null;
+          if (sisa === 0) {
+            if (tarif.jenis === "Tahunan") {
+              const iuranTahunan = iuran.filter(
+                (i) =>
+                  i.tahun === tahunSaatIni &&
+                  (i.frekuensi || "bulanan").toLowerCase() === "tahunan" &&
+                  parseInt(i.tarif_id) === parseInt(tarif.id)
+              );
+              // Ambil yang terbaru (sort by id DESC atau created_at DESC)
+              if (iuranTahunan.length > 0) {
+                const sorted = iuranTahunan.sort((a, b) => (b.id || 0) - (a.id || 0));
+                iuranId = sorted[0].id;
+              }
+            } else {
+              const iuranSeumur = iuran.filter(
+                (i) =>
+                  (i.frekuensi || "bulanan").toLowerCase() === "seumur_hidup" &&
+                  parseInt(i.tarif_id) === parseInt(tarif.id)
+              );
+              // Ambil yang terbaru
+              if (iuranSeumur.length > 0) {
+                const sorted = iuranSeumur.sort((a, b) => (b.id || 0) - (a.id || 0));
+                iuranId = sorted[0].id;
+              }
+            }
+          }
 
-      // Escape nama tarif untuk menghindari masalah dengan karakter khusus
-      const tarifNamaEscaped = String(tarif.nama || "").replace(/'/g, "&#39;").replace(/"/g, "&quot;").replace(/`/g, "&#96;");
-      const tarifKeteranganEscaped = String(tarif.keterangan || "").replace(/'/g, "&#39;").replace(/"/g, "&quot;").replace(/`/g, "&#96;");
-
-      cardsHTML += `
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4">
-          <div class="flex items-center justify-between mb-2">
-            <h3 class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
-              <i class="bx bx-check-shield text-blue-600 dark:text-blue-400"></i>
-              ${tarif.nama || "-"}
-            </h3>
-            <span class="text-xs px-2 py-1 rounded ${statusClass}">${status}</span>
-          </div>
-          <div class="space-y-1 text-sm text-gray-700 dark:text-gray-200">
-            <div class="flex justify-between">
-              <span>Total Tarif</span>
-              <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(tarif.jumlah)}</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Sudah Bayar</span>
-              <span class="font-semibold text-green-600 dark:text-green-400">${formatRupiah(sudahBayar)}</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Sisa</span>
-              <span class="font-semibold text-red-600 dark:text-red-400">${formatRupiah(sisa)}</span>
-            </div>
-          </div>
-          <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-            ${tarif.keterangan || ""} ${sisa === 0 ? "Sudah lunas." : "Sisa pembayaran sekali."}
-          </p>
-          <div class="mt-3 flex justify-end gap-2">
-            <button
-              onclick="lihatDetailTahunanSeumur('seumur_hidup', ${tarif.id}, '${tarifNamaEscaped}', null)"
-              class="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
-            >
-              Detail
-            </button>
-            <button
-              onclick="bayarTahunanSeumur('seumur_hidup', ${tarif.id}, '${tarifNamaEscaped}')"
-              class="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded ${sisa === 0 ? "opacity-50 cursor-not-allowed" : ""}"
-              ${sisa === 0 ? "disabled" : ""}
-            >
-              Bayar
-            </button>
-          </div>
-        </div>
-      `;
-    });
-
-      container.innerHTML = cardsHTML || '<div class="col-span-2 text-center text-gray-500 dark:text-gray-400 py-4">Tidak ada tarif tahunan atau sekali yang dipilih untuk anggota ini.</div>';
+          return `
+            <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150">
+              <td class="px-2 md:px-4 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-medium">
+                <a
+                  href="javascript:void(0)"
+                  onclick="lihatDetailTahunanSeumur('${frekuensi}', ${tarif.id}, '${tarifNamaEscaped}', ${tahunParam})"
+                  class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline flex items-center gap-0.5 md:gap-1"
+                  title="Lihat Detail Pembayaran"
+                >
+                  <span class="truncate max-w-[80px] md:max-w-none">${tarif.nama || "-"}</span>
+                  <i class="bx bx-info-circle text-[10px] md:text-xs flex-shrink-0"></i>
+                </a>
+              </td>
+              <td class="px-2 md:px-4 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-semibold text-right whitespace-nowrap">
+                ${formatRupiah(tarif.jumlah)}
+              </td>
+              <td class="px-2 md:px-4 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-semibold text-right whitespace-nowrap">
+                ${formatRupiah(sudahBayar)}
+              </td>
+              <td class="px-2 md:px-4 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-semibold text-right whitespace-nowrap ${
+                sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
+              }">
+                ${formatRupiah(sisa)}
+              </td>
+              <td class="px-2 md:px-4 py-1.5 md:py-2 text-center">
+                <span class="px-1 md:px-1.5 py-0.5 text-[9px] md:text-[10px] font-semibold rounded-full ${statusClass} whitespace-nowrap">${status}</span>
+              </td>
+              <td class="px-2 md:px-4 py-1.5 md:py-2 text-center">
+                ${
+                  sisa === 0 && iuranId
+                    ? `
+                      <button
+                        onclick="hapusPembayaranTahunanSeumur(${iuranId}, '${frekuensi}', ${tarif.id}, '${tarifNamaEscaped}', ${tahunParam})"
+                        class="px-1 md:px-2 py-0.5 md:py-1 text-[10px] md:text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded transition-all duration-200 flex items-center gap-0.5 md:gap-1 mx-auto"
+                        title="Hapus Pembayaran"
+                      >
+                        <i class="bx bx-trash text-[10px] md:text-xs"></i>
+                        <span class="hidden sm:inline">Hapus</span>
+                      </button>
+                    `
+                    : `
+                      <button
+                        onclick="bayarTahunanSeumur('${frekuensi}', ${tarif.id}, '${tarifNamaEscaped}')"
+                        class="px-1 md:px-2 py-0.5 md:py-1 text-[10px] md:text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded transition-all duration-200 flex items-center gap-0.5 md:gap-1 mx-auto"
+                        title="Bayar Iuran"
+                      >
+                        <i class="bx bx-check text-[10px] md:text-xs"></i>
+                        <span class="hidden sm:inline">Bayar</span>
+                      </button>
+                    `
+                }
+              </td>
+            </tr>
+          `;
+        })
+        .filter(html => html !== "")
+        .join("");
     } catch (error) {
       console.error("Error loading tahunan/seumur hidup:", error);
-      const container = document.getElementById("cardTahunanSeumurContainer");
-      if (container) {
-        container.innerHTML = '<div class="col-span-2 text-center text-red-500 dark:text-red-400 py-4">Terjadi kesalahan saat memuat data.</div>';
+      const section = document.getElementById("sectionTahunanSeumur");
+      if (section) {
+        section.classList.add("hidden");
       }
     }
   }
@@ -1654,56 +1557,57 @@
           const sisa = Math.max(0, totalTarif - totalBayar);
 
           modalContent.innerHTML = `
-            <div class="space-y-4">
-              <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-                <div class="flex justify-between items-center mb-2">
-                  <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Total Tarif:</span>
-                  <span class="text-sm font-bold text-gray-800 dark:text-white">${formatRupiah(totalTarif)}</span>
-                </div>
-                <div class="flex justify-between items-center mb-2">
-                  <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Total Sudah Dibayar:</span>
-                  <span class="text-sm font-bold text-green-600 dark:text-green-400">${formatRupiah(totalBayar)}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Sisa:</span>
-                  <span class="text-sm font-bold ${sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}">${formatRupiah(sisa)}</span>
-                </div>
-              </div>
-              <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead class="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">No</th>
-                      <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Jumlah Pembayaran</th>
-                      <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Tanggal Pembayaran</th>
-                      <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Keterangan</th>
-                      <th class="px-3 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    ${pembayaranList.map((p, index) => {
-                      const tanggal = p.tanggal_bayar ? formatTanggal(p.tanggal_bayar) : "-";
-                      return `
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                          <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">${index + 1}</td>
-                          <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-gray-800 dark:text-gray-200 text-right">${formatRupiah(p.jumlah)}</td>
-                          <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">${tanggal}</td>
-                          <td class="px-3 py-2 text-sm text-gray-800 dark:text-gray-200">${p.keterangan || "-"}</td>
-                          <td class="px-3 py-2 whitespace-nowrap text-center">
-                            <button
-                              onclick="hapusPembayaranTahunanSeumur(${p.id}, '${frekuensi}', ${tarifId}, '${tarifNama}', ${tahun || 'null'})"
-                              class="px-2 py-1 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded transition-colors"
-                              title="Hapus Pembayaran"
-                            >
-                              <i class="bx bx-trash"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      `;
-                    }).join("")}
-                  </tbody>
-                </table>
-              </div>
+            <!-- Tabel Pembayaran -->
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">No</th>
+                    <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Jumlah Pembayaran</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Tanggal Pembayaran</th>
+                    <th class="px-3 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  ${pembayaranList.map((p, index) => {
+                    const tanggal = p.tanggal_bayar ? formatTanggal(p.tanggal_bayar) : "-";
+                    return `
+                      <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">${index + 1}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-gray-800 dark:text-gray-200 text-right">${formatRupiah(p.jumlah)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">${tanggal}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-center">
+                          <button
+                            onclick="hapusPembayaranTahunanSeumur(${p.id}, '${frekuensi}', ${tarifId}, '${tarifNama}', ${tahun || 'null'})"
+                            class="px-2 py-1 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded transition-colors"
+                            title="Hapus Pembayaran"
+                          >
+                            <i class="bx bx-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    `;
+                  }).join("")}
+                </tbody>
+                <tfoot class="bg-gray-50 dark:bg-gray-700 border-t-2 border-gray-300 dark:border-gray-600">
+                  <tr>
+                    <td colspan="4" class="px-3 py-3 space-y-1">
+                      <div class="flex justify-between items-center text-sm">
+                        <span class="font-semibold text-gray-700 dark:text-gray-300">Total Tarif:</span>
+                        <span class="font-bold text-gray-800 dark:text-white">${formatRupiah(totalTarif)}</span>
+                      </div>
+                      <div class="flex justify-between items-center text-sm">
+                        <span class="font-semibold text-gray-700 dark:text-gray-300">Total Sudah Dibayar:</span>
+                        <span class="font-bold text-green-600 dark:text-green-400">${formatRupiah(totalBayar)}</span>
+                      </div>
+                      <div class="flex justify-between items-center text-sm">
+                        <span class="font-semibold text-gray-700 dark:text-gray-300">Sisa yang Harus Dibayar:</span>
+                        <span class="font-bold ${sisa > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}">${formatRupiah(sisa)}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
           `;
         }
@@ -1770,7 +1674,6 @@
   // Load semua data dengan error handling dan delay untuk memastikan DOM ready
   function initPage() {
     try {
-      console.log("Initializing page...");
       loadAnggotaInfo();
     } catch (error) {
       console.error("Error loading anggota info:", error);
@@ -1806,7 +1709,6 @@
       console.error("Error loading print header:", error);
     }
 
-    console.log("Page initialization complete");
   }
 
   // Tunggu DOM ready
