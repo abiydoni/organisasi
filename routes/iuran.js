@@ -168,7 +168,7 @@ router.post("/create", (req, res) => {
 
       // Auto insert ke buku kas sebagai debet
       if (status === "lunas" && jumlah > 0) {
-        // Get anggota name
+        // Get anggota name and tarif info
         db.get(
           "SELECT nama FROM anggota WHERE id = ?",
           [anggotaIdInt],
@@ -198,49 +198,125 @@ router.post("/create", (req, res) => {
               anggota
             );
 
-            const namaBulan = getNamaBulan(bulan);
-            let keteranganBukuKas = `Iuran ${namaBulan} - ${namaAnggota}`;
-
-            console.log(
-              "Keterangan buku_kas yang akan disimpan:",
-              keteranganBukuKas
-            );
-
-            // Tambahkan keterangan dari form jika ada
-            if (keterangan && keterangan.trim()) {
-              keteranganBukuKas += `\n${keterangan.trim()}`;
-            }
-
-            // Get last saldo
-            db.get(
-              "SELECT saldo FROM buku_kas ORDER BY id DESC LIMIT 1",
-              [],
-              (err, lastRow) => {
-                if (err) {
-                  console.error("Error mengambil saldo:", err);
-                }
-                const lastSaldo = lastRow?.saldo || 0;
-                const newSaldo = lastSaldo + parseInt(jumlah);
-
-                db.run(
-                  `INSERT INTO buku_kas (tanggal, keterangan, kategori, debet, kredit, saldo) 
-                  VALUES (?, ?, ?, ?, ?, ?)`,
-                  [
-                    tanggal_bayar || new Date().toISOString().split("T")[0],
-                    keteranganBukuKas,
-                    "iuran",
-                    parseInt(jumlah),
-                    0,
-                    newSaldo,
-                  ],
-                  (err) => {
-                    if (err) {
-                      console.error("Error insert buku_kas:", err);
-                    }
+            // Get tarif info if tarif_id exists
+            if (tarif_id) {
+              db.get(
+                "SELECT nama FROM tarif WHERE id = ?",
+                [tarif_id],
+                (err, tarif) => {
+                  if (err) {
+                    console.error("Error mengambil data tarif:", err);
                   }
-                );
+
+                  const frekuensiLower = (frekuensi || "bulanan").toLowerCase();
+                  let keteranganBukuKas;
+
+                  if (
+                    frekuensiLower === "tahunan" ||
+                    frekuensiLower === "seumur_hidup"
+                  ) {
+                    // Untuk tahunan dan seumur_hidup, gunakan nama tarif
+                    let namaTarif = tarif?.nama || "Iuran";
+                    // Pastikan ada prefix "Iuran" jika belum ada
+                    if (!namaTarif.toLowerCase().startsWith("iuran")) {
+                      namaTarif = `Iuran ${namaTarif}`;
+                    }
+                    keteranganBukuKas = `${namaTarif} - ${namaAnggota}`;
+                  } else {
+                    // Untuk bulanan, gunakan nama bulan
+                    const namaBulan = getNamaBulan(bulan);
+                    keteranganBukuKas = `Iuran ${namaBulan} - ${namaAnggota}`;
+                  }
+
+                  console.log(
+                    "Keterangan buku_kas yang akan disimpan:",
+                    keteranganBukuKas
+                  );
+
+                  // Tambahkan keterangan dari form jika ada
+                  if (keterangan && keterangan.trim()) {
+                    keteranganBukuKas += `\n${keterangan.trim()}`;
+                  }
+
+                  // Get last saldo
+                  db.get(
+                    "SELECT saldo FROM buku_kas ORDER BY id DESC LIMIT 1",
+                    [],
+                    (err, lastRow) => {
+                      if (err) {
+                        console.error("Error mengambil saldo:", err);
+                      }
+                      const lastSaldo = lastRow?.saldo || 0;
+                      const newSaldo = lastSaldo + parseInt(jumlah);
+
+                      db.run(
+                        `INSERT INTO buku_kas (tanggal, keterangan, kategori, debet, kredit, saldo) 
+                        VALUES (?, ?, ?, ?, ?, ?)`,
+                        [
+                          tanggal_bayar ||
+                            new Date().toISOString().split("T")[0],
+                          keteranganBukuKas,
+                          "iuran",
+                          parseInt(jumlah),
+                          0,
+                          newSaldo,
+                        ],
+                        (err) => {
+                          if (err) {
+                            console.error("Error insert buku_kas:", err);
+                          }
+                        }
+                      );
+                    }
+                  );
+                }
+              );
+            } else {
+              // Fallback jika tidak ada tarif_id
+              const namaBulan = getNamaBulan(bulan);
+              let keteranganBukuKas = `Iuran ${namaBulan} - ${namaAnggota}`;
+
+              console.log(
+                "Keterangan buku_kas yang akan disimpan:",
+                keteranganBukuKas
+              );
+
+              // Tambahkan keterangan dari form jika ada
+              if (keterangan && keterangan.trim()) {
+                keteranganBukuKas += `\n${keterangan.trim()}`;
               }
-            );
+
+              // Get last saldo
+              db.get(
+                "SELECT saldo FROM buku_kas ORDER BY id DESC LIMIT 1",
+                [],
+                (err, lastRow) => {
+                  if (err) {
+                    console.error("Error mengambil saldo:", err);
+                  }
+                  const lastSaldo = lastRow?.saldo || 0;
+                  const newSaldo = lastSaldo + parseInt(jumlah);
+
+                  db.run(
+                    `INSERT INTO buku_kas (tanggal, keterangan, kategori, debet, kredit, saldo) 
+                    VALUES (?, ?, ?, ?, ?, ?)`,
+                    [
+                      tanggal_bayar || new Date().toISOString().split("T")[0],
+                      keteranganBukuKas,
+                      "iuran",
+                      parseInt(jumlah),
+                      0,
+                      newSaldo,
+                    ],
+                    (err) => {
+                      if (err) {
+                        console.error("Error insert buku_kas:", err);
+                      }
+                    }
+                  );
+                }
+              );
+            }
           }
         );
       }
@@ -325,35 +401,99 @@ router.delete("/delete/:id", (req, res) => {
               "dari anggota_id:",
               iuranData.anggota_id
             );
-            const namaBulan = getNamaBulan(iuranData.bulan);
-            const keteranganBukuKas = `Pembatalan iuran ${namaBulan} - ${namaAnggota}`;
 
-            // Get last saldo
-            db.get(
-              "SELECT saldo FROM buku_kas ORDER BY id DESC LIMIT 1",
-              [],
-              (err, lastRow) => {
-                const lastSaldo = lastRow?.saldo || 0;
-                const newSaldo = Math.max(
-                  0,
-                  lastSaldo - parseInt(iuranData.jumlah)
-                );
+            // Get tarif info if tarif_id exists
+            if (iuranData.tarif_id) {
+              db.get(
+                "SELECT nama FROM tarif WHERE id = ?",
+                [iuranData.tarif_id],
+                (err, tarif) => {
+                  if (err) {
+                    console.error("Error mengambil data tarif:", err);
+                  }
 
-                // Insert reverse entry (kredit)
-                db.run(
-                  `INSERT INTO buku_kas (tanggal, keterangan, kategori, debet, kredit, saldo) 
-                  VALUES (?, ?, ?, ?, ?, ?)`,
-                  [
-                    new Date().toISOString().split("T")[0],
-                    keteranganBukuKas,
-                    "iuran",
+                  const frekuensiLower = (
+                    iuranData.frekuensi || "bulanan"
+                  ).toLowerCase();
+                  let keteranganBukuKas;
+
+                  if (
+                    frekuensiLower === "tahunan" ||
+                    frekuensiLower === "seumur_hidup"
+                  ) {
+                    // Untuk tahunan dan seumur_hidup, gunakan nama tarif
+                    let namaTarif = tarif?.nama || "Iuran";
+                    // Pastikan ada prefix "Iuran" jika belum ada
+                    if (!namaTarif.toLowerCase().startsWith("iuran")) {
+                      namaTarif = `Iuran ${namaTarif}`;
+                    }
+                    keteranganBukuKas = `Pembatalan ${namaTarif} - ${namaAnggota}`;
+                  } else {
+                    // Untuk bulanan, gunakan nama bulan
+                    const namaBulan = getNamaBulan(iuranData.bulan);
+                    keteranganBukuKas = `Pembatalan iuran ${namaBulan} - ${namaAnggota}`;
+                  }
+
+                  // Get last saldo
+                  db.get(
+                    "SELECT saldo FROM buku_kas ORDER BY id DESC LIMIT 1",
+                    [],
+                    (err, lastRow) => {
+                      const lastSaldo = lastRow?.saldo || 0;
+                      const newSaldo = Math.max(
+                        0,
+                        lastSaldo - parseInt(iuranData.jumlah)
+                      );
+
+                      // Insert reverse entry (kredit)
+                      db.run(
+                        `INSERT INTO buku_kas (tanggal, keterangan, kategori, debet, kredit, saldo) 
+                        VALUES (?, ?, ?, ?, ?, ?)`,
+                        [
+                          new Date().toISOString().split("T")[0],
+                          keteranganBukuKas,
+                          "iuran",
+                          0,
+                          parseInt(iuranData.jumlah),
+                          newSaldo,
+                        ]
+                      );
+                    }
+                  );
+                }
+              );
+            } else {
+              // Fallback jika tidak ada tarif_id
+              const namaBulan = getNamaBulan(iuranData.bulan);
+              const keteranganBukuKas = `Pembatalan iuran ${namaBulan} - ${namaAnggota}`;
+
+              // Get last saldo
+              db.get(
+                "SELECT saldo FROM buku_kas ORDER BY id DESC LIMIT 1",
+                [],
+                (err, lastRow) => {
+                  const lastSaldo = lastRow?.saldo || 0;
+                  const newSaldo = Math.max(
                     0,
-                    parseInt(iuranData.jumlah),
-                    newSaldo,
-                  ]
-                );
-              }
-            );
+                    lastSaldo - parseInt(iuranData.jumlah)
+                  );
+
+                  // Insert reverse entry (kredit)
+                  db.run(
+                    `INSERT INTO buku_kas (tanggal, keterangan, kategori, debet, kredit, saldo) 
+                    VALUES (?, ?, ?, ?, ?, ?)`,
+                    [
+                      new Date().toISOString().split("T")[0],
+                      keteranganBukuKas,
+                      "iuran",
+                      0,
+                      parseInt(iuranData.jumlah),
+                      newSaldo,
+                    ]
+                  );
+                }
+              );
+            }
           }
         );
       }

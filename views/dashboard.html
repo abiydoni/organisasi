@@ -27,204 +27,238 @@
 
   <!-- Statistics Cards -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+    <!-- Total Anggota Card -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border-l-4 border-blue-500 transform hover:-translate-y-1"
+      class="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 relative overflow-hidden"
     >
-      <div class="flex items-center justify-between">
-        <div class="flex-1">
-          <p
-            class="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-medium uppercase tracking-wide mb-1"
+      <div
+        class="absolute top-0 right-0 w-32 h-32 bg-blue-50 dark:bg-blue-900/20 rounded-full -mr-16 -mt-16 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2"
+            >
+              Total Anggota
+            </p>
+            <p
+              id="stat-anggota"
+              class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight break-words"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-blue-500 to-blue-600 p-3 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
           >
-            Total Anggota
-          </p>
-          <p
-            id="stat-anggota"
-            class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mt-2"
-          >
-            0
-          </p>
-        </div>
-        <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-xl">
-          <i
-            class="bx bx-group text-4xl md:text-5xl text-blue-600 dark:text-blue-400"
-          ></i>
+            <i class="bx bx-group text-2xl md:text-3xl text-white"></i>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- Iuran Lunas Card -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border-l-4 border-green-500 transform hover:-translate-y-1"
+      class="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 border border-gray-100 dark:border-gray-700 hover:border-green-200 dark:hover:border-green-800 relative overflow-hidden"
     >
-      <div class="flex items-center justify-between">
-        <div class="flex-1">
-          <p
-            class="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-medium uppercase tracking-wide mb-1"
-          >
-            Iuran Lunas
-          </p>
-          <p
-            id="stat-iuran"
-            class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mt-2"
-          >
-            0
-          </p>
-          <div
-            class="mt-2 flex items-center text-xs text-green-600 dark:text-green-400"
-          >
-            <i class="bx bx-check-circle mr-1"></i>
-            <span>Pembayaran</span>
+      <div
+        class="absolute top-0 right-0 w-32 h-32 bg-green-50 dark:bg-green-900/20 rounded-full -mr-16 -mt-16 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2"
+            >
+              Iuran Lunas
+            </p>
+            <p
+              id="stat-iuran"
+              class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight mb-2 break-words"
+            >
+              0
+            </p>
+            <div
+              class="flex items-center text-xs font-medium text-green-600 dark:text-green-400"
+            >
+              <i class="bx bx-check-circle mr-1.5"></i>
+              <span>Pembayaran</span>
+            </div>
           </div>
-        </div>
-        <div class="bg-green-100 dark:bg-green-900 p-4 rounded-xl">
-          <i
-            class="bx bx-check-circle text-4xl md:text-5xl text-green-600 dark:text-green-400"
-          ></i>
+          <div
+            class="bg-gradient-to-br from-green-500 to-green-600 p-3 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-check-circle text-2xl md:text-3xl text-white"></i>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- Total Pemasukan Card -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border-l-4 border-yellow-500 transform hover:-translate-y-1"
+      class="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 border border-gray-100 dark:border-gray-700 hover:border-yellow-200 dark:hover:border-yellow-800 relative overflow-hidden"
     >
-      <div class="flex items-center justify-between">
-        <div class="flex-1">
-          <p
-            class="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-medium uppercase tracking-wide mb-1"
-          >
-            Total Pemasukan
-          </p>
-          <p
-            id="stat-masuk"
-            class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mt-2"
-          >
-            Rp 0
-          </p>
-          <div
-            class="mt-2 flex items-center text-xs text-yellow-600 dark:text-yellow-400"
-          >
-            <i class="bx bx-trending-up mr-1"></i>
-            <span>Pendapatan</span>
+      <div
+        class="absolute top-0 right-0 w-32 h-32 bg-yellow-50 dark:bg-yellow-900/20 rounded-full -mr-16 -mt-16 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2"
+            >
+              Total Pemasukan
+            </p>
+            <p
+              id="stat-masuk"
+              class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight mb-2 break-words"
+            >
+              Rp 0
+            </p>
+            <div
+              class="flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400"
+            >
+              <i class="bx bx-trending-up mr-1.5"></i>
+              <span>Pendapatan</span>
+            </div>
           </div>
-        </div>
-        <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-xl">
-          <i
-            class="bx bx-trending-up text-4xl md:text-5xl text-yellow-600 dark:text-yellow-400"
-          ></i>
+          <div
+            class="bg-gradient-to-br from-yellow-500 to-yellow-600 p-3 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-trending-up text-2xl md:text-3xl text-white"></i>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- Total Pengeluaran Card -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border-l-4 border-red-500 transform hover:-translate-y-1"
+      class="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 border border-gray-100 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-800 relative overflow-hidden"
     >
-      <div class="flex items-center justify-between">
-        <div class="flex-1">
-          <p
-            class="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-medium uppercase tracking-wide mb-1"
-          >
-            Total Pengeluaran
-          </p>
-          <p
-            id="stat-keluar"
-            class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mt-2"
-          >
-            Rp 0
-          </p>
-          <div
-            class="mt-2 flex items-center text-xs text-red-600 dark:text-red-400"
-          >
-            <i class="bx bx-trending-down mr-1"></i>
-            <span>Pengeluaran</span>
+      <div
+        class="absolute top-0 right-0 w-32 h-32 bg-red-50 dark:bg-red-900/20 rounded-full -mr-16 -mt-16 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2"
+            >
+              Total Pengeluaran
+            </p>
+            <p
+              id="stat-keluar"
+              class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight mb-2 break-words"
+            >
+              Rp 0
+            </p>
+            <div
+              class="flex items-center text-xs font-medium text-red-600 dark:text-red-400"
+            >
+              <i class="bx bx-trending-down mr-1.5"></i>
+              <span>Pengeluaran</span>
+            </div>
           </div>
-        </div>
-        <div class="bg-red-100 dark:bg-red-900 p-4 rounded-xl">
-          <i
-            class="bx bx-trending-down text-4xl md:text-5xl text-red-600 dark:text-red-400"
-          ></i>
+          <div
+            class="bg-gradient-to-br from-red-500 to-red-600 p-3 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-trending-down text-2xl md:text-3xl text-white"></i>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Quick Actions -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-    <a
-      href="/anggota"
-      class="group bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 transform hover:-translate-y-1"
+  <!-- Charts Section -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+    <!-- Chart Pertumbuhan Anggota -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border border-gray-200 dark:border-gray-700"
     >
-      <div class="flex items-center gap-4">
-        <div
-          class="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-xl group-hover:scale-110 transition-transform duration-300 shadow-lg"
-        >
-          <i class="bx bx-user-plus text-3xl md:text-4xl text-white"></i>
-        </div>
-        <div class="flex-1">
-          <h3
-            class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center gap-3">
+          <div
+            class="bg-blue-100 dark:bg-blue-900 p-2.5 rounded-lg flex-shrink-0"
           >
-            Tambah Anggota
-          </h3>
-          <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-            Daftarkan anggota baru ke organisasi
-          </p>
+            <i class="bx bx-group text-xl text-blue-600 dark:text-blue-400"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3
+              class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-0.5 break-words"
+            >
+              Pertumbuhan Anggota
+            </h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 leading-tight">
+              Total anggota dalam 12 bulan terakhir
+            </p>
+          </div>
         </div>
-        <i
-          class="bx bx-chevron-right text-2xl text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
-        ></i>
       </div>
-    </a>
+      <div class="relative h-48 md:h-56">
+        <canvas id="anggotaChart"></canvas>
+      </div>
+    </div>
 
-    <a
-      href="/iuran"
-      class="group bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-500 transform hover:-translate-y-1"
+    <!-- Chart Pembayaran Iuran -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border border-gray-200 dark:border-gray-700"
     >
-      <div class="flex items-center gap-4">
-        <div
-          class="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded-xl group-hover:scale-110 transition-transform duration-300 shadow-lg"
-        >
-          <i class="bx bx-money text-3xl md:text-4xl text-white"></i>
-        </div>
-        <div class="flex-1">
-          <h3
-            class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors"
+      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center gap-3">
+          <div
+            class="bg-green-100 dark:bg-green-900 p-2.5 rounded-lg flex-shrink-0"
           >
-            Input Iuran
-          </h3>
-          <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-            Catat pembayaran iuran bulanan
-          </p>
+            <i
+              class="bx bx-money text-xl text-green-600 dark:text-green-400"
+            ></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3
+              class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-0.5 break-words"
+            >
+              Pembayaran Iuran
+            </h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 leading-tight">
+              Total pembayaran per bulan
+            </p>
+          </div>
         </div>
-        <i
-          class="bx bx-chevron-right text-2xl text-gray-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors"
-        ></i>
       </div>
-    </a>
+      <div class="relative h-48 md:h-56">
+        <canvas id="iuranChart"></canvas>
+      </div>
+    </div>
 
-    <a
-      href="/buku-kas"
-      class="group bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border border-gray-200 dark:border-gray-700 hover:border-yellow-500 dark:hover:border-yellow-500 transform hover:-translate-y-1"
+    <!-- Chart Saldo Kas -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border border-gray-200 dark:border-gray-700"
     >
-      <div class="flex items-center gap-4">
-        <div
-          class="bg-gradient-to-br from-yellow-500 to-yellow-600 p-4 rounded-xl group-hover:scale-110 transition-transform duration-300 shadow-lg"
-        >
-          <i class="bx bx-book text-3xl md:text-4xl text-white"></i>
-        </div>
-        <div class="flex-1">
-          <h3
-            class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-1 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors"
+      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center gap-3">
+          <div
+            class="bg-yellow-100 dark:bg-yellow-900 p-2.5 rounded-lg flex-shrink-0"
           >
-            Buku Kas
-          </h3>
-          <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-            Kelola keuangan organisasi
-          </p>
+            <i
+              class="bx bx-trending-up text-xl text-yellow-600 dark:text-yellow-400"
+            ></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3
+              class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-0.5 break-words"
+            >
+              Saldo Kas
+            </h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 leading-tight">
+              Trend saldo kas dalam 12 bulan terakhir
+            </p>
+          </div>
         </div>
-        <i
-          class="bx bx-chevron-right text-2xl text-gray-400 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors"
-        ></i>
       </div>
-    </a>
+      <div class="relative h-48 md:h-56">
+        <canvas id="saldoChart"></canvas>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -262,5 +296,230 @@
 
   function formatRupiah(angka) {
     return "Rp " + new Intl.NumberFormat("id-ID").format(angka);
+  }
+
+  // Chart configuration dengan dark mode support
+  const isDarkMode = document.documentElement.classList.contains("dark");
+  const textColor = isDarkMode ? "rgba(255, 255, 255, 0.9)" : "rgba(0, 0, 0, 0.7)";
+  const gridColor = isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)";
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: "top",
+        labels: {
+          usePointStyle: true,
+          padding: 15,
+          font: {
+            size: 12,
+          },
+          color: textColor,
+        },
+      },
+      tooltip: {
+        backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.9)" : "rgba(0, 0, 0, 0.8)",
+        padding: 12,
+        titleFont: {
+          size: 14,
+        },
+        bodyFont: {
+          size: 12,
+        },
+        titleColor: "#fff",
+        bodyColor: "#fff",
+        callbacks: {
+          label: function (context) {
+            if (context.dataset.label === "Pembayaran Iuran" || context.dataset.label === "Saldo Kas") {
+              return context.dataset.label + ": " + formatRupiah(context.parsed.y);
+            }
+            return context.dataset.label + ": " + context.parsed.y;
+          },
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          font: {
+            size: 11,
+          },
+          color: textColor,
+          callback: function (value) {
+            if (value >= 1000000) {
+              return "Rp " + (value / 1000000).toFixed(1) + "Jt";
+            } else if (value >= 1000) {
+              return "Rp " + (value / 1000).toFixed(0) + "Rb";
+            }
+            return "Rp " + value;
+          },
+        },
+        grid: {
+          color: gridColor,
+        },
+      },
+      x: {
+        ticks: {
+          font: {
+            size: 11,
+          },
+          color: textColor,
+        },
+        grid: {
+          display: false,
+        },
+      },
+    },
+  };
+
+  // Load chart data
+  let anggotaChart, iuranChart, saldoChart;
+
+  async function loadCharts() {
+    try {
+      const response = await fetch("/dashboard/chart-data");
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        const { labels, anggota, iuran, saldo } = result.data;
+
+        // Chart Pertumbuhan Anggota
+        const anggotaCtx = document.getElementById("anggotaChart");
+        if (anggotaCtx) {
+          if (anggotaChart) {
+            anggotaChart.destroy();
+          }
+          anggotaChart = new Chart(anggotaCtx, {
+            type: "line",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: anggota.label,
+                  data: anggota.data,
+                  borderColor: "rgb(59, 130, 246)",
+                  backgroundColor: "rgba(59, 130, 246, 0.1)",
+                  borderWidth: 3,
+                  fill: true,
+                  tension: 0.4,
+                  pointRadius: 4,
+                  pointHoverRadius: 6,
+                  pointBackgroundColor: "rgb(59, 130, 246)",
+                  pointBorderColor: "#fff",
+                  pointBorderWidth: 2,
+                },
+              ],
+            },
+            options: {
+              ...chartOptions,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    font: {
+                      size: 11,
+                    },
+                    stepSize: 1,
+                  },
+                  grid: {
+                    color: "rgba(0, 0, 0, 0.05)",
+                  },
+                },
+                x: {
+                  ticks: {
+                    font: {
+                      size: 11,
+                    },
+                  },
+                  grid: {
+                    display: false,
+                  },
+                },
+              },
+              plugins: {
+                ...chartOptions.plugins,
+                tooltip: {
+                  ...chartOptions.plugins.tooltip,
+                  callbacks: {
+                    label: function (context) {
+                      return context.dataset.label + ": " + context.parsed.y + " anggota";
+                    },
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // Chart Pembayaran Iuran
+        const iuranCtx = document.getElementById("iuranChart");
+        if (iuranCtx) {
+          if (iuranChart) {
+            iuranChart.destroy();
+          }
+          iuranChart = new Chart(iuranCtx, {
+            type: "bar",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: iuran.label,
+                  data: iuran.data,
+                  backgroundColor: "rgba(34, 197, 94, 0.8)",
+                  borderColor: "rgb(34, 197, 94)",
+                  borderWidth: 2,
+                  borderRadius: 6,
+                  borderSkipped: false,
+                },
+              ],
+            },
+            options: chartOptions,
+          });
+        }
+
+        // Chart Saldo Kas
+        const saldoCtx = document.getElementById("saldoChart");
+        if (saldoCtx) {
+          if (saldoChart) {
+            saldoChart.destroy();
+          }
+          saldoChart = new Chart(saldoCtx, {
+            type: "line",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: saldo.label,
+                  data: saldo.data,
+                  borderColor: "rgb(234, 179, 8)",
+                  backgroundColor: "rgba(234, 179, 8, 0.1)",
+                  borderWidth: 3,
+                  fill: true,
+                  tension: 0.4,
+                  pointRadius: 4,
+                  pointHoverRadius: 6,
+                  pointBackgroundColor: "rgb(234, 179, 8)",
+                  pointBorderColor: "#fff",
+                  pointBorderWidth: 2,
+                },
+              ],
+            },
+            options: chartOptions,
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error loading charts:", error);
+    }
+  }
+
+  // Load charts when page is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadCharts);
+  } else {
+    loadCharts();
   }
 </script>

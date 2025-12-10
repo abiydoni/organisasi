@@ -7,14 +7,14 @@
   }
 }
 
-/* Print Styles untuk Tagihan - Desain Padat dan Menarik */
+/* Print Styles untuk Tagihan - Sederhana dan Langsung */
 @media print {
   @page {
     margin: 1cm;
     size: A4;
   }
 
-  /* Reset styling */
+  /* Reset dasar */
   * {
     box-shadow: none !important;
     text-shadow: none !important;
@@ -29,7 +29,9 @@
     padding: 0 !important;
   }
 
-  /* PRIORITAS TERTINGGI: Tampilkan kop surat di awal - sebelum rule lain */
+  /* ============================================
+     KOP SURAT - PASTIKAN MUNCUL
+     ============================================ */
   #printHeader,
   div#printHeader,
   .print-header,
@@ -37,403 +39,181 @@
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-  }
-
-  /* Sembunyikan elemen yang tidak perlu - TAPI JANGAN SEMBUNYIKAN KOP SURAT */
-  .no-print,
-  button,
-  select,
-  nav,
-  header,
-  footer,
-  aside,
-  #modalDetailPembayaran,
-  .modal,
-  i,
-  .bx {
-    display: none !important;
-    visibility: hidden !important;
-    width: 0 !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* PASTIKAN KOP SURAT TIDAK TERMASUK DALAM ELEMEN YANG DISEMBUNYIKAN */
-  .no-print#printHeader,
-  .no-print.print-header,
-  .no-print.print-only {
-    display: block !important;
-    visibility: visible !important;
-  }
-
-  /* Sembunyikan select dan label di filter tahun, tapi tampilkan grid */
-  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"] select,
-  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"] label {
-    display: none !important;
-  }
-
-  /* Tampilkan tabel desktop di print */
-  .hidden.md\:block,
-  div.hidden.md\:block {
-    display: block !important;
-    visibility: visible !important;
-  }
-
-  /* Sembunyikan mobile view */
-  .md\:hidden,
-  div.md\:hidden {
-    display: none !important;
-  }
-
-  /* ============================================
-     KOP SURAT - PASTIKAN MUNCUL DENGAN SANGAT AGRESIF
-     ============================================ */
-  /* Override SEMUA kemungkinan selector - sangat agresif dan prioritas tertinggi */
-  html body #printHeader,
-  html body div#printHeader,
-  html body div[id="printHeader"],
-  html body > div#printHeader,
-  html body > div.print-header,
-  html body > div.print-only,
-  html body main > div#printHeader,
-  html body main > div.print-header,
-  html body main > div.print-only,
-  html body .space-y-3 > div#printHeader,
-  html body .space-y-4 > div#printHeader,
-  html body #printHeader,
-  html body .print-header,
-  html body .print-only,
-  html body div.print-header,
-  html body div.print-only,
-  html body [id="printHeader"],
-  html body [class*="print-header"],
-  html body [class*="print-only"],
-  * #printHeader,
-  * div#printHeader,
-  * div[id="printHeader"],
-  body > div#printHeader,
-  body > div.print-header,
-  body > div.print-only,
-  main > div#printHeader,
-  main > div.print-header,
-  main > div.print-only,
-  .space-y-3 > div#printHeader,
-  .space-y-4 > div#printHeader,
-  #printHeader,
-  .print-header,
-  .print-only,
-  div.print-header,
-  div.print-only,
-  [id="printHeader"],
-  [class*="print-header"],
-  [class*="print-only"] {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
     margin: 0 0 10px 0 !important;
     padding: 0 !important;
     width: 100% !important;
     page-break-after: avoid !important;
-    position: relative !important;
-    height: auto !important;
-    min-height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-    clear: both !important;
   }
 
-  /* Pastikan semua child element terlihat - sangat agresif */
-  #printHeader > *,
-  #printHeader > div,
-  div#printHeader > *,
-  div#printHeader > div,
-  * #printHeader > *,
-  * #printHeader > div {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    width: 100% !important;
-  }
-
-  #printHeader > div:first-child,
-  div#printHeader > div:first-child {
-    display: block !important;
-    visibility: visible !important;
+  #printHeader > div {
     text-align: center !important;
     border-bottom: 2px solid #000 !important;
     padding-bottom: 8px !important;
     margin-bottom: 8px !important;
-    page-break-after: avoid !important;
   }
 
-  #printLogoContainer {
-    display: block !important;
-    visibility: visible !important;
-    text-align: center !important;
-    margin-bottom: 5px !important;
-    height: auto !important;
-  }
-
-  /* Logo - sangat agresif override */
+  #printLogoContainer,
   #printLogo,
-  #printHeader img,
-  #printLogoContainer img,
-  img#printLogo,
-  #printHeader > div > div > img {
+  #printHeader img {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
     max-width: 70px !important;
     max-height: 70px !important;
     margin: 0 auto 5px auto !important;
-    width: auto !important;
-    height: auto !important;
   }
 
-  /* Override semua kemungkinan inline style untuk logo */
-  #printLogo[style],
-  #printHeader img[style],
-  img[style*="display"] {
+  #printHeader h1,
+  #printOrgNama {
+    display: block !important;
+    font-size: 16pt !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    margin: 0 0 3px 0 !important;
+    color: black !important;
+  }
+
+  #printHeader p,
+  #printOrgAlamat,
+  #printOrgTelepon,
+  #printOrgEmail {
+    display: block !important;
+    font-size: 9pt !important;
+    text-align: center !important;
+    margin: 2px 0 !important;
+    color: black !important;
+  }
+
+  /* ============================================
+     SEMBUNYIKAN ELEMEN YANG TIDAK PERLU
+     ============================================ */
+  .no-print,
+  button,
+  select,
+  nav,
+  header:not(#printHeader),
+  footer,
+  aside,
+  #modalDetailPembayaran,
+  .modal,
+  i.bx,
+  .bx {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Sembunyikan filter tahun */
+  select#tahunFilter,
+  label[for="tahunFilter"],
+  div:has(select#tahunFilter) {
+    display: none !important;
+  }
+
+  /* ============================================
+     PASTIKAN SEMUA KONTEN TERLIHAT
+     ============================================ */
+  /* Override semua hidden class dari Tailwind */
+  .hidden,
+  .md\:hidden,
+  .sm\:hidden,
+  .lg\:hidden,
+  [class*="hidden"]:not(.no-print):not(.modal) {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Pastikan md:block terlihat */
+  .md\:block,
+  .hidden.md\:block {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Pastikan semua container utama terlihat */
+  body > div,
+  div.space-y-3,
+  div.space-y-4,
+  div[class*="space-y"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+  }
+
+  /* Pastikan semua child div terlihat */
+  div.space-y-3 > div,
+  div.space-y-4 > div,
+  div[class*="space-y"] > div {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
   }
 
-  #printHeader h1,
-  #printHeader > div > h1,
-  #printOrgNama {
+  /* Pastikan card terlihat */
+  div[class*="bg-white"],
+  div[class*="rounded"],
+  div[class*="border"],
+  div[class*="grid"] {
     display: block !important;
     visibility: visible !important;
-    margin: 0 0 3px 0 !important;
-    padding: 0 !important;
-    font-size: 16pt !important;
-    font-weight: bold !important;
-    text-align: center !important;
-    text-transform: uppercase !important;
-    color: black !important;
-    line-height: 1.2 !important;
+    opacity: 1 !important;
+    border: 1px solid #000 !important;
+    padding: 4px 6px !important;
+    margin: 4px 0 !important;
+    background: white !important;
   }
 
-  #printHeader p,
-  #printHeader > div > p,
-  #printOrgAlamat {
-    display: block !important;
-    visibility: visible !important;
-    margin: 2px 0 !important;
-    padding: 0 !important;
-    font-size: 9pt !important;
-    text-align: center !important;
-    color: black !important;
-    line-height: 1.3 !important;
-  }
-
-  #printHeader span,
-  #printOrgTelepon,
-  #printOrgEmail {
-    display: inline !important;
-    visibility: visible !important;
-    color: black !important;
-  }
-
-  /* Judul tabel untuk print */
-  h2.print-only {
-    display: block !important;
-    visibility: visible !important;
-    text-align: center !important;
-    font-size: 14pt !important;
-    font-weight: bold !important;
-    text-transform: uppercase !important;
-    margin: 8px 0 6px 0 !important;
-    padding: 0 !important;
-    color: black !important;
-    page-break-after: avoid !important;
-  }
-
-  /* ============================================
-     INFORMASI ANGGOTA DAN DAFTAR TARIF - BERDAMPINGAN
-     ============================================ */
-  /* Buat container untuk informasi anggota dan grid daftar tarif menjadi flex row */
-  .space-y-3 > div:nth-child(2),
-  .space-y-4 > div:nth-child(2) {
+  /* Grid layout untuk informasi anggota dan tarif */
+  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"] {
     display: flex !important;
     flex-direction: row !important;
     gap: 8px !important;
-    margin: 6px 0 !important;
-    align-items: flex-start !important;
-    page-break-inside: avoid !important;
   }
 
-  /* Card informasi anggota - kolom kiri (lebih besar) */
-  .space-y-3 > div:nth-child(2) > div[class*="bg-white"]:first-child,
-  .space-y-4 > div:nth-child(2) > div[class*="bg-white"]:first-child {
-    flex: 2 !important;
-    display: block !important;
-    margin: 0 !important;
-    padding: 5px 6px !important;
-    border: 1px solid #000 !important;
-    font-size: 8.5pt !important;
-    line-height: 1.4 !important;
-    page-break-inside: avoid !important;
-  }
-
-  /* Sembunyikan h3 di informasi anggota */
-  .space-y-3 > div:nth-child(2) > div[class*="bg-white"]:first-child h3,
-  .space-y-4 > div:nth-child(2) > div[class*="bg-white"]:first-child h3 {
-    display: none !important;
-  }
-
-  /* Grid daftar tarif - kolom kanan (lebih kecil) */
-  .space-y-3
-    > div:nth-child(2)
-    > div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"],
-  .space-y-4
-    > div:nth-child(2)
-    > div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"] {
+  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"] > div {
     flex: 1 !important;
     display: block !important;
-    margin: 0 !important;
   }
 
-  /* Sembunyikan card riwayat pembayaran (div pertama dalam grid lg:grid-cols-2) */
-  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"]
-    > div:first-child {
-    display: none !important;
-  }
-
-  /* Informasi Anggota - styling internal */
-  div[class*="grid"][class*="grid-cols-3"] {
-    display: block !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    font-size: 8.5pt !important;
-    line-height: 1.4 !important;
-  }
-
-  div[class*="grid"][class*="grid-cols-3"] > div {
-    display: inline-block !important;
-    width: auto !important;
-    margin-right: 10px !important;
-    padding: 0 !important;
-    border: none !important;
-    vertical-align: baseline !important;
-  }
-
-  div[class*="grid"][class*="grid-cols-3"] > div > p.text-xs {
-    display: inline !important;
-    margin-right: 3px !important;
-    font-weight: bold !important;
-    font-size: 8.5pt !important;
-  }
-
-  div[class*="grid"][class*="grid-cols-3"] > div > p:not(.text-xs) {
-    display: inline !important;
-    font-size: 8.5pt !important;
-    font-weight: normal !important;
-  }
-
-  div[class*="grid"][class*="grid-cols-3"] > div:not(:last-child)::after {
-    content: " | " !important;
-    margin-left: 3px !important;
-  }
-
-  /* Daftar Tarif - Kolom kanan (lebih kecil) */
-  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"]
-    > div:last-child {
-    display: block !important;
-    padding: 4px 5px !important;
-    border: 1px solid #000 !important;
-    background: white !important;
-    page-break-inside: avoid !important;
-    font-size: 8pt !important;
-  }
-
-  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"]
-    > div:last-child
-    h3 {
-    font-size: 9pt !important;
-    font-weight: bold !important;
-    margin: 0 0 3px 0 !important;
-    padding: 0 !important;
+  /* Pastikan semua text terlihat */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  div,
+  a {
     color: black !important;
+    display: block !important;
+    visibility: visible !important;
   }
 
-  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"]
-    > div:last-child
-    #tarifList {
-    max-height: none !important;
-    overflow: visible !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"]
-    > div:last-child
-    #tarifList
-    > div {
-    margin-bottom: 2px !important;
-    padding: 2px 3px !important;
-    border: 1px solid #ccc !important;
-    font-size: 7.5pt !important;
-    line-height: 1.2 !important;
-  }
-
-  div[class*="grid"][class*="grid-cols-1"][class*="lg:grid-cols-2"]
-    > div:last-child
-    #tarifList
-    > div
-    p {
-    margin: 0 !important;
-    padding: 0 !important;
-    font-size: 7.5pt !important;
-    line-height: 1.2 !important;
-  }
-
-  div[class*="grid"][class*="grid-cols-3"] > div {
-    display: inline-block !important;
-    width: auto !important;
-    margin-right: 12px !important;
-    padding: 0 !important;
-    border: none !important;
-    vertical-align: baseline !important;
-  }
-
-  div[class*="grid"] > div > p.text-xs {
+  span,
+  a,
+  .inline,
+  .inline-block {
     display: inline !important;
-    margin-right: 4px !important;
-    font-weight: bold !important;
-    font-size: 9pt !important;
-  }
-
-  div[class*="grid"] > div > p:not(.text-xs) {
-    display: inline !important;
-    font-size: 9pt !important;
-    font-weight: normal !important;
-  }
-
-  div[class*="grid"] > div:not(:last-child)::after {
-    content: " | " !important;
-    margin-left: 4px !important;
   }
 
   /* ============================================
-     TABEL PEMBAYARAN - PADAT DAN RAPI DENGAN GARIS JELAS
+     TABEL - PASTIKAN TERLIHAT
      ============================================ */
   table {
+    display: table !important;
+    visibility: visible !important;
     width: 100% !important;
     border-collapse: collapse !important;
     border: 2px solid #000 !important;
     margin: 8px 0 !important;
     font-size: 9pt !important;
-    page-break-inside: auto !important;
-    border-spacing: 0 !important;
   }
 
   table thead {
     display: table-header-group !important;
     background: #e0e0e0 !important;
-    page-break-after: avoid !important;
   }
 
   table tbody {
@@ -444,146 +224,59 @@
     display: table-footer-group !important;
     background: #f0f0f0 !important;
     font-weight: bold !important;
-    border-top: 2px solid #000 !important;
-    page-break-before: avoid !important;
   }
 
   table tr {
+    display: table-row !important;
     border-bottom: 1px solid #000 !important;
-  }
-
-  table tr:last-child {
-    border-bottom: none !important;
   }
 
   table th,
   table td {
-    border: 1px solid #000 !important;
-    border-right: 1px solid #000 !important;
-    border-left: 1px solid #000 !important;
-    padding: 4px 6px !important;
-    font-size: 9pt !important;
     display: table-cell !important;
-    vertical-align: middle !important;
-    line-height: 1.3 !important;
+    border: 1px solid #000 !important;
+    padding: 4px 6px !important;
+    text-align: left !important;
   }
 
   table th {
     background: #e0e0e0 !important;
     font-weight: bold !important;
     text-align: center !important;
-    border-top: 2px solid #000 !important;
-    border-bottom: 2px solid #000 !important;
   }
 
-  table th:first-child {
-    border-left: 2px solid #000 !important;
+  table tbody tr:nth-child(even) {
+    background: #f9f9f9 !important;
   }
 
-  table th:last-child {
-    border-right: 2px solid #000 !important;
-  }
-
-  table td:first-child {
-    border-left: 2px solid #000 !important;
-  }
-
-  table td:last-child {
-    border-right: 2px solid #000 !important;
-  }
-
-  table tbody tr:last-child td {
-    border-bottom: 2px solid #000 !important;
-  }
-
-  /* Kolom 1: Bulan - CENTER */
+  /* Kolom alignment */
   table th:first-child,
-  table thead th:first-child {
+  table td:first-child {
     text-align: center !important;
     width: 12% !important;
   }
 
-  table td:first-child,
-  table tbody td:first-child,
-  table tfoot td:first-child {
-    text-align: center !important;
-    width: 12% !important;
-  }
-
-  /* Kolom 2: Daftar Tarif - RIGHT */
   table th:nth-child(2),
-  table thead th:nth-child(2) {
-    text-align: right !important;
-    width: 22% !important;
-  }
-
   table td:nth-child(2),
-  table tbody td:nth-child(2),
-  table tfoot td:nth-child(2) {
-    text-align: right !important;
-    width: 22% !important;
-  }
-
-  /* Kolom 3: Bayar - RIGHT */
   table th:nth-child(3),
-  table thead th:nth-child(3) {
-    text-align: right !important;
-    width: 22% !important;
-  }
-
   table td:nth-child(3),
-  table tbody td:nth-child(3),
-  table tfoot td:nth-child(3) {
-    text-align: right !important;
-    width: 22% !important;
-  }
-
-  /* Kolom 4: Sisa - RIGHT */
   table th:nth-child(4),
-  table thead th:nth-child(4) {
+  table td:nth-child(4) {
     text-align: right !important;
-    width: 22% !important;
   }
 
-  table td:nth-child(4),
-  table tbody td:nth-child(4),
-  table tfoot td:nth-child(4) {
-    text-align: right !important;
-    width: 22% !important;
-  }
-
-  /* Kolom 5: Status - CENTER */
   table th:nth-child(5),
-  table thead th:nth-child(5) {
+  table td:nth-child(5) {
     text-align: center !important;
-    width: 10% !important;
   }
 
-  table td:nth-child(5),
-  table tbody td:nth-child(5),
-  table tfoot td:nth-child(5) {
-    text-align: center !important;
-    width: 10% !important;
-  }
-
-  /* Sembunyikan link, tampilkan teks bulan */
+  /* Sembunyikan link di bulan, tampilkan text */
   table tbody td:first-child a {
     display: none !important;
-    visibility: hidden !important;
-    width: 0 !important;
-    height: 0 !important;
   }
 
   table tbody td:first-child .print-text {
     display: inline-block !important;
-    font-weight: normal !important;
-    color: black !important;
-    visibility: visible !important;
-  }
-
-  table tbody td:first-child > *:not(.print-text) {
-    display: none !important;
-    visibility: hidden !important;
   }
 
   /* Sembunyikan kolom terakhir di footer */
@@ -591,69 +284,68 @@
     display: none !important;
   }
 
-  /* Background dan warna - sederhana */
-  .bg-white,
-  .bg-gray-50,
-  .bg-gray-800,
-  .bg-gray-700,
-  .bg-gradient-to-r {
-    background: white !important;
+  /* ============================================
+     SECTION TAHUNAN & SEUMUR HIDUP
+     ============================================ */
+  #sectionTahunanSeumur {
+    display: block !important;
+    visibility: visible !important;
+    margin: 8px 0 !important;
   }
 
-  table tbody tr:nth-child(even) {
-    background: #f9f9f9 !important;
-  }
-
-  table tbody tr:nth-child(odd) {
-    background: white !important;
-  }
-
-  .text-gray-800,
-  .text-gray-700,
-  .text-gray-600,
-  .text-blue-600,
-  .text-green-600,
-  .text-red-600 {
+  #sectionTahunanSeumur h3 {
+    font-size: 11pt !important;
+    font-weight: bold !important;
+    margin: 0 0 4px 0 !important;
     color: black !important;
   }
 
-  /* Pastikan container tabel terlihat */
-  div[class*="bg-white"][class*="rounded-lg"],
-  div[class*="rounded-lg"][class*="shadow-md"] {
-    border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    padding: 0 !important;
-    margin: 0 !important;
+  #cardTahunanSeumurContainer {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  #cardTahunanSeumurContainer > div {
+    border: 1px solid #000 !important;
+    padding: 4px 5px !important;
+    background: white !important;
+    font-size: 8pt !important;
+  }
+
+  /* ============================================
+     JUDUL TABEL UNTUK PRINT
+     ============================================ */
+  h2.print-only {
+    display: block !important;
+    visibility: visible !important;
+    text-align: center !important;
+    font-size: 14pt !important;
+    font-weight: bold !important;
+    margin: 8px 0 6px 0 !important;
+    color: black !important;
+  }
+
+  /* ============================================
+     INFORMASI ANGGOTA - STYLING
+     ============================================ */
+  div[class*="grid"][class*="grid-cols-3"] {
     display: block !important;
   }
 
-  /* Pastikan tabel container terlihat */
-  div.hidden.md\:block table {
-    display: table !important;
-    visibility: visible !important;
+  div[class*="grid"][class*="grid-cols-3"] > div {
+    display: inline-block !important;
+    margin-right: 10px !important;
   }
 
-  /* Pastikan tbody dan tfoot terisi */
-  table tbody,
-  table tbody#pembayaranTableBody {
-    display: table-row-group !important;
-    visibility: visible !important;
+  div[class*="grid"][class*="grid-cols-3"] > div:not(:last-child)::after {
+    content: " | " !important;
+    margin-left: 3px !important;
   }
 
-  table tbody tr {
-    display: table-row !important;
-    page-break-inside: avoid !important;
-    visibility: visible !important;
-  }
-
-  table tfoot,
-  table tfoot#pembayaranTableFooter {
-    display: table-footer-group !important;
-    visibility: visible !important;
-  }
-
-  /* Kurangi spacing umum */
+  /* ============================================
+     SPACING & LAYOUT
+     ============================================ */
   .space-y-3 > * + *,
   .space-y-4 > * + * {
     margin-top: 6px !important;

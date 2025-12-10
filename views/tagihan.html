@@ -54,117 +54,110 @@
     </div>
   </div>
 
-  <!-- Informasi Anggota -->
-  <div
-    class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4"
-  >
-    <h3
-      class="text-lg md:text-xl font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2"
-    >
-      <i class="bx bx-info-circle text-blue-600 dark:text-blue-400"></i>
-      Informasi Anggota
-    </h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-      <div>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Nama</p>
-        <p
-          class="text-sm md:text-base font-semibold text-gray-800 dark:text-white"
-          id="anggotaNama"
-        >
-          -
-        </p>
-      </div>
-      <div>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">NIK</p>
-        <p
-          class="text-sm md:text-base text-gray-800 dark:text-white"
-          id="anggotaNik"
-        >
-          -
-        </p>
-      </div>
-      <div>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Alamat</p>
-        <p
-          class="text-sm md:text-base text-gray-800 dark:text-white"
-          id="anggotaAlamat"
-        >
-          -
-        </p>
-      </div>
-      <div>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Telepon</p>
-        <p
-          class="text-sm md:text-base text-gray-800 dark:text-white"
-          id="anggotaTelepon"
-        >
-          -
-        </p>
-      </div>
-      <div>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Email</p>
-        <p
-          class="text-sm md:text-base text-gray-800 dark:text-white"
-          id="anggotaEmail"
-        >
-          -
-        </p>
-      </div>
-      <div>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Status</p>
-        <span
-          id="anggotaStatus"
-          class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full"
-        >
-          -
-        </span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Filter Tahun dan Daftar Tarif -->
+  <!-- Informasi Anggota dan Daftar Tarif Aktif -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
-    <!-- Filter Tahun -->
+    <!-- Informasi Anggota -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4"
+      class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-3 md:p-4"
     >
-      <div class="flex flex-col gap-2">
-        <h3
-          class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"
-        >
-          <i class="bx bx-calendar text-blue-600 dark:text-blue-400"></i>
-          Riwayat Pembayaran
-        </h3>
-        <div class="flex items-center gap-2">
-          <label class="text-xs md:text-sm text-gray-700 dark:text-gray-300"
-            >Tahun:</label
+      <h3
+        class="text-sm md:text-base font-semibold text-gray-800 dark:text-white mb-3"
+      >
+        Informasi Anggota
+      </h3>
+      <div class="space-y-2.5">
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Nama</p>
+          <p class="text-sm text-gray-800 dark:text-white" id="anggotaNama">
+            -
+          </p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">NIK</p>
+          <p class="text-sm text-gray-800 dark:text-white" id="anggotaNik">-</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Alamat</p>
+          <p class="text-sm text-gray-800 dark:text-white" id="anggotaAlamat">
+            -
+          </p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Telepon</p>
+          <p class="text-sm text-gray-800 dark:text-white" id="anggotaTelepon">
+            -
+          </p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Email</p>
+          <p class="text-sm text-gray-800 dark:text-white" id="anggotaEmail">
+            -
+          </p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Status</p>
+          <span
+            id="anggotaStatus"
+            class="inline-block px-2 py-0.5 text-xs font-medium rounded"
           >
-          <select
-            id="tahunFilter"
-            class="flex-1 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
-          >
-            <!-- Options akan diisi oleh JavaScript -->
-          </select>
+            -
+          </span>
         </div>
       </div>
     </div>
 
-    <!-- Daftar Tarif -->
+    <!-- Daftar Tarif Aktif -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4"
+      class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-3 md:p-4"
     >
       <h3
-        class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-2 md:mb-3 flex items-center gap-2"
+        class="text-sm md:text-base font-semibold text-gray-800 dark:text-white mb-3"
       >
-        <i class="bx bx-list-check text-blue-600 dark:text-blue-400"></i>
         Daftar Tarif Aktif
       </h3>
-      <div
-        class="space-y-1.5 max-h-40 md:max-h-48 overflow-y-auto"
-        id="tarifList"
-      >
+      <div class="space-y-2" id="tarifList">
         <!-- Daftar tarif akan diisi oleh JavaScript -->
       </div>
+    </div>
+  </div>
+
+  <!-- Filter Tahun -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-3 md:p-4"
+  >
+    <div class="flex flex-col gap-2">
+      <h3
+        class="text-sm md:text-base font-semibold text-gray-800 dark:text-white"
+      >
+        Riwayat Pembayaran
+      </h3>
+      <div class="flex items-center gap-2">
+        <label class="text-xs md:text-sm text-gray-700 dark:text-gray-300"
+          >Tahun:</label
+        >
+        <select
+          id="tahunFilter"
+          class="flex-1 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+        >
+          <!-- Options akan diisi oleh JavaScript -->
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Iuran Tahunan dan Seumur Hidup -->
+  <div id="sectionTahunanSeumur" class="hidden">
+    <h3
+      class="text-lg md:text-xl font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2"
+    >
+      <i class="bx bx-calendar-check text-blue-600 dark:text-blue-400"></i>
+      Iuran Tahunan & Sekali Seumur Hidup
+    </h3>
+    <div
+      id="cardTahunanSeumurContainer"
+      class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4"
+    >
+      <!-- Card akan diisi oleh JavaScript -->
     </div>
   </div>
 
@@ -307,6 +300,128 @@
       display: none !important;
     }
   }
+
+  /* Print Styles - Prioritas Tinggi */
+  @media print {
+    /* OVERRIDE SEMUA - Pastikan semua konten terlihat */
+    * {
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* Override Tailwind hidden dengan cara yang sangat agresif */
+    .hidden,
+    .md\:hidden,
+    .sm\:hidden,
+    .lg\:hidden,
+    [class*="hidden"]:not(.no-print):not(.modal) {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* Pastikan md:block terlihat */
+    .md\:block,
+    .hidden.md\:block {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* Pastikan semua container terlihat */
+    body,
+    body > div,
+    div.space-y-3,
+    div.space-y-4,
+    div[class*="space-y"],
+    div[class*="bg-white"],
+    div[class*="rounded"],
+    div[class*="border"],
+    div[class*="grid"] {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      width: 100% !important;
+      height: auto !important;
+    }
+
+    /* Pastikan semua child terlihat */
+    div.space-y-3 > *,
+    div.space-y-4 > *,
+    div[class*="space-y"] > * {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* Pastikan tabel terlihat */
+    table,
+    table * {
+      display: revert !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    table {
+      display: table !important;
+    }
+
+    table thead {
+      display: table-header-group !important;
+    }
+
+    table tbody {
+      display: table-row-group !important;
+    }
+
+    table tfoot {
+      display: table-footer-group !important;
+    }
+
+    table tr {
+      display: table-row !important;
+    }
+
+    table th,
+    table td {
+      display: table-cell !important;
+    }
+
+    /* Pastikan semua text terlihat */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    span,
+    div,
+    a {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      color: black !important;
+    }
+
+    span,
+    a,
+    .inline,
+    .inline-block {
+      display: inline !important;
+    }
+
+    /* Sembunyikan yang tidak perlu */
+    .no-print,
+    button,
+    select,
+    nav,
+    aside,
+    .modal {
+      display: none !important;
+      visibility: hidden !important;
+    }
+  }
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -314,7 +429,9 @@
   // Load data
   const anggota = {{anggota}} || {};
   const iuran = {{iuran}} || [];
+  const semuaIuran = {{semuaIuran}} || [];
   const tarif = {{tarif}} || [];
+  const tarifAnggota = {{tarifAnggota}} || [];
   // organisasi sudah dideklarasikan di layout.html
   const tahunSaatIni = parseInt("{{tahun}}") || new Date().getFullYear();
 
@@ -417,15 +534,13 @@
     tarifList.innerHTML = tarifAktif
       .map(
         (item) => `
-          <div class="flex items-center justify-between p-1.5 md:p-2 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-            <div class="flex-1 min-w-0">
-              <p class="text-xs md:text-sm font-medium text-gray-800 dark:text-white truncate">${
-                item.nama
-              }</p>
-              ${item.keterangan ? `<p class="text-xs text-gray-500 dark:text-gray-400 truncate">${item.keterangan}</p>` : ""}
+          <div class="flex items-start justify-between py-1.5 border-b border-gray-100 dark:border-gray-700 last:border-0">
+            <div class="flex-1 min-w-0 pr-2">
+              <p class="text-sm text-gray-800 dark:text-white">${item.nama}</p>
+              ${item.keterangan ? `<p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">${item.keterangan}</p>` : ""}
             </div>
-            <div class="text-right ml-2 flex-shrink-0">
-              <p class="text-xs md:text-sm font-semibold text-gray-800 dark:text-white">${formatRupiah(item.jumlah)}</p>
+            <div class="text-right flex-shrink-0">
+              <p class="text-sm text-gray-800 dark:text-white">${formatRupiah(item.jumlah)}</p>
             </div>
           </div>
         `
@@ -435,21 +550,28 @@
 
   // Load tabel pembayaran
   function loadPembayaran() {
-    // Ambil semua tarif aktif
-    const tarifAktif = tarif.filter((t) => t.status === "aktif");
+    // Ambil hanya tarif aktif dengan frekuensi bulanan (atau NULL/kosong yang dianggap bulanan)
+    const tarifAktif = tarif.filter((t) => {
+      if (t.status !== "aktif") return false;
+      const freq = (t.frekuensi || "bulanan").toLowerCase();
+      return freq === "bulanan" || !t.frekuensi || t.frekuensi === "";
+    });
 
-    // Hitung total semua tarif aktif
-    const totalSemuaTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+    // Hitung total tarif bulanan saja
+    const totalTarifBulanan = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
 
     // Buat data untuk 12 bulan
     const bulanData = [];
     let totalPembayaran = 0;
 
     for (let bulan = 1; bulan <= 12; bulan++) {
-      // Cari semua iuran untuk bulan ini (bisa lebih dari 1 pembayaran)
-      const semuaIuranBulan = iuran.filter(
-        (i) => i.bulan === bulan && i.tahun === tahunSaatIni
-      );
+      // Cari hanya iuran bulanan untuk bulan ini (bisa lebih dari 1 pembayaran)
+      // Iuran tanpa frekuensi atau NULL dianggap bulanan
+      const semuaIuranBulan = iuran.filter((i) => {
+        if (i.bulan !== bulan || i.tahun !== tahunSaatIni) return false;
+        const freq = (i.frekuensi || "bulanan").toLowerCase();
+        return freq === "bulanan" || !i.frekuensi || i.frekuensi === "";
+      });
 
       // Jumlah total yang sudah dibayar (jumlahkan semua pembayaran)
       const jumlahBayar = semuaIuranBulan.reduce(
@@ -457,8 +579,8 @@
         0
       );
 
-      // Sisa tagihan (total tagihan - jumlah yang sudah dibayar)
-      const sisa = Math.max(0, totalSemuaTarif - jumlahBayar);
+      // Sisa tagihan (total tarif bulanan - jumlah yang sudah dibayar)
+      const sisa = Math.max(0, totalTarifBulanan - jumlahBayar);
 
       // Tentukan status berdasarkan sisa dan pembayaran
       let status;
@@ -488,7 +610,7 @@
         bulan: bulan,
         namaBulan: bulanNames[bulan],
         tarifAktif: tarifAktif,
-        totalTarif: totalSemuaTarif,
+        totalTarif: totalTarifBulanan,
         jumlahBayar: jumlahBayar,
         sisa: sisa,
         tanggalBayar: iuranTerakhir ? iuranTerakhir.tanggal_bayar : null,
@@ -828,7 +950,12 @@
       doc.setFontSize(7.5);
       doc.setFont(undefined, "normal");
       const tarifAktif = tarif.filter((t) => t.status === "aktif");
-      tarifAktif.forEach((item) => {
+      // Filter hanya tarif bulanan untuk ditampilkan di daftar tarif
+      const tarifAktifBulanan = tarifAktif.filter((t) => {
+        const freq = (t.frekuensi || "bulanan").toLowerCase();
+        return freq === "bulanan" || !t.frekuensi || t.frekuensi === "";
+      });
+      tarifAktifBulanan.forEach((item) => {
         const tarifText = `${item.nama}: ${formatRupiah(item.jumlah)}`;
         let splitTarif;
         try {
@@ -844,6 +971,137 @@
 
       // Gunakan y terbesar dari kedua kolom
       y = Math.max(infoY, tarifY) + 3;
+
+      // ============================================
+      // IURAN TAHUNAN & SEUMUR HIDUP (jika ada)
+      // ============================================
+      // Gunakan tarifAnggota yang sudah ada di halaman
+      const tarifTahunan = (tarifAnggota || []).filter((t) => {
+        if (!t || t.status !== "aktif") return false;
+        const freq = (t.frekuensi || "bulanan").toLowerCase();
+        return freq === "tahunan" || freq === "seumur_hidup";
+      });
+
+      if (tarifTahunan.length > 0) {
+        // Cek apakah perlu halaman baru
+        if (y > pageHeight - 40) {
+          doc.addPage();
+          y = margin;
+        }
+
+        doc.setFontSize(11);
+        doc.setFont(undefined, "bold");
+        doc.text("Iuran Tahunan & Sekali Seumur Hidup", margin, y);
+        y += 5;
+
+        // Group tarif per frekuensi
+        const tarifTahunanGroup = tarifTahunan.filter((t) => {
+          const freq = (t.frekuensi || "bulanan").toLowerCase();
+          return freq === "tahunan";
+        });
+        const tarifSeumurGroup = tarifTahunan.filter((t) => {
+          const freq = (t.frekuensi || "bulanan").toLowerCase();
+          return freq === "seumur_hidup";
+        });
+
+        // Hitung jumlah kolom (maksimal 2)
+        const totalCards = tarifTahunanGroup.length + tarifSeumurGroup.length;
+        const cardsPerRow = Math.min(2, totalCards);
+        const cardWidth = (pageWidth - 2 * margin - (cardsPerRow - 1) * 3) / cardsPerRow;
+
+        let cardX = margin;
+        let cardY = y;
+        let currentRow = 0;
+
+        // Fungsi untuk render card
+        const renderCard = (tarifItem, frekuensi) => {
+          if (cardY > pageHeight - 30) {
+            doc.addPage();
+            cardY = margin;
+            cardX = margin;
+            currentRow = 0;
+          }
+
+          // Cari iuran untuk tarif ini berdasarkan frekuensi
+          // Untuk tahunan, cari iuran di tahun saat ini
+          // Untuk seumur hidup, cari semua iuran
+          const iuranTarif = semuaIuran.filter((i) => {
+            const iFreq = (i.frekuensi || "bulanan").toLowerCase();
+            const tarifFreq = (frekuensi || "bulanan").toLowerCase();
+            if (frekuensi === "tahunan") {
+              return parseInt(i.tarif_id) === parseInt(tarifItem.id) &&
+                     iFreq === tarifFreq &&
+                     parseInt(i.tahun) === tahunSaatIni;
+            } else {
+              return parseInt(i.tarif_id) === parseInt(tarifItem.id) && iFreq === tarifFreq;
+            }
+          });
+          const totalBayar = iuranTarif.reduce((sum, i) => sum + (parseInt(i.jumlah) || 0), 0);
+          const totalTarif = parseInt(tarifItem.jumlah) || 0;
+          const sisa = Math.max(0, totalTarif - totalBayar);
+          const status = sisa === 0 ? "Lunas" : totalBayar === 0 ? "Belum Bayar" : "Belum Lunas";
+
+          // Border card
+          doc.setDrawColor(0, 0, 0);
+          doc.setLineWidth(0.1);
+          doc.rect(cardX, cardY, cardWidth, 20);
+
+          // Isi card
+          doc.setFontSize(9);
+          doc.setFont(undefined, "bold");
+          const namaTarif = tarifItem.nama || "-";
+          let splitNama;
+          try {
+            splitNama = doc.splitTextToSize(namaTarif, cardWidth - 2);
+          } catch (e) {
+            splitNama = [namaTarif];
+          }
+          let textY = cardY + 3;
+          splitNama.forEach((line) => {
+            doc.text(line, cardX + 1, textY);
+            textY += 2.5;
+          });
+
+          doc.setFontSize(7.5);
+          doc.setFont(undefined, "normal");
+          textY += 1;
+          doc.text(`Total: ${formatRupiah(totalTarif)}`, cardX + 1, textY);
+          textY += 2.5;
+          doc.text(`Bayar: ${formatRupiah(totalBayar)}`, cardX + 1, textY);
+          textY += 2.5;
+          doc.text(`Sisa: ${formatRupiah(sisa)}`, cardX + 1, textY);
+          textY += 2.5;
+          doc.text(`Status: ${status}`, cardX + 1, textY);
+
+          // Pindah ke card berikutnya
+          currentRow++;
+          if (currentRow >= cardsPerRow) {
+            cardY += 22;
+            cardX = margin;
+            currentRow = 0;
+          } else {
+            cardX += cardWidth + 3;
+          }
+        };
+
+        // Render tarif tahunan
+        tarifTahunanGroup.forEach((t) => {
+          renderCard(t, "tahunan");
+        });
+
+        // Render tarif seumur hidup
+        tarifSeumurGroup.forEach((t) => {
+          renderCard(t, "seumur_hidup");
+        });
+
+        // Update y position
+        if (currentRow === 0) {
+          y = cardY;
+        } else {
+          y = cardY + 22;
+        }
+        y += 5;
+      }
 
       // ============================================
       // JUDUL TABEL
@@ -910,10 +1168,11 @@
       doc.line(margin, y, pageWidth - margin, y);
       y += 3;
 
-      // Data Tabel
+      // Data Tabel - hanya tarif bulanan
+      // Menggunakan tarifAktifBulanan yang sudah dideklarasikan sebelumnya
       doc.setFontSize(9);
       doc.setFont(undefined, "normal");
-      const totalSemuaTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+      const totalTarifBulanan = tarifAktifBulanan.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
       let totalDaftarTarif = 0;
       let totalBayar = 0;
       let totalSisa = 0;
@@ -924,14 +1183,17 @@
           y = margin;
         }
 
-        const semuaIuranBulan = iuran.filter(
-          (i) => i.bulan === bulan && i.tahun === tahunSaatIni
-        );
+        // Filter hanya iuran bulanan (NULL/kosong dianggap bulanan)
+        const semuaIuranBulan = iuran.filter((i) => {
+          if (i.bulan !== bulan || i.tahun !== tahunSaatIni) return false;
+          const freq = (i.frekuensi || "bulanan").toLowerCase();
+          return freq === "bulanan" || !i.frekuensi || i.frekuensi === "";
+        });
         const jumlahBayar = semuaIuranBulan.reduce(
           (sum, i) => sum + (parseInt(i.jumlah) || 0),
           0
         );
-        const sisa = Math.max(0, totalSemuaTarif - jumlahBayar);
+        const sisa = Math.max(0, totalTarifBulanan - jumlahBayar);
 
         let status;
         if (semuaIuranBulan.length === 0 || jumlahBayar === 0) {
@@ -942,7 +1204,7 @@
           status = "Lunas";
         }
 
-        totalDaftarTarif += totalSemuaTarif;
+        totalDaftarTarif += totalTarifBulanan;
         totalBayar += jumlahBayar;
         totalSisa += sisa;
 
@@ -951,7 +1213,7 @@
         const bulanTextWidthVal = doc.getTextWidth(bulanTextVal);
         doc.text(bulanTextVal, centerBulan - bulanTextWidthVal / 2, y);
 
-        const tarifTextVal = formatRupiah(totalSemuaTarif);
+        const tarifTextVal = formatRupiah(totalTarifBulanan);
         const tarifTextWidthVal = doc.getTextWidth(tarifTextVal);
         doc.text(tarifTextVal, rightTarif - tarifTextWidthVal, y);
 
@@ -1038,7 +1300,13 @@
       if (response.success && response.data) {
         const pembayaranList = response.data;
 
-        if (pembayaranList.length === 0) {
+        // Filter hanya iuran bulanan (NULL/kosong dianggap bulanan)
+        const pembayaranBulanan = pembayaranList.filter((p) => {
+          const freq = (p.frekuensi || "bulanan").toLowerCase();
+          return freq === "bulanan" || !p.frekuensi || p.frekuensi === "";
+        });
+
+        if (pembayaranBulanan.length === 0) {
           modalContent.innerHTML = `
             <div class="text-center py-8">
               <i class="bx bx-info-circle text-3xl text-gray-400 dark:text-gray-500 mb-2"></i>
@@ -1047,11 +1315,15 @@
           `;
         } else {
           // Hitung total
-          const totalBayar = pembayaranList.reduce((sum, p) => sum + (parseInt(p.jumlah) || 0), 0);
+          const totalBayar = pembayaranBulanan.reduce((sum, p) => sum + (parseInt(p.jumlah) || 0), 0);
 
-          // Get tarif aktif untuk bulan ini
-          const tarifAktif = tarif.filter((t) => t.status === "aktif");
-          const totalTarif = tarifAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
+          // Get hanya tarif aktif bulanan (NULL/kosong dianggap bulanan)
+          const tarifBulananAktif = tarif.filter((t) => {
+            if (t.status !== "aktif") return false;
+            const freq = (t.frekuensi || "bulanan").toLowerCase();
+            return freq === "bulanan" || !t.frekuensi || t.frekuensi === "";
+          });
+          const totalTarif = tarifBulananAktif.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
           const sisa = Math.max(0, totalTarif - totalBayar);
 
           modalContent.innerHTML = `
@@ -1066,7 +1338,7 @@
                   </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  ${pembayaranList.map((p, index) => {
+                  ${pembayaranBulanan.map((p, index) => {
                     const tanggal = p.tanggal_bayar ? formatTanggal(p.tanggal_bayar) : "-";
                     return `
                       <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -1154,10 +1426,178 @@
     }
   }
 
+  // Fungsi untuk group tarif per frekuensi
+  function groupTarifPerFrekuensi() {
+    const groups = { bulanan: [], tahunan: [], seumur_hidup: [] };
+    const list = tarifAnggota || [];
+    if (!Array.isArray(list)) {
+      return groups;
+    }
+    list.forEach((t) => {
+      if (!t) return;
+      const f = (t.frekuensi || "bulanan").toLowerCase();
+      if (groups[f]) {
+        groups[f].push(t);
+      } else {
+        groups.bulanan.push(t);
+      }
+    });
+    return groups;
+  }
+
+  // Load data iuran tahunan dan seumur hidup (tanpa tombol)
+  function loadTahunanSeumur() {
+    try {
+      const container = document.getElementById("cardTahunanSeumurContainer");
+      if (!container) {
+        console.warn("Container cardTahunanSeumurContainer tidak ditemukan");
+        return;
+      }
+
+      const groupedTarif = groupTarifPerFrekuensi();
+      const tarifTahunan = groupedTarif.tahunan || [];
+      const tarifSeumur = groupedTarif.seumur_hidup || [];
+
+      let cardsHTML = "";
+
+      // === IURAN TAHUNAN ===
+      tarifTahunan.forEach((tarif) => {
+        if (!tarif || !tarif.id) return;
+
+        // Cari iuran tahunan untuk tarif ini di tahun ini
+        const iuranTahunan = semuaIuran.filter(
+          (i) =>
+            i.tahun === tahunSaatIni &&
+            (i.frekuensi || "bulanan").toLowerCase() === "tahunan" &&
+            parseInt(i.tarif_id) === parseInt(tarif.id)
+        );
+
+        const sudahBayar = iuranTahunan.reduce(
+          (sum, i) => sum + (parseInt(i.jumlah) || 0),
+          0
+        );
+
+        const sisa = Math.max(0, parseInt(tarif.jumlah || 0) - sudahBayar);
+        const status = sisa === 0 ? "Lunas" : sudahBayar > 0 ? "Belum Lunas" : "Belum Bayar";
+        const statusClass = sisa === 0
+          ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
+          : sudahBayar > 0
+          ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
+          : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200";
+
+        cardsHTML += `
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                <i class="bx bx-calendar text-blue-600 dark:text-blue-400"></i>
+                ${tarif.nama || "-"}
+              </h3>
+              <span class="text-xs px-2 py-1 rounded ${statusClass}">${status}</span>
+            </div>
+            <div class="space-y-1 text-sm text-gray-700 dark:text-gray-200">
+              <div class="flex justify-between">
+                <span>Total Tarif</span>
+                <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(tarif.jumlah)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Sudah Bayar</span>
+                <span class="font-semibold text-green-600 dark:text-green-400">${formatRupiah(sudahBayar)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Sisa</span>
+                <span class="font-semibold text-red-600 dark:text-red-400">${formatRupiah(sisa)}</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              ${tarif.keterangan || ""} ${sisa === 0 ? `Sudah lunas untuk tahun ${tahunSaatIni}.` : `Sisa pembayaran untuk tahun ${tahunSaatIni}.`}
+            </p>
+          </div>
+        `;
+      });
+
+      // === IURAN SEUMUR HIDUP ===
+      tarifSeumur.forEach((tarif) => {
+        if (!tarif || !tarif.id) return;
+
+        // Cari iuran seumur hidup untuk tarif ini
+        const iuranSeumur = semuaIuran.filter(
+          (i) =>
+            (i.frekuensi || "bulanan").toLowerCase() === "seumur_hidup" &&
+            parseInt(i.tarif_id) === parseInt(tarif.id)
+        );
+
+        const sudahBayar = iuranSeumur.reduce(
+          (sum, i) => sum + (parseInt(i.jumlah) || 0),
+          0
+        );
+
+        const sisa = Math.max(0, parseInt(tarif.jumlah || 0) - sudahBayar);
+        const status = sisa === 0 ? "Lunas" : sudahBayar > 0 ? "Belum Lunas" : "Belum Bayar";
+        const statusClass = sisa === 0
+          ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
+          : sudahBayar > 0
+          ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
+          : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200";
+
+        cardsHTML += `
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-3 md:p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-base md:text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                <i class="bx bx-check-shield text-blue-600 dark:text-blue-400"></i>
+                ${tarif.nama || "-"}
+              </h3>
+              <span class="text-xs px-2 py-1 rounded ${statusClass}">${status}</span>
+            </div>
+            <div class="space-y-1 text-sm text-gray-700 dark:text-gray-200">
+              <div class="flex justify-between">
+                <span>Total Tarif</span>
+                <span class="font-semibold text-gray-800 dark:text-white">${formatRupiah(tarif.jumlah)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Sudah Bayar</span>
+                <span class="font-semibold text-green-600 dark:text-green-400">${formatRupiah(sudahBayar)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Sisa</span>
+                <span class="font-semibold text-red-600 dark:text-red-400">${formatRupiah(sisa)}</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              ${tarif.keterangan || ""} ${sisa === 0 ? "Sudah lunas." : "Sisa pembayaran sekali seumur hidup."}
+            </p>
+          </div>
+        `;
+      });
+
+      const section = document.getElementById("sectionTahunanSeumur");
+      if (cardsHTML) {
+        container.innerHTML = cardsHTML;
+        if (section) {
+          section.classList.remove("hidden");
+        }
+      } else {
+        if (section) {
+          section.classList.add("hidden");
+        }
+      }
+    } catch (error) {
+      console.error("Error loading tahunan/seumur hidup:", error);
+      const container = document.getElementById("cardTahunanSeumurContainer");
+      const section = document.getElementById("sectionTahunanSeumur");
+      if (container) {
+        container.innerHTML = '<div class="col-span-2 text-center text-red-500 dark:text-red-400 py-4 text-sm">Terjadi kesalahan saat memuat data.</div>';
+      }
+      if (section) {
+        section.classList.remove("hidden");
+      }
+    }
+  }
+
   // Load semua data
   loadAnggotaInfo();
   loadTahunFilter();
   loadTarifList();
+  loadTahunanSeumur();
   loadPembayaran();
   loadPrintHeader();
 </script>

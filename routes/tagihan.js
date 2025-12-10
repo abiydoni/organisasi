@@ -62,101 +62,172 @@ router.get("/", (req, res) => {
               tarif = [];
             }
 
-            // Get iuran data untuk tahun tertentu
+            // Get tarif yang wajib dibayar oleh anggota ini
             db.all(
-              "SELECT * FROM iuran WHERE anggota_id=? AND tahun=? ORDER BY bulan ASC",
-              [anggota.id, tahun],
-              (err, iuran) => {
+              `SELECT t.* FROM tarif t
+               INNER JOIN anggota_tarif at ON t.id = at.tarif_id
+               WHERE at.anggota_id = ?
+               ORDER BY t.id DESC`,
+              [anggota.id],
+              (err, tarifAnggota) => {
                 if (err) {
-                  console.error("Error fetching iuran:", err);
-                  iuran = [];
+                  console.error("Error fetching tarif anggota:", err);
+                  tarifAnggota = [];
                 }
 
-                try {
-                  // Set active flags based on user role
-                  const userRole = req.session.user.role;
-                  const active = {
-                    tagihan: true,
-                    isAdmin: userRole === "admin",
-                    isAdminOrPengurus:
-                      userRole === "admin" || userRole === "pengurus",
-                    isUser: userRole === "user",
-                  };
+                // Get iuran data untuk tahun tertentu (untuk tabel bulanan)
+                db.all(
+                  "SELECT * FROM iuran WHERE anggota_id=? AND tahun=? ORDER BY bulan ASC",
+                  [anggota.id, tahun],
+                  (err, iuran) => {
+                    if (err) {
+                      console.error("Error fetching iuran:", err);
+                      iuran = [];
+                    }
 
-                  const layout = renderHTML("tagihan.html", {
-                    title: "Tagihan Iuran Saya",
-                    user: req.session.user,
-                    active: active,
-                    content: "",
-                    organisasi: organisasi || {},
-                  });
+                    // Get semua iuran (untuk tahunan dan seumur hidup)
+                    db.all(
+                      "SELECT * FROM iuran WHERE anggota_id=? ORDER BY tahun DESC, bulan ASC",
+                      [anggota.id],
+                      (err, semuaIuran) => {
+                        if (err) {
+                          console.error("Error fetching semua iuran:", err);
+                          semuaIuran = [];
+                        }
 
-                  // Replace template variables
-                  const anggotaJson = JSON.stringify(anggota || {});
-                  const iuranJson = JSON.stringify(iuran || []);
-                  const tarifJson = JSON.stringify(tarif || []);
-                  const organisasiJson = JSON.stringify(organisasi || {});
-                  let html = layout.replace(/\{\{anggota\}\}/g, anggotaJson);
-                  html = html.replace(/\{\{iuran\}\}/g, iuranJson);
-                  html = html.replace(/\{\{tarif\}\}/g, tarifJson);
-                  html = html.replace(/\{\{organisasi\}\}/g, organisasiJson);
-                  html = html.replace(/\{\{tahun\}\}/g, tahun);
-                  html = html.replace(
-                    /\{\{user\.nama\}\}/g,
-                    req.session.user.nama || ""
-                  );
+                        try {
+                          // Set active flags based on user role
+                          const userRole = req.session.user.role;
+                          const active = {
+                            tagihan: true,
+                            isAdmin: userRole === "admin",
+                            isAdminOrPengurus:
+                              userRole === "admin" || userRole === "pengurus",
+                            isUser: userRole === "user",
+                          };
 
-                  // Replace organisasi template variables directly from database
-                  if (organisasi) {
-                    html = html.replace(
-                      /\{\{organisasi\.nama\}\}/g,
-                      organisasi.nama || ""
-                    );
-                    html = html.replace(
-                      /\{\{organisasi\.alamat\}\}/g,
-                      organisasi.alamat || ""
-                    );
-                    html = html.replace(
-                      /\{\{organisasi\.telepon\}\}/g,
-                      organisasi.telepon || ""
-                    );
-                    html = html.replace(
-                      /\{\{organisasi\.email\}\}/g,
-                      organisasi.email || ""
-                    );
-                    // Handle logo path - ensure it's a valid URL
-                    const logoPath = organisasi.logo
-                      ? organisasi.logo.startsWith("http")
-                        ? organisasi.logo
-                        : organisasi.logo
-                      : "";
-                    html = html.replace(/\{\{organisasi\.logo\}\}/g, logoPath);
-                    // Replace display style for logo
-                    const logoDisplay = organisasi.logo ? "block" : "none";
-                    html = html.replace(
-                      /\{\{organisasi\.logo\}.*display:\s*\{\{organisasi\.logo\}\}/g,
-                      `display: ${logoDisplay}`
-                    );
-                  } else {
-                    // If no organisasi data, replace with empty strings
-                    html = html.replace(/\{\{organisasi\.nama\}\}/g, "");
-                    html = html.replace(/\{\{organisasi\.alamat\}\}/g, "");
-                    html = html.replace(/\{\{organisasi\.telepon\}\}/g, "");
-                    html = html.replace(/\{\{organisasi\.email\}\}/g, "");
-                    html = html.replace(/\{\{organisasi\.logo\}\}/g, "");
-                    html = html.replace(
-                      /display:\s*\{\{organisasi\.logo\}\}/g,
-                      "display: none"
+                          const layout = renderHTML("tagihan.html", {
+                            title: "Tagihan Iuran Saya",
+                            user: req.session.user,
+                            active: active,
+                            content: "",
+                            organisasi: organisasi || {},
+                          });
+
+                          // Replace template variables
+                          const anggotaJson = JSON.stringify(anggota || {});
+                          const iuranJson = JSON.stringify(iuran || []);
+                          const semuaIuranJson = JSON.stringify(
+                            semuaIuran || []
+                          );
+                          const tarifJson = JSON.stringify(tarif || []);
+                          const tarifAnggotaJson = JSON.stringify(
+                            tarifAnggota || []
+                          );
+                          const organisasiJson = JSON.stringify(
+                            organisasi || {}
+                          );
+                          let html = layout.replace(
+                            /\{\{anggota\}\}/g,
+                            anggotaJson
+                          );
+                          html = html.replace(/\{\{iuran\}\}/g, iuranJson);
+                          html = html.replace(
+                            /\{\{semuaIuran\}\}/g,
+                            semuaIuranJson
+                          );
+                          html = html.replace(/\{\{tarif\}\}/g, tarifJson);
+                          html = html.replace(
+                            /\{\{tarifAnggota\}\}/g,
+                            tarifAnggotaJson
+                          );
+                          html = html.replace(
+                            /\{\{organisasi\}\}/g,
+                            organisasiJson
+                          );
+                          html = html.replace(/\{\{tahun\}\}/g, tahun);
+                          html = html.replace(
+                            /\{\{user\.nama\}\}/g,
+                            req.session.user.nama || ""
+                          );
+
+                          // Replace organisasi template variables directly from database
+                          if (organisasi) {
+                            html = html.replace(
+                              /\{\{organisasi\.nama\}\}/g,
+                              organisasi.nama || ""
+                            );
+                            html = html.replace(
+                              /\{\{organisasi\.alamat\}\}/g,
+                              organisasi.alamat || ""
+                            );
+                            html = html.replace(
+                              /\{\{organisasi\.telepon\}\}/g,
+                              organisasi.telepon || ""
+                            );
+                            html = html.replace(
+                              /\{\{organisasi\.email\}\}/g,
+                              organisasi.email || ""
+                            );
+                            // Handle logo path - ensure it's a valid URL
+                            const logoPath = organisasi.logo
+                              ? organisasi.logo.startsWith("http")
+                                ? organisasi.logo
+                                : organisasi.logo
+                              : "";
+                            html = html.replace(
+                              /\{\{organisasi\.logo\}\}/g,
+                              logoPath
+                            );
+                            // Replace display style for logo
+                            const logoDisplay = organisasi.logo
+                              ? "block"
+                              : "none";
+                            html = html.replace(
+                              /\{\{organisasi\.logo\}.*display:\s*\{\{organisasi\.logo\}\}/g,
+                              `display: ${logoDisplay}`
+                            );
+                          } else {
+                            // If no organisasi data, replace with empty strings
+                            html = html.replace(
+                              /\{\{organisasi\.nama\}\}/g,
+                              ""
+                            );
+                            html = html.replace(
+                              /\{\{organisasi\.alamat\}\}/g,
+                              ""
+                            );
+                            html = html.replace(
+                              /\{\{organisasi\.telepon\}\}/g,
+                              ""
+                            );
+                            html = html.replace(
+                              /\{\{organisasi\.email\}\}/g,
+                              ""
+                            );
+                            html = html.replace(
+                              /\{\{organisasi\.logo\}\}/g,
+                              ""
+                            );
+                            html = html.replace(
+                              /display:\s*\{\{organisasi\.logo\}\}/g,
+                              "display: none"
+                            );
+                          }
+
+                          res.send(html);
+                        } catch (renderError) {
+                          console.error("Error rendering HTML:", renderError);
+                          res
+                            .status(500)
+                            .send(
+                              "Error rendering halaman: " + renderError.message
+                            );
+                        }
+                      }
                     );
                   }
-
-                  res.send(html);
-                } catch (renderError) {
-                  console.error("Error rendering HTML:", renderError);
-                  res
-                    .status(500)
-                    .send("Error rendering halaman: " + renderError.message);
-                }
+                );
               }
             );
           });
@@ -201,9 +272,10 @@ router.get("/pembayaran", (req, res) => {
           .json({ success: false, message: "Tahun tidak valid" });
       }
 
-      // Get all iuran for this month and year
+      // Get only bulanan iuran for this month and year
+      // Iuran tanpa frekuensi atau NULL dianggap bulanan
       db.all(
-        "SELECT * FROM iuran WHERE anggota_id=? AND bulan=? AND tahun=? ORDER BY tanggal_bayar DESC, created_at DESC",
+        "SELECT * FROM iuran WHERE anggota_id=? AND bulan=? AND tahun=? AND (frekuensi IS NULL OR frekuensi = '' OR LOWER(TRIM(frekuensi)) = 'bulanan') ORDER BY tanggal_bayar DESC, created_at DESC",
         [anggota.id, bulan, tahun],
         (err, iuran) => {
           if (err) {
