@@ -1,0 +1,523 @@
+<div class="space-y-4 md:space-y-6">
+  <!-- Header dengan tombol kembali -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2 md:gap-3">
+      <a
+        href="/penilaian?bulan={{bulan}}&tahun={{tahun}}"
+        class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+        title="Kembali"
+      >
+        <i class="bx bx-arrow-back text-xl md:text-2xl"></i>
+      </a>
+      <div>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
+          <i
+            class="bx bx-check-square text-indigo-600 dark:text-indigo-400"
+          ></i>
+          Detail Penilaian
+        </h2>
+        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+          Informasi dan penilaian anggota
+        </p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3 flex-wrap">
+      <div class="flex items-center gap-2">
+        <label class="text-sm text-gray-700 dark:text-gray-300">Bulan:</label>
+        <select
+          id="bulanFilter"
+          class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all text-sm"
+        >
+          <option value="1">Januari</option>
+          <option value="2">Februari</option>
+          <option value="3">Maret</option>
+          <option value="4">April</option>
+          <option value="5">Mei</option>
+          <option value="6">Juni</option>
+          <option value="7">Juli</option>
+          <option value="8">Agustus</option>
+          <option value="9">September</option>
+          <option value="10">Oktober</option>
+          <option value="11">November</option>
+          <option value="12">Desember</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2">
+        <label class="text-sm text-gray-700 dark:text-gray-300">Tahun:</label>
+        <select
+          id="tahunFilter"
+          class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all text-sm"
+        >
+          <!-- Options akan diisi oleh JavaScript -->
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Informasi Anggota -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6"
+  >
+    <h3
+      class="text-sm font-medium text-gray-800 dark:text-white mb-3 pb-2 border-b border-gray-200 dark:border-gray-700"
+    >
+      Informasi Anggota
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+      <div>
+        <span class="text-gray-500 dark:text-gray-400">Nama:</span>
+        <span
+          class="text-gray-800 dark:text-white block font-semibold"
+          id="anggotaNama"
+          >-</span
+        >
+      </div>
+      <div>
+        <span class="text-gray-500 dark:text-gray-400">NIK:</span>
+        <span class="text-gray-800 dark:text-white block" id="anggotaNik"
+          >-</span
+        >
+      </div>
+      <div>
+        <span class="text-gray-500 dark:text-gray-400">Telepon:</span>
+        <span class="text-gray-800 dark:text-white block" id="anggotaTelepon"
+          >-</span
+        >
+      </div>
+      <div>
+        <span class="text-gray-500 dark:text-gray-400">Email:</span>
+        <span class="text-gray-800 dark:text-white block" id="anggotaEmail"
+          >-</span
+        >
+      </div>
+      <div class="md:col-span-2">
+        <span class="text-gray-500 dark:text-gray-400">Alamat:</span>
+        <span class="text-gray-800 dark:text-white block" id="anggotaAlamat"
+          >-</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabel Penilaian -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <div class="overflow-x-auto">
+      <table
+        class="w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed"
+      >
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-1 md:px-2 py-1.5 md:py-2 text-left text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase w-8 md:w-auto"
+            >
+              No
+            </th>
+            <th
+              class="px-1 md:px-2 py-1.5 md:py-2 text-left text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase w-20 md:w-32"
+            >
+              Jenis Penilaian
+            </th>
+            <th
+              class="px-1 md:px-2 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase w-12 md:w-auto"
+            >
+              Nilai
+            </th>
+            <th
+              class="px-1 md:px-2 py-1.5 md:py-2 text-left text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Deskripsi
+            </th>
+            <th
+              class="px-1 md:px-2 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase w-16 md:w-auto"
+            >
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="penilaianTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+        <tfoot
+          id="penilaianTableFooter"
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 border-t-2 border-gray-300 dark:border-gray-600"
+        >
+          <!-- Footer dengan rata-rata akan diisi oleh JavaScript -->
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Edit/Tambah Penilaian -->
+<div
+  id="penilaianModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg p-4 md:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+  >
+    <h3
+      class="text-xl font-bold text-gray-800 dark:text-white mb-4"
+      id="modalTitle"
+    >
+      Edit Penilaian
+    </h3>
+    <form id="penilaianForm" class="space-y-3 md:space-y-4">
+      <input type="hidden" id="penilaianId" />
+      <input type="hidden" id="jenisPenilaianId" />
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Jenis Penilaian *</label
+        >
+        <select
+          id="namaJenisPenilaian"
+          required
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all"
+        >
+          <option value="">Pilih Jenis Penilaian</option>
+        </select>
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Nilai *</label
+        >
+        <input
+          type="number"
+          id="nilai"
+          step="0.1"
+          min="0"
+          max="100"
+          required
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all"
+          placeholder="Masukkan nilai (0-100)"
+        />
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Keterangan</label
+        >
+        <textarea
+          id="keterangan"
+          rows="3"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all"
+          placeholder="Keterangan penilaian..."
+        ></textarea>
+      </div>
+      <div class="flex justify-end gap-3">
+        <button
+          type="button"
+          onclick="closeModal()"
+          class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-200 font-medium"
+        >
+          Batal
+        </button>
+        <button
+          type="submit"
+          class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-lg transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+        >
+          Simpan
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Load data
+  const anggota = {{anggota}} || {};
+  const penilaian = {{penilaian}} || [];
+  const jenisPenilaian = {{jenisPenilaian}} || [];
+  let currentBulan = {{bulan}} || new Date().getMonth() + 1;
+  let currentTahun = {{tahun}} || new Date().getFullYear();
+  const anggotaId = anggota.id;
+
+  // Initialize tahun filter
+  function initTahunFilter() {
+    const tahunSelect = document.getElementById("tahunFilter");
+    const currentYear = new Date().getFullYear();
+    tahunSelect.innerHTML = "";
+    for (let i = currentYear; i >= currentYear - 5; i--) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i;
+      if (i === currentTahun) option.selected = true;
+      tahunSelect.appendChild(option);
+    }
+  }
+
+  // Set bulan filter
+  document.getElementById("bulanFilter").value = currentBulan;
+
+  // Load informasi anggota
+  function loadInformasiAnggota() {
+    if (anggota && Object.keys(anggota).length > 0) {
+      document.getElementById("anggotaNama").textContent = anggota.nama || "-";
+      document.getElementById("anggotaNik").textContent = anggota.nik || "-";
+      document.getElementById("anggotaTelepon").textContent = anggota.telepon || "-";
+      document.getElementById("anggotaEmail").textContent = anggota.email || "-";
+      document.getElementById("anggotaAlamat").textContent = anggota.alamat || "-";
+    }
+  }
+
+  function filterPenilaian() {
+    const bulan = document.getElementById("bulanFilter").value;
+    const tahun = document.getElementById("tahunFilter").value;
+    window.location.href = `/penilaian/detail/${anggotaId}?bulan=${bulan}&tahun=${tahun}`;
+  }
+
+  // Auto filter saat bulan atau tahun berubah
+  document.getElementById("bulanFilter").addEventListener("change", filterPenilaian);
+  document.getElementById("tahunFilter").addEventListener("change", filterPenilaian);
+
+  function loadPenilaian() {
+    const tbody = document.getElementById("penilaianTableBody");
+
+    if (jenisPenilaian.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+            Belum ada jenis penilaian. Silakan tambah jenis penilaian terlebih dahulu.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    // Tampilkan semua jenis penilaian aktif
+    tbody.innerHTML = jenisPenilaian
+      .map((jp, index) => {
+        // Cari penilaian yang sudah ada untuk jenis penilaian ini
+        const existingPenilaian = penilaian.find(
+          (p) => p.jenis_penilaian_id === jp.id
+        );
+
+        if (existingPenilaian) {
+          // Jika sudah ada penilaian, tampilkan dengan tombol edit dan hapus
+          return `
+            <tr class="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-medium">
+                ${index + 1}
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-semibold">
+                ${jp.nama}
+                ${jp.deskripsi ? `<br><span class="text-gray-500 dark:text-gray-400 text-[9px] md:text-[10px]">${jp.deskripsi}</span>` : ""}
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-center text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-semibold">
+                ${existingPenilaian.nilai}
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 break-words">
+                ${existingPenilaian.keterangan || "-"}
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-center">
+                <button onclick="editPenilaian(${existingPenilaian.id}, ${existingPenilaian.jenis_penilaian_id}, ${existingPenilaian.nilai}, '${(existingPenilaian.keterangan || "").replace(/'/g, "\\'")}')" class="inline-flex items-center justify-center w-6 h-6 md:w-7 md:h-7 text-indigo-600 hover:text-white hover:bg-indigo-600 rounded transition-all duration-200 mr-0.5 md:mr-1" title="Edit">
+                  <i class='bx bx-edit text-xs md:text-sm'></i>
+                </button>
+                <button onclick="deletePenilaian(${existingPenilaian.id})" class="inline-flex items-center justify-center w-6 h-6 md:w-7 md:h-7 text-red-600 hover:text-white hover:bg-red-600 rounded transition-all duration-200" title="Hapus">
+                  <i class='bx bx-trash text-xs md:text-sm'></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        } else {
+          // Jika belum ada penilaian, tampilkan dengan nilai "-" dan tombol tambah
+          return `
+            <tr class="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-medium">
+                ${index + 1}
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-semibold break-words">
+                ${jp.nama}
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-center text-[10px] md:text-xs text-gray-500 dark:text-gray-400">
+                -
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-500 dark:text-gray-400 break-words">
+                -
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-center">
+                <button onclick="tambahPenilaian(${jp.id}, '${(jp.nama || "").replace(/'/g, "\\'")}')" class="inline-flex items-center justify-center w-6 h-6 md:w-7 md:h-7 text-green-600 hover:text-white hover:bg-green-600 rounded transition-all duration-200" title="Tambah Penilaian">
+                  <i class='bx bx-plus text-xs md:text-sm'></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        }
+      })
+      .join("");
+
+    // Hitung dan tampilkan rata-rata
+    loadRataRata();
+  }
+
+  function loadRataRata() {
+    const tfoot = document.getElementById("penilaianTableFooter");
+
+    // Hitung rata-rata dari semua penilaian yang ada nilai
+    const nilaiArray = penilaian
+      .filter((p) => p.nilai !== null && p.nilai !== undefined)
+      .map((p) => parseFloat(p.nilai));
+
+    let rataRata = 0;
+    if (nilaiArray.length > 0) {
+      const sum = nilaiArray.reduce((a, b) => a + b, 0);
+      rataRata = sum / nilaiArray.length;
+    }
+
+    if (nilaiArray.length === 0) {
+      tfoot.innerHTML = `
+        <tr>
+          <td class="px-1 md:px-2 py-1.5 md:py-2"></td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2 text-left text-[10px] md:text-xs font-bold text-gray-800 dark:text-white">
+            Rata-rata
+          </td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-bold text-gray-600 dark:text-gray-400">
+            -
+          </td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2"></td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2"></td>
+        </tr>
+      `;
+    } else {
+      tfoot.innerHTML = `
+        <tr>
+          <td class="px-1 md:px-2 py-1.5 md:py-2"></td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2 text-left text-[10px] md:text-xs font-bold text-gray-800 dark:text-white">
+            Rata-rata
+          </td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-bold text-gray-800 dark:text-gray-200">
+            ${rataRata.toFixed(2)}
+          </td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2"></td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2"></td>
+        </tr>
+      `;
+    }
+  }
+
+  function tambahPenilaian(jenisPenilaianId, namaJenis) {
+    document.getElementById("penilaianModal").classList.remove("hidden");
+    document.getElementById("penilaianForm").reset();
+    document.getElementById("penilaianId").value = "";
+    document.getElementById("jenisPenilaianId").value = jenisPenilaianId;
+    document.getElementById("modalTitle").textContent = "Tambah Penilaian";
+    initJenisPenilaianSelect();
+    document.getElementById("namaJenisPenilaian").value = jenisPenilaianId;
+    document.getElementById("namaJenisPenilaian").disabled = true;
+    document.getElementById("nilai").value = "";
+    document.getElementById("keterangan").value = "";
+  }
+
+  function initJenisPenilaianSelect() {
+    const select = document.getElementById("namaJenisPenilaian");
+    select.innerHTML = '<option value="">Pilih Jenis Penilaian</option>';
+    jenisPenilaian.forEach((jp) => {
+      const option = document.createElement("option");
+      option.value = jp.id;
+      option.textContent = jp.nama + (jp.deskripsi ? ` - ${jp.deskripsi}` : "");
+      select.appendChild(option);
+    });
+  }
+
+  function editPenilaian(id, jenisPenilaianId, nilai, keterangan) {
+    document.getElementById("penilaianModal").classList.remove("hidden");
+    document.getElementById("penilaianForm").reset();
+    document.getElementById("penilaianId").value = id;
+    document.getElementById("jenisPenilaianId").value = jenisPenilaianId;
+    document.getElementById("modalTitle").textContent = "Edit Penilaian";
+    initJenisPenilaianSelect();
+    document.getElementById("namaJenisPenilaian").value = jenisPenilaianId;
+    document.getElementById("namaJenisPenilaian").disabled = true;
+    document.getElementById("nilai").value = nilai;
+    document.getElementById("keterangan").value = keterangan || "";
+  }
+
+  function closeModal() {
+    document.getElementById("penilaianModal").classList.add("hidden");
+  }
+
+  async function deletePenilaian(id) {
+    const result = await Swal.fire({
+      title: "Yakin?",
+      text: "Data akan dihapus permanen",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+    });
+
+    if (result.isConfirmed) {
+      const response = await API.delete(`/penilaian/delete/${id}`);
+      if (response.success) {
+        Swal.fire("Terhapus!", response.message, "success");
+        location.reload();
+      } else {
+        Swal.fire("Error!", response.message, "error");
+      }
+    }
+  }
+
+  document.getElementById("penilaianForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("penilaianId").value;
+    const jenisPenilaianId = document.getElementById("namaJenisPenilaian").value || document.getElementById("jenisPenilaianId").value;
+    const nilai = parseFloat(document.getElementById("nilai").value);
+    const keterangan = document.getElementById("keterangan").value;
+
+    if (!jenisPenilaianId) {
+      Swal.fire("Error!", "Jenis penilaian wajib dipilih", "error");
+      return;
+    }
+
+    if (id) {
+      // Update existing
+      const data = {
+        nilai: nilai,
+        keterangan: keterangan,
+      };
+
+      const response = await API.put(`/penilaian/update/${id}`, data);
+      if (response.success) {
+        Swal.fire("Berhasil!", response.message, "success");
+        closeModal();
+        location.reload();
+      } else {
+        Swal.fire("Error!", response.message, "error");
+      }
+    } else {
+      // Create new
+      const data = {
+        anggota_id: anggotaId,
+        jenis_penilaian_id: jenisPenilaianId,
+        bulan: currentBulan,
+        tahun: currentTahun,
+        nilai: nilai,
+        keterangan: keterangan,
+      };
+
+      const response = await API.post("/penilaian/create", data);
+      if (response.success) {
+        Swal.fire("Berhasil!", response.message, "success");
+        closeModal();
+        location.reload();
+      } else {
+        Swal.fire("Error!", response.message, "error");
+      }
+    }
+  });
+
+  initTahunFilter();
+  initJenisPenilaianSelect();
+  loadInformasiAnggota();
+  loadPenilaian();
+</script>

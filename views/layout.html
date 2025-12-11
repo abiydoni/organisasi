@@ -126,6 +126,26 @@
               Data Tarif
             </a>
           </li>
+          <li>
+            <a
+              href="/jenis-penilaian"
+              onclick="closeMobileMenu()"
+              class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 {{#if active.jenisPenilaian}}bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400{{/if}}"
+            >
+              <i class="bx bx-clipboard text-xl mr-3"></i>
+              Jenis Penilaian
+            </a>
+          </li>
+          <li>
+            <a
+              href="/penilaian"
+              onclick="closeMobileMenu()"
+              class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 {{#if active.penilaian}}bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400{{/if}}"
+            >
+              <i class="bx bx-check-square text-xl mr-3"></i>
+              Penilaian Bulanan
+            </a>
+          </li>
           {{/if}} {{#if active.isUser}}
           <li>
             <a

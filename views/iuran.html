@@ -494,10 +494,39 @@
 
 <script>
   // Load data
-  const iuran = {{iuran}} || [];
-  const anggota = {{anggota}} || [];
-  const tarif = {{tarif}} || [];
-  const anggotaTarif = {{anggotaTarif}} || [];
+  let iuran = [];
+  let anggota = [];
+  let tarif = [];
+  let anggotaTarif = [];
+
+  try {
+    iuran = {{iuran}} || [];
+    if (!Array.isArray(iuran)) iuran = [];
+  } catch(e) {
+    iuran = [];
+  }
+
+  try {
+    anggota = {{anggota}} || [];
+    if (!Array.isArray(anggota)) anggota = [];
+  } catch(e) {
+    anggota = [];
+  }
+
+  try {
+    tarif = {{tarif}} || [];
+    if (!Array.isArray(tarif)) tarif = [];
+  } catch(e) {
+    tarif = [];
+  }
+
+  try {
+    anggotaTarif = {{anggotaTarif}} || [];
+    if (!Array.isArray(anggotaTarif)) anggotaTarif = [];
+  } catch(e) {
+    anggotaTarif = [];
+  }
+
   const tahunSaatIni = parseInt("{{tahun}}") || new Date().getFullYear();
 
   // Buat mapping tarif per anggota
@@ -552,12 +581,6 @@
     return tarifAnggota.reduce((sum, t) => sum + (parseInt(t.jumlah) || 0), 0);
   }
 
-  // Data loaded
-    tarifCount: tarif.length,
-    anggotaTarifCount: anggotaTarif.length,
-    tahunSaatIni: tahunSaatIni
-  });
-
   // Load tahun filter
   function loadTahunFilter() {
     const tahunSelect = document.getElementById("tahunFilter");
@@ -583,43 +606,49 @@
 
   // Fungsi untuk mendapatkan status pembayaran per bulan
   function getStatusPembayaran(anggotaId, bulan, tahun) {
-    if (!iuran || iuran.length === 0) {
-      return "belum bayar";
-    }
+    try {
+      if (!iuran || !Array.isArray(iuran) || iuran.length === 0) {
+        return "belum bayar";
+      }
 
-    const totalTarifBulanan = getTotalTarifAnggota(anggotaId, "bulanan");
+      const totalTarifBulanan = getTotalTarifAnggota(anggotaId, "bulanan");
 
-    if (totalTarifBulanan === 0) {
-      return "tidak ada tarif";
-    }
+      if (totalTarifBulanan === 0 || isNaN(totalTarifBulanan)) {
+        return "tidak ada tarif";
+      }
 
-    // Cari semua iuran untuk anggota, bulan, dan tahun ini
-    const iuranBulan = iuran.filter((i) => {
-      const match = parseInt(i.anggota_id) === parseInt(anggotaId) &&
-                    parseInt(i.bulan) === parseInt(bulan) &&
-                    parseInt(i.tahun) === parseInt(tahun);
-      return match;
-    });
+      // Cari semua iuran untuk anggota, bulan, dan tahun ini
+      const iuranBulan = iuran.filter((i) => {
+        if (!i) return false;
+        const match = parseInt(i.anggota_id) === parseInt(anggotaId) &&
+                      parseInt(i.bulan) === parseInt(bulan) &&
+                      parseInt(i.tahun) === parseInt(tahun);
+        return match;
+      });
 
-    if (iuranBulan.length === 0) {
-      return "belum bayar";
-    }
+      if (iuranBulan.length === 0) {
+        return "belum bayar";
+      }
 
-    // Hitung total yang sudah dibayar
-    const totalBayar = iuranBulan.reduce(
-      (sum, i) => sum + (parseInt(i.jumlah) || 0),
-      0
-    );
+      // Hitung total yang sudah dibayar
+      const totalBayar = iuranBulan.reduce(
+        (sum, i) => sum + (parseInt(i.jumlah) || 0),
+        0
+      );
 
-    // Dapatkan total tarif bulanan untuk anggota ini
-    const totalTarifAnggota = totalTarifBulanan;
+      // Dapatkan total tarif bulanan untuk anggota ini
+      const totalTarifAnggota = totalTarifBulanan;
 
-    // Bandingkan dengan total tarif anggota
-    if (totalTarifAnggota > 0 && totalBayar >= totalTarifAnggota) {
-      return "lunas";
-    } else if (totalBayar > 0) {
-      return "belum lunas";
-    } else {
+      // Bandingkan dengan total tarif anggota
+      if (totalTarifAnggota > 0 && totalBayar >= totalTarifAnggota) {
+        return "lunas";
+      } else if (totalBayar > 0) {
+        return "belum lunas";
+      } else {
+        return "belum bayar";
+      }
+    } catch (error) {
+      console.error("Error in getStatusPembayaran:", error);
       return "belum bayar";
     }
   }
@@ -662,32 +691,43 @@
     }
 
     try {
-
     const rows = anggota.map((a, index) => {
       // Generate cells untuk setiap bulan (1-12)
       const bulanCells = [];
       for (let bulan = 1; bulan <= 12; bulan++) {
         const status = getStatusPembayaran(a.id, bulan, tahunSaatIni);
-        const statusClass = getStatusClass(status);
-        const statusText = status === "lunas" ? "Lunas" : status === "belum lunas" ? "Belum Lunas" : "Belum Bayar";
+        const statusLower = (status || "").toLowerCase().trim();
 
-        // Tentukan warna berdasarkan status
-        let bgColor;
-        if (status === "lunas") {
+        // Tentukan teks status
+        let statusText;
+        if (statusLower === "lunas") {
+          statusText = "Lunas";
+        } else if (statusLower === "belum lunas") {
+          statusText = "Belum Lunas";
+        } else if (statusLower === "tidak ada tarif") {
+          statusText = "Tidak Ada Tarif";
+        } else {
+          statusText = "Belum Bayar";
+        }
+
+        // Tentukan warna berdasarkan status - pastikan selalu ada nilai
+        let bgColor = "#ef4444"; // default red
+        if (statusLower === "lunas") {
           bgColor = "#10b981"; // green-500
-        } else if (status === "belum lunas") {
+        } else if (statusLower === "belum lunas") {
           bgColor = "#eab308"; // yellow-500
-        } else if (status === "tidak ada tarif") {
+        } else if (statusLower === "tidak ada tarif") {
           bgColor = "#9ca3af"; // gray-400
         } else {
           bgColor = "#ef4444"; // red-500
         }
 
         // Pastikan div selalu memiliki warna dengan inline style yang eksplisit
+        const safeBgColor = bgColor || "#ef4444";
         bulanCells.push(`
           <td class="px-2 py-3 text-center">
             <div
-              style="width: 32px; height: 32px; background-color: ${bgColor}; border-radius: 0.25rem; margin: 0 auto; cursor: pointer; transition: opacity 0.2s;"
+              style="width: 32px; height: 32px; background-color: ${safeBgColor}; border-radius: 0.25rem; margin: 0 auto; cursor: pointer; display: block;"
               onmouseover="this.style.opacity='0.8'"
               onmouseout="this.style.opacity='1'"
               onclick="showDetailPembayaran(${a.id}, ${bulan}, ${tahunSaatIni})"
@@ -710,7 +750,17 @@
       `;
     });
 
-    tbody.innerHTML = rows.join("");
+    if (rows && rows.length > 0) {
+      tbody.innerHTML = rows.join("");
+    } else {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="14" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+            Tidak ada data untuk ditampilkan
+          </td>
+        </tr>
+      `;
+    }
     } catch (error) {
       console.error("Error loading iuran table:", error);
       tbody.innerHTML = `
@@ -948,7 +998,10 @@
   // Load data saat halaman dimuat
   function init() {
     loadTahunFilter();
-    loadIuran();
+    // Pastikan loadIuran dipanggil setelah semua data siap
+    setTimeout(() => {
+      loadIuran();
+    }, 100);
   }
 
   // Panggil saat DOM ready
@@ -957,4 +1010,9 @@
   } else {
     init();
   }
+
+  // Debug: log data untuk memastikan ter-load
+  console.log("Iuran data:", iuran.length, "records");
+  console.log("Anggota data:", anggota.length, "records");
+  console.log("Tarif data:", tarif.length, "records");
 </script>

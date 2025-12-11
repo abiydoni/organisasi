@@ -1,0 +1,289 @@
+<div class="space-y-4 md:space-y-6">
+  <div
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+  >
+    <div>
+      <h2
+        class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-1"
+      >
+        <i class="bx bx-clipboard text-purple-600 dark:text-purple-400"></i>
+        Jenis Penilaian
+      </h2>
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Kelola jenis-jenis penilaian yang akan digunakan
+      </p>
+    </div>
+    <button
+      onclick="openModal()"
+      class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-lg transition-all duration-300 text-sm md:text-base font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2"
+    >
+      <i class="bx bx-plus text-lg"></i> <span>Tambah Jenis Penilaian</span>
+    </button>
+  </div>
+
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              No
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Nama Jenis Penilaian
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Deskripsi
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Bobot
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Status
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="jenisPenilaianTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  id="jenisPenilaianModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg p-4 md:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+  >
+    <h3
+      class="text-xl font-bold text-gray-800 dark:text-white mb-4"
+      id="modalTitle"
+    >
+      Tambah Jenis Penilaian
+    </h3>
+    <form id="jenisPenilaianForm" class="space-y-3 md:space-y-4">
+      <input type="hidden" id="jenisPenilaianId" />
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Nama Jenis Penilaian *</label
+        >
+        <input
+          type="text"
+          id="nama"
+          required
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-all"
+          placeholder="Contoh: Kedisiplinan"
+        />
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Deskripsi</label
+        >
+        <textarea
+          id="deskripsi"
+          rows="3"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-all"
+          placeholder="Deskripsi jenis penilaian..."
+        ></textarea>
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Bobot *</label
+        >
+        <input
+          type="number"
+          id="bobot"
+          required
+          min="0"
+          step="0.1"
+          value="1.0"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-all"
+          placeholder="1.0"
+        />
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Status *</label
+        >
+        <select
+          id="status"
+          required
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-all"
+        >
+          <option value="aktif">Aktif</option>
+          <option value="tidak aktif">Tidak Aktif</option>
+        </select>
+      </div>
+      <div class="flex justify-end gap-3">
+        <button
+          type="button"
+          onclick="closeModal()"
+          class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-all duration-200 font-medium"
+        >
+          Batal
+        </button>
+        <button
+          type="submit"
+          class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-lg transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+        >
+          Simpan
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Load jenis penilaian data
+  const jenisPenilaian = {{jenisPenilaian}} || [];
+
+  function loadJenisPenilaian() {
+    const tbody = document.getElementById("jenisPenilaianTableBody");
+    tbody.innerHTML = jenisPenilaian
+      .map(
+        (item, index) => `
+          <tr class="hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-medium">${
+                index + 1
+              }</td>
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold">${
+                item.nama
+              }</td>
+              <td class="px-2 md:px-4 py-2 md:py-3 text-xs text-gray-800 dark:text-gray-200">${
+                item.deskripsi || "-"
+              }</td>
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">
+                ${item.bobot || 1.0}
+              </td>
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap">
+                  <span class="px-2 py-0.5 md:px-3 md:py-1 text-[10px] md:text-xs font-semibold rounded-full ${
+                    item.status === "aktif"
+                      ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200"
+                      : "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 dark:from-gray-900 dark:to-gray-800 dark:text-gray-200"
+                  }">${item.status}</span>
+              </td>
+              <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs">
+                  <button onclick="editJenisPenilaian(${item.id})" class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 text-purple-600 hover:text-white hover:bg-purple-600 rounded-lg transition-all duration-200 mr-1 md:mr-2" title="Edit">
+                      <i class='bx bx-edit text-base md:text-lg'></i>
+                  </button>
+                  <button onclick="deleteJenisPenilaian(${item.id})" class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200" title="Hapus">
+                      <i class='bx bx-trash text-base md:text-lg'></i>
+                  </button>
+              </td>
+          </tr>
+      `
+      )
+      .join("");
+  }
+
+  function openModal(id = null) {
+    document.getElementById("jenisPenilaianModal").classList.remove("hidden");
+    document.getElementById("jenisPenilaianForm").reset();
+    document.getElementById("jenisPenilaianId").value = id || "";
+    document.getElementById("modalTitle").textContent = id
+      ? "Edit Jenis Penilaian"
+      : "Tambah Jenis Penilaian";
+
+    // Default bobot
+    document.getElementById("bobot").value = "1.0";
+
+    if (id) {
+      const item = jenisPenilaian.find((j) => j.id === id);
+      if (item) {
+        document.getElementById("nama").value = item.nama || "";
+        document.getElementById("deskripsi").value = item.deskripsi || "";
+        document.getElementById("bobot").value = item.bobot || 1.0;
+        document.getElementById("status").value = item.status || "aktif";
+      }
+    }
+  }
+
+  function closeModal() {
+    document.getElementById("jenisPenilaianModal").classList.add("hidden");
+  }
+
+  function editJenisPenilaian(id) {
+    openModal(id);
+  }
+
+  async function deleteJenisPenilaian(id) {
+    const result = await Swal.fire({
+      title: "Yakin?",
+      text: "Data akan dihapus permanen",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+    });
+
+    if (result.isConfirmed) {
+      const response = await API.delete(`/jenis-penilaian/delete/${id}`);
+      if (response.success) {
+        Swal.fire("Terhapus!", response.message, "success");
+        location.reload();
+      } else {
+        Swal.fire("Error!", response.message, "error");
+      }
+    }
+  }
+
+  document
+    .getElementById("jenisPenilaianForm")
+    .addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = document.getElementById("jenisPenilaianId").value;
+      const data = {
+        nama: document.getElementById("nama").value,
+        deskripsi: document.getElementById("deskripsi").value,
+        bobot: parseFloat(document.getElementById("bobot").value),
+        status: document.getElementById("status").value,
+      };
+
+      const url = id
+        ? `/jenis-penilaian/update/${id}`
+        : "/jenis-penilaian/create";
+      const method = id ? "put" : "post";
+
+      const response = await API[method](url, data);
+      if (response.success) {
+        Swal.fire("Berhasil!", response.message, "success");
+        closeModal();
+        location.reload();
+      } else {
+        Swal.fire("Error!", response.message, "error");
+      }
+    });
+
+  loadJenisPenilaian();
+</script>

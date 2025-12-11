@@ -36,6 +36,8 @@ const bukuKasRoutes = require("./routes/bukuKas");
 const tagihanRoutes = require("./routes/tagihan");
 const tarifRoutes = require("./routes/tarif");
 const arusKasRoutes = require("./routes/arusKas");
+const jenisPenilaianRoutes = require("./routes/jenisPenilaian");
+const penilaianRoutes = require("./routes/penilaian");
 
 // Routes
 app.use("/auth", authRoutes);
@@ -48,6 +50,8 @@ app.use("/buku-kas", bukuKasRoutes);
 app.use("/tagihan", tagihanRoutes);
 app.use("/tarif", tarifRoutes);
 app.use("/arus-kas", arusKasRoutes);
+app.use("/jenis-penilaian", jenisPenilaianRoutes);
+app.use("/penilaian", penilaianRoutes);
 
 // Root route
 app.get("/", (req, res) => {

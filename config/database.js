@@ -153,6 +153,33 @@ function initializeDatabase() {
       FOREIGN KEY (tarif_id) REFERENCES tarif(id) ON DELETE CASCADE,
       UNIQUE(anggota_id, tarif_id)
     )`);
+
+    // Tabel Jenis Penilaian
+    db.run(`CREATE TABLE IF NOT EXISTS jenis_penilaian (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nama TEXT NOT NULL,
+      deskripsi TEXT,
+      bobot REAL DEFAULT 1.0,
+      status TEXT DEFAULT 'aktif',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
+    // Tabel Penilaian (penilaian bulanan anggota)
+    db.run(`CREATE TABLE IF NOT EXISTS penilaian (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      anggota_id INTEGER NOT NULL,
+      jenis_penilaian_id INTEGER NOT NULL,
+      bulan INTEGER NOT NULL,
+      tahun INTEGER NOT NULL,
+      nilai REAL NOT NULL,
+      keterangan TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (anggota_id) REFERENCES anggota(id) ON DELETE CASCADE,
+      FOREIGN KEY (jenis_penilaian_id) REFERENCES jenis_penilaian(id) ON DELETE CASCADE,
+      UNIQUE(anggota_id, jenis_penilaian_id, bulan, tahun)
+    )`);
   });
 }
 

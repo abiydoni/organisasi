@@ -1,0 +1,171 @@
+<div class="space-y-4 md:space-y-6">
+  <div
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+  >
+    <div>
+      <h2
+        class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-1"
+      >
+        <i class="bx bx-check-square text-indigo-600 dark:text-indigo-400"></i>
+        Penilaian Bulanan
+      </h2>
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Daftar penilaian anggota per bulan
+      </p>
+    </div>
+    <div class="flex items-center gap-3 flex-wrap">
+      <div class="flex items-center gap-2">
+        <label class="text-sm text-gray-700 dark:text-gray-300">Bulan:</label>
+        <select
+          id="bulanFilter"
+          class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all text-sm"
+        >
+          <option value="1">Januari</option>
+          <option value="2">Februari</option>
+          <option value="3">Maret</option>
+          <option value="4">April</option>
+          <option value="5">Mei</option>
+          <option value="6">Juni</option>
+          <option value="7">Juli</option>
+          <option value="8">Agustus</option>
+          <option value="9">September</option>
+          <option value="10">Oktober</option>
+          <option value="11">November</option>
+          <option value="12">Desember</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2">
+        <label class="text-sm text-gray-700 dark:text-gray-300">Tahun:</label>
+        <select
+          id="tahunFilter"
+          class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all text-sm"
+        >
+          <!-- Options akan diisi oleh JavaScript -->
+        </select>
+      </div>
+      <button
+        onclick="filterPenilaian()"
+        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all text-sm font-medium"
+      >
+        Filter
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              No
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Nama Anggota
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Rata-rata
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="penilaianTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Load data
+  const anggota = {{anggota}} || [];
+  let currentBulan = {{bulan}} || new Date().getMonth() + 1;
+  let currentTahun = {{tahun}} || new Date().getFullYear();
+
+  // Initialize tahun filter
+  function initTahunFilter() {
+    const tahunSelect = document.getElementById("tahunFilter");
+    const currentYear = new Date().getFullYear();
+    tahunSelect.innerHTML = "";
+    for (let i = currentYear; i >= currentYear - 5; i--) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i;
+      if (i === currentTahun) option.selected = true;
+      tahunSelect.appendChild(option);
+    }
+  }
+
+  // Set bulan filter
+  document.getElementById("bulanFilter").value = currentBulan;
+
+  function filterPenilaian() {
+    const bulan = document.getElementById("bulanFilter").value;
+    const tahun = document.getElementById("tahunFilter").value;
+    window.location.href = `/penilaian?bulan=${bulan}&tahun=${tahun}`;
+  }
+
+  function loadPenilaian() {
+    const tbody = document.getElementById("penilaianTableBody");
+
+    if (anggota.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+            Tidak ada data anggota
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = anggota
+      .map((a, index) => {
+        const rataRata = parseFloat(a.rata_rata || 0).toFixed(2);
+        const jumlahPenilaian = a.jumlah_penilaian || 0;
+
+        return `
+          <tr class="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-medium">
+              ${index + 1}
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold">
+              <a href="/penilaian/detail/${a.id}?bulan=${currentBulan}&tahun=${currentTahun}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 hover:underline">
+                ${a.nama}
+              </a>
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-center text-xs text-gray-800 dark:text-gray-200">
+              ${jumlahPenilaian > 0 ? rataRata : "-"}
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs">
+              <a href="/penilaian/detail/${a.id}?bulan=${currentBulan}&tahun=${currentTahun}" class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 text-indigo-600 hover:text-white hover:bg-indigo-600 rounded-lg transition-all duration-200" title="Lihat Detail">
+                <i class='bx bx-show text-base md:text-lg'></i>
+              </a>
+            </td>
+          </tr>
+        `;
+      })
+      .join("");
+  }
+
+  initTahunFilter();
+  loadPenilaian();
+</script>
