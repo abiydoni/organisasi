@@ -1,0 +1,306 @@
+<div class="space-y-4 md:space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2 md:gap-3">
+      <div>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
+          <i
+            class="bx bx-check-square text-indigo-600 dark:text-indigo-400"
+          ></i>
+          Penilaian Saya
+        </h2>
+        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+          Informasi dan penilaian saya
+        </p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3 flex-wrap">
+      <div class="flex items-center gap-2">
+        <label class="text-sm text-gray-700 dark:text-gray-300">Bulan:</label>
+        <select
+          id="bulanFilter"
+          class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all text-sm"
+        >
+          <option value="1">Januari</option>
+          <option value="2">Februari</option>
+          <option value="3">Maret</option>
+          <option value="4">April</option>
+          <option value="5">Mei</option>
+          <option value="6">Juni</option>
+          <option value="7">Juli</option>
+          <option value="8">Agustus</option>
+          <option value="9">September</option>
+          <option value="10">Oktober</option>
+          <option value="11">November</option>
+          <option value="12">Desember</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2">
+        <label class="text-sm text-gray-700 dark:text-gray-300">Tahun:</label>
+        <select
+          id="tahunFilter"
+          class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all text-sm"
+        >
+          <!-- Options akan diisi oleh JavaScript -->
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Informasi Anggota -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6"
+  >
+    <h3
+      class="text-sm font-medium text-gray-800 dark:text-white mb-3 pb-2 border-b border-gray-200 dark:border-gray-700"
+    >
+      Informasi Anggota
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+      <div>
+        <span class="text-gray-500 dark:text-gray-400">Nama:</span>
+        <span
+          class="text-gray-800 dark:text-white block font-semibold"
+          id="anggotaNama"
+          >-</span
+        >
+      </div>
+      <div>
+        <span class="text-gray-500 dark:text-gray-400">NIK:</span>
+        <span class="text-gray-800 dark:text-white block" id="anggotaNik"
+          >-</span
+        >
+      </div>
+      <div>
+        <span class="text-gray-500 dark:text-gray-400">Telepon:</span>
+        <span class="text-gray-800 dark:text-white block" id="anggotaTelepon"
+          >-</span
+        >
+      </div>
+      <div>
+        <span class="text-gray-500 dark:text-gray-400">Email:</span>
+        <span class="text-gray-800 dark:text-white block" id="anggotaEmail"
+          >-</span
+        >
+      </div>
+      <div class="md:col-span-2">
+        <span class="text-gray-500 dark:text-gray-400">Alamat:</span>
+        <span class="text-gray-800 dark:text-white block" id="anggotaAlamat"
+          >-</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabel Penilaian -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <div class="overflow-x-auto">
+      <table
+        class="w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed"
+      >
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-1 md:px-2 py-1.5 md:py-2 text-left text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase w-8 md:w-auto"
+            >
+              No
+            </th>
+            <th
+              class="px-1 md:px-2 py-1.5 md:py-2 text-left text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase w-20 md:w-32"
+            >
+              Jenis Penilaian
+            </th>
+            <th
+              class="px-1 md:px-2 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase w-12 md:w-auto"
+            >
+              Nilai
+            </th>
+            <th
+              class="px-1 md:px-2 py-1.5 md:py-2 text-left text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Deskripsi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="penilaianTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+        <tfoot
+          id="penilaianTableFooter"
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 border-t-2 border-gray-300 dark:border-gray-600"
+        >
+          <!-- Footer dengan rata-rata akan diisi oleh JavaScript -->
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Load data
+  const anggota = {{anggota}} || {};
+  const penilaian = {{penilaian}} || [];
+  const jenisPenilaian = {{jenisPenilaian}} || [];
+  let currentBulan = {{bulan}} || new Date().getMonth() + 1;
+  let currentTahun = {{tahun}} || new Date().getFullYear();
+  const anggotaId = anggota.id;
+
+  // Initialize tahun filter
+  function initTahunFilter() {
+    const tahunSelect = document.getElementById("tahunFilter");
+    const currentYear = new Date().getFullYear();
+    tahunSelect.innerHTML = "";
+    for (let i = currentYear; i >= currentYear - 5; i--) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i;
+      if (i === currentTahun) option.selected = true;
+      tahunSelect.appendChild(option);
+    }
+  }
+
+  // Set bulan filter
+  document.getElementById("bulanFilter").value = currentBulan;
+
+  // Load informasi anggota
+  function loadInformasiAnggota() {
+    if (anggota && Object.keys(anggota).length > 0) {
+      document.getElementById("anggotaNama").textContent = anggota.nama || "-";
+      document.getElementById("anggotaNik").textContent = anggota.nik || "-";
+      document.getElementById("anggotaTelepon").textContent = anggota.telepon || "-";
+      document.getElementById("anggotaEmail").textContent = anggota.email || "-";
+      document.getElementById("anggotaAlamat").textContent = anggota.alamat || "-";
+    }
+  }
+
+  function filterPenilaian() {
+    const bulan = document.getElementById("bulanFilter").value;
+    const tahun = document.getElementById("tahunFilter").value;
+    window.location.href = `/penilaian-saya?bulan=${bulan}&tahun=${tahun}`;
+  }
+
+  // Auto filter saat bulan atau tahun berubah
+  document.getElementById("bulanFilter").addEventListener("change", filterPenilaian);
+  document.getElementById("tahunFilter").addEventListener("change", filterPenilaian);
+
+  function loadPenilaian() {
+    const tbody = document.getElementById("penilaianTableBody");
+
+    if (jenisPenilaian.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+            Belum ada jenis penilaian. Silakan hubungi administrator.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    // Tampilkan semua jenis penilaian aktif
+    tbody.innerHTML = jenisPenilaian
+      .map((jp, index) => {
+        // Cari penilaian yang sudah ada untuk jenis penilaian ini
+        const existingPenilaian = penilaian.find(
+          (p) => p.jenis_penilaian_id === jp.id
+        );
+
+        if (existingPenilaian) {
+          // Jika sudah ada penilaian, tampilkan tanpa tombol
+          return `
+            <tr class="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-medium">
+                ${index + 1}
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-semibold">
+                ${jp.nama}
+                ${jp.deskripsi ? `<br><span class="text-gray-500 dark:text-gray-400 text-[9px] md:text-[10px]">${jp.deskripsi}</span>` : ""}
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-center text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-semibold">
+                ${existingPenilaian.nilai}
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 break-words">
+                ${existingPenilaian.keterangan || "-"}
+              </td>
+            </tr>
+          `;
+        } else {
+          // Jika belum ada penilaian, tampilkan dengan nilai "-"
+          return `
+            <tr class="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-medium">
+                ${index + 1}
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-semibold break-words">
+                ${jp.nama}
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-center text-[10px] md:text-xs text-gray-500 dark:text-gray-400">
+                -
+              </td>
+              <td class="px-1 md:px-2 py-1.5 md:py-2 text-[10px] md:text-xs text-gray-500 dark:text-gray-400 break-words">
+                -
+              </td>
+            </tr>
+          `;
+        }
+      })
+      .join("");
+
+    // Hitung dan tampilkan rata-rata
+    loadRataRata();
+  }
+
+  function loadRataRata() {
+    const tfoot = document.getElementById("penilaianTableFooter");
+
+    // Hitung rata-rata dari semua penilaian yang ada nilai
+    const nilaiArray = penilaian
+      .filter((p) => p.nilai !== null && p.nilai !== undefined)
+      .map((p) => parseFloat(p.nilai));
+
+    let rataRata = 0;
+    if (nilaiArray.length > 0) {
+      const sum = nilaiArray.reduce((a, b) => a + b, 0);
+      rataRata = sum / nilaiArray.length;
+    }
+
+    if (nilaiArray.length === 0) {
+      tfoot.innerHTML = `
+        <tr>
+          <td class="px-1 md:px-2 py-1.5 md:py-2"></td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2 text-left text-[10px] md:text-xs font-bold text-gray-800 dark:text-white">
+            Rata-rata
+          </td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-bold text-gray-600 dark:text-gray-400">
+            -
+          </td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2"></td>
+        </tr>
+      `;
+    } else {
+      tfoot.innerHTML = `
+        <tr>
+          <td class="px-1 md:px-2 py-1.5 md:py-2"></td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2 text-left text-[10px] md:text-xs font-bold text-gray-800 dark:text-white">
+            Rata-rata
+          </td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-bold text-gray-800 dark:text-gray-200">
+            ${rataRata.toFixed(2)}
+          </td>
+          <td class="px-1 md:px-2 py-1.5 md:py-2"></td>
+        </tr>
+      `;
+    }
+  }
+
+  initTahunFilter();
+  loadInformasiAnggota();
+  loadPenilaian();
+</script>

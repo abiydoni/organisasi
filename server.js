@@ -38,6 +38,7 @@ const tarifRoutes = require("./routes/tarif");
 const arusKasRoutes = require("./routes/arusKas");
 const jenisPenilaianRoutes = require("./routes/jenisPenilaian");
 const penilaianRoutes = require("./routes/penilaian");
+const myPenilaianRoutes = require("./routes/myPenilaian");
 
 // Routes
 app.use("/auth", authRoutes);
@@ -52,6 +53,7 @@ app.use("/tarif", tarifRoutes);
 app.use("/arus-kas", arusKasRoutes);
 app.use("/jenis-penilaian", jenisPenilaianRoutes);
 app.use("/penilaian", penilaianRoutes);
+app.use("/penilaian-saya", myPenilaianRoutes);
 
 // Root route
 app.get("/", (req, res) => {

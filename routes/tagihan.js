@@ -61,10 +61,6 @@ router.get("/", (req, res) => {
               console.error("Error fetching tarif:", err);
               tarif = [];
             }
-            console.log(`Fetched ${tarif?.length || 0} tarif records`);
-            if (tarif && tarif.length > 0) {
-              console.log("Sample tarif:", JSON.stringify(tarif[0]));
-            }
 
             // Get tarif yang wajib dibayar oleh anggota ini
             db.all(
@@ -88,13 +84,6 @@ router.get("/", (req, res) => {
                       console.error("Error fetching iuran:", err);
                       iuran = [];
                     }
-                    console.log(
-                      `Fetched ${
-                        iuran?.length || 0
-                      } iuran records for anggota_id=${
-                        anggota.id
-                      }, tahun=${tahun}`
-                    );
 
                     // Get semua iuran (untuk tahunan dan seumur hidup)
                     db.all(
@@ -160,20 +149,6 @@ router.get("/", (req, res) => {
                             tarifJson = "[]";
                             tarifAnggotaJson = "[]";
                           }
-
-                          // Debug: Log data sebelum replace
-                          console.log("Before template replacement:");
-                          console.log("anggota:", anggota?.nama || "not found");
-                          console.log("iuran count:", iuran?.length || 0);
-                          console.log("tarif count:", tarif?.length || 0);
-                          console.log(
-                            "tarifAnggota count:",
-                            tarifAnggota?.length || 0
-                          );
-                          console.log(
-                            "anggotaJson sample:",
-                            anggotaJson.substring(0, 100)
-                          );
 
                           const organisasiJson = JSON.stringify(
                             organisasi || {}
@@ -406,12 +381,10 @@ router.get("/pembayaran-lain", (req, res) => {
 
       // Validate parameters
       if (!frekuensi || !tarif_id) {
-        return res
-          .status(400)
-          .json({
-            success: false,
-            message: "Frekuensi dan tarif_id harus diisi",
-          });
+        return res.status(400).json({
+          success: false,
+          message: "Frekuensi dan tarif_id harus diisi",
+        });
       }
 
       if (!["tahunan", "seumur_hidup"].includes(frekuensi.toLowerCase())) {

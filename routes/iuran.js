@@ -140,12 +140,6 @@ router.post("/create", (req, res) => {
 
   // Pastikan anggota_id adalah integer
   const anggotaIdInt = parseInt(anggota_id);
-  console.log(
-    "Creating iuran - anggota_id:",
-    anggotaIdInt,
-    "type:",
-    typeof anggotaIdInt
-  );
 
   db.run(
     `INSERT INTO iuran (anggota_id, bulan, tahun, jumlah, frekuensi, tarif_id, tanggal_bayar, status, keterangan) 
@@ -189,14 +183,6 @@ router.post("/create", (req, res) => {
             }
 
             const namaAnggota = anggota?.nama || "Unknown";
-            console.log(
-              "Nama anggota untuk buku_kas:",
-              namaAnggota,
-              "dari anggota_id:",
-              anggotaIdInt,
-              "anggota object:",
-              anggota
-            );
 
             // Get tarif info if tarif_id exists
             if (tarif_id) {
@@ -227,11 +213,6 @@ router.post("/create", (req, res) => {
                     const namaBulan = getNamaBulan(bulan);
                     keteranganBukuKas = `Iuran ${namaBulan} - ${namaAnggota}`;
                   }
-
-                  console.log(
-                    "Keterangan buku_kas yang akan disimpan:",
-                    keteranganBukuKas
-                  );
 
                   // Tambahkan keterangan dari form jika ada
                   if (keterangan && keterangan.trim()) {
@@ -275,11 +256,6 @@ router.post("/create", (req, res) => {
               // Fallback jika tidak ada tarif_id
               const namaBulan = getNamaBulan(bulan);
               let keteranganBukuKas = `Iuran ${namaBulan} - ${namaAnggota}`;
-
-              console.log(
-                "Keterangan buku_kas yang akan disimpan:",
-                keteranganBukuKas
-              );
 
               // Tambahkan keterangan dari form jika ada
               if (keterangan && keterangan.trim()) {
@@ -395,12 +371,6 @@ router.delete("/delete/:id", (req, res) => {
             }
 
             const namaAnggota = anggota?.nama || "Unknown";
-            console.log(
-              "Nama anggota untuk buku_kas:",
-              namaAnggota,
-              "dari anggota_id:",
-              iuranData.anggota_id
-            );
 
             // Get tarif info if tarif_id exists
             if (iuranData.tarif_id) {

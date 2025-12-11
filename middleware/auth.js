@@ -24,7 +24,10 @@ function requireAdminOrPengurus(req, res, next) {
 }
 
 function requireUser(req, res, next) {
-  if (req.session && req.session.user && req.session.user.role === "user") {
+  if (!req.session || !req.session.user) {
+    return res.redirect("/auth/login");
+  }
+  if (req.session.user.role === "user") {
     return next();
   }
   res

@@ -53,7 +53,6 @@
         </div>
 
         <ul class="space-y-2">
-          {{#if active.isAdminOrPengurus}}
           <li>
             <a
               href="/dashboard"
@@ -64,7 +63,7 @@
               Dashboard
             </a>
           </li>
-          {{/if}} {{#if active.isAdmin}}
+          {{#if active.isAdminOrPengurus}} {{#if active.isAdmin}}
           <li>
             <a
               href="/organisasi"
@@ -155,6 +154,16 @@
             >
               <i class="bx bx-receipt text-xl mr-3"></i>
               Tagihan Saya
+            </a>
+          </li>
+          <li>
+            <a
+              href="/penilaian-saya"
+              onclick="closeMobileMenu()"
+              class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 {{#if active.myPenilaian}}bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400{{/if}}"
+            >
+              <i class="bx bx-check-square text-xl mr-3"></i>
+              Penilaian Saya
             </a>
           </li>
           <li>

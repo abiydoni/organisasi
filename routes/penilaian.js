@@ -2,12 +2,16 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const fs = require("fs");
-const { requireAuth, requireAdminOrPengurus } = require("../middleware/auth");
+const {
+  requireAuth,
+  requireAdminOrPengurus,
+  requireUser,
+} = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
 
+// Hanya admin dan pengurus yang bisa akses route ini
 router.use(requireAuth);
-// Hanya admin dan pengurus yang bisa akses
 router.use(requireAdminOrPengurus);
 
 // Route untuk detail penilaian per anggota - HARUS SEBELUM route "/" dan "/data"
