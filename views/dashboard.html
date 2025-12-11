@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <!-- Iuran Lunas Card -->
+    <!-- Transaksi Iuran Card -->
     <div
       class="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 border border-gray-100 dark:border-gray-700 hover:border-green-200 dark:hover:border-green-800 relative overflow-hidden"
     >
@@ -71,7 +71,7 @@
             <p
               class="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2"
             >
-              Iuran Lunas
+              Transaksi Iuran
             </p>
             <p
               id="stat-iuran"
@@ -320,7 +320,7 @@
         },
       },
       tooltip: {
-        backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.9)" : "rgba(0, 0, 0, 0.8)",
+        backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.9)" : "rgba(255, 255, 255, 0.95)",
         padding: 12,
         titleFont: {
           size: 14,
@@ -328,8 +328,10 @@
         bodyFont: {
           size: 12,
         },
-        titleColor: "#fff",
-        bodyColor: "#fff",
+        titleColor: isDarkMode ? "#fff" : "rgba(0, 0, 0, 0.9)",
+        bodyColor: isDarkMode ? "#fff" : "rgba(0, 0, 0, 0.8)",
+        borderColor: isDarkMode ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)",
+        borderWidth: 1,
         callbacks: {
           label: function (context) {
             if (context.dataset.label === "Pembayaran Iuran" || context.dataset.label === "Saldo Kas") {
@@ -380,6 +382,46 @@
 
   async function loadCharts() {
     try {
+      // Get current theme colors
+      const currentIsDarkMode = document.documentElement.classList.contains("dark");
+      const currentTextColor = currentIsDarkMode ? "rgba(255, 255, 255, 0.9)" : "rgba(0, 0, 0, 0.7)";
+      const currentGridColor = currentIsDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)";
+
+      // Update chart options with current theme colors
+      const currentChartOptions = {
+        ...chartOptions,
+        plugins: {
+          ...chartOptions.plugins,
+          legend: {
+            ...chartOptions.plugins.legend,
+            labels: {
+              ...chartOptions.plugins.legend.labels,
+              color: currentTextColor,
+            },
+          },
+        },
+        scales: {
+          y: {
+            ...chartOptions.scales.y,
+            ticks: {
+              ...chartOptions.scales.y.ticks,
+              color: currentTextColor,
+            },
+            grid: {
+              ...chartOptions.scales.y.grid,
+              color: currentGridColor,
+            },
+          },
+          x: {
+            ...chartOptions.scales.x,
+            ticks: {
+              ...chartOptions.scales.x.ticks,
+              color: currentTextColor,
+            },
+          },
+        },
+      };
+
       const response = await fetch("/dashboard/chart-data");
       const result = await response.json();
 
@@ -414,7 +456,7 @@
               ],
             },
             options: {
-              ...chartOptions,
+              ...currentChartOptions,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -422,10 +464,11 @@
                     font: {
                       size: 11,
                     },
+                    color: currentTextColor,
                     stepSize: 1,
                   },
                   grid: {
-                    color: "rgba(0, 0, 0, 0.05)",
+                    color: currentGridColor,
                   },
                 },
                 x: {
@@ -433,6 +476,7 @@
                     font: {
                       size: 11,
                     },
+                    color: currentTextColor,
                   },
                   grid: {
                     display: false,
@@ -440,9 +484,9 @@
                 },
               },
               plugins: {
-                ...chartOptions.plugins,
+                ...currentChartOptions.plugins,
                 tooltip: {
-                  ...chartOptions.plugins.tooltip,
+                  ...currentChartOptions.plugins.tooltip,
                   callbacks: {
                     label: function (context) {
                       return context.dataset.label + ": " + context.parsed.y + " anggota";
@@ -476,7 +520,7 @@
                 },
               ],
             },
-            options: chartOptions,
+            options: currentChartOptions,
           });
         }
 
@@ -507,7 +551,7 @@
                 },
               ],
             },
-            options: chartOptions,
+            options: currentChartOptions,
           });
         }
       }
@@ -515,6 +559,58 @@
       console.error("Error loading charts:", error);
     }
   }
+
+  // Function to update chart colors based on theme
+  function updateChartColors() {
+    const isDarkMode = document.documentElement.classList.contains("dark");
+    const textColor = isDarkMode ? "rgba(255, 255, 255, 0.9)" : "rgba(0, 0, 0, 0.7)";
+    const gridColor = isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)";
+
+    // Update all charts if they exist
+    const charts = [anggotaChart, iuranChart, saldoChart];
+    charts.forEach((chart) => {
+      if (chart) {
+        // Update scales colors
+        chart.options.scales.y.ticks.color = textColor;
+        chart.options.scales.y.grid.color = gridColor;
+        chart.options.scales.x.ticks.color = textColor;
+
+        // Update legend colors
+        chart.options.plugins.legend.labels.color = textColor;
+
+        // Update tooltip colors
+        chart.options.plugins.tooltip.backgroundColor = isDarkMode
+          ? "rgba(0, 0, 0, 0.9)"
+          : "rgba(255, 255, 255, 0.95)";
+        chart.options.plugins.tooltip.titleColor = isDarkMode
+          ? "#fff"
+          : "rgba(0, 0, 0, 0.9)";
+        chart.options.plugins.tooltip.bodyColor = isDarkMode
+          ? "#fff"
+          : "rgba(0, 0, 0, 0.8)";
+        chart.options.plugins.tooltip.borderColor = isDarkMode
+          ? "rgba(255, 255, 255, 0.2)"
+          : "rgba(0, 0, 0, 0.1)";
+
+        chart.update();
+      }
+    });
+  }
+
+  // Listen for theme changes
+  const themeObserver = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      if (mutation.type === "attributes" && mutation.attributeName === "class") {
+        updateChartColors();
+      }
+    });
+  });
+
+  // Observe changes to the html element's class attribute
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
 
   // Load charts when page is ready
   if (document.readyState === "loading") {
