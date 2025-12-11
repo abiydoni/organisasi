@@ -5,14 +5,15 @@ const fs = require("fs");
 const {
   requireAuth,
   requireAdminOrPengurus,
+  requireAdminOrPengurusOrTentor,
   requireUser,
 } = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
 
-// Hanya admin dan pengurus yang bisa akses route ini
+// Admin, pengurus, dan tentor bisa akses route ini
 router.use(requireAuth);
-router.use(requireAdminOrPengurus);
+router.use(requireAdminOrPengurusOrTentor);
 
 // Route untuk detail penilaian per anggota - HARUS SEBELUM route "/" dan "/data"
 router.get("/detail/:id", (req, res) => {
@@ -82,6 +83,11 @@ router.get("/detail/:id", (req, res) => {
                     isAdminOrPengurus:
                       userRole === "admin" || userRole === "pengurus",
                     isUser: userRole === "user",
+                    isTentor: userRole === "tentor",
+                    isAdminOrPengurusOrTentor:
+                      userRole === "admin" ||
+                      userRole === "pengurus" ||
+                      userRole === "tentor",
                   };
 
                   const layout = renderHTML("detailPenilaian.html", {
@@ -175,6 +181,11 @@ router.get("/", (req, res) => {
             isAdmin: userRole === "admin",
             isAdminOrPengurus: userRole === "admin" || userRole === "pengurus",
             isUser: userRole === "user",
+            isTentor: userRole === "tentor",
+            isAdminOrPengurusOrTentor:
+              userRole === "admin" ||
+              userRole === "pengurus" ||
+              userRole === "tentor",
           };
 
           const layout = renderHTML("penilaian.html", {

@@ -38,6 +38,7 @@ router.get("/", (req, res) => {
                 isAdminOrPengurus:
                   userRole === "admin" || userRole === "pengurus",
                 isUser: userRole === "user",
+                isTentor: userRole === "tentor",
               };
 
               const layout = renderHTML("user.html", {
@@ -158,7 +159,7 @@ router.put("/update/:id", (req, res) => {
     // Validasi: pengurus hanya bisa mengubah role yang sama atau di bawahnya
     if (currentUser.role === "pengurus") {
       // Pengurus tidak bisa edit admin (sudah di-handle di atas)
-      // Pengurus hanya bisa set role: pengurus atau user (tidak bisa set admin)
+      // Pengurus hanya bisa set role: pengurus, tentor, atau user (tidak bisa set admin)
       if (role === "admin") {
         return res.json({
           success: false,

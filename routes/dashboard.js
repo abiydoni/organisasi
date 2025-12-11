@@ -46,6 +46,7 @@ router.get("/", (req, res) => {
                         isAdminOrPengurus:
                           userRole === "admin" || userRole === "pengurus",
                         isUser: userRole === "user",
+                        isTentor: userRole === "tentor",
                       };
 
                       const layout = renderHTML("dashboard.html", {

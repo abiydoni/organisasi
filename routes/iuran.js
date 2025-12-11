@@ -2,7 +2,11 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const fs = require("fs");
-const { requireAuth, requireAdminOrPengurus } = require("../middleware/auth");
+const {
+  requireAuth,
+  requireAdminOrPengurus,
+  requireAdminOrPengurusOrTentor,
+} = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
 
@@ -27,8 +31,8 @@ function getNamaBulan(bulan) {
 }
 
 router.use(requireAuth);
-// Hanya admin dan pengurus yang bisa akses
-router.use(requireAdminOrPengurus);
+// Admin, pengurus, dan tentor bisa akses
+router.use(requireAdminOrPengurusOrTentor);
 
 router.get("/", (req, res) => {
   const tahun = req.query.tahun || new Date().getFullYear();
@@ -70,6 +74,11 @@ router.get("/", (req, res) => {
                       isAdminOrPengurus:
                         userRole === "admin" || userRole === "pengurus",
                       isUser: userRole === "user",
+                      isTentor: userRole === "tentor",
+                      isAdminOrPengurusOrTentor:
+                        userRole === "admin" ||
+                        userRole === "pengurus" ||
+                        userRole === "tentor",
                     };
 
                     const layout = renderHTML("iuran.html", {

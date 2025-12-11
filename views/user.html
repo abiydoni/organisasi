@@ -31,27 +31,27 @@
         >
           <tr>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-1.5 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               No
             </th>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-1.5 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Username
             </th>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-1.5 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Nama
             </th>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-1.5 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Role
             </th>
             <th
-              class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              class="px-2 md:px-4 py-1.5 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
             >
               Aksi
             </th>
@@ -253,47 +253,61 @@
       .map(
         (user) => {
           displayIndex++;
+          // Normalize role dengan lebih teliti
+          const rawRole = user.role || "";
+          const role = String(rawRole).toLowerCase().trim();
+
+          let badgeClass = "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 dark:from-gray-800 dark:to-gray-700 dark:text-gray-200";
+
+          // Cek dengan berbagai cara untuk memastikan tentor terdeteksi
+          // Urutan penting: cek tentor SEBELUM user agar tidak tertangkap oleh kondisi user
+          if (role === "admin") {
+            badgeClass = "bg-gradient-to-r from-red-100 to-red-200 text-red-800 dark:from-red-900 dark:to-red-800 dark:text-red-200";
+          } else if (role === "pengurus") {
+            badgeClass = "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-200";
+          } else if (role === "tentor") {
+            badgeClass = "bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 dark:from-purple-900 dark:to-purple-800 dark:text-purple-200";
+          } else if (role === "user") {
+            badgeClass = "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 dark:from-blue-900 dark:to-blue-800 dark:text-blue-200";
+          }
+
           return `
           <tr class="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
-              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-medium">${
+              <td class="px-2 md:px-4 py-1.5 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-medium">${
                 displayIndex
               }</td>
-              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold">${
+              <td class="px-2 md:px-4 py-1.5 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold">${
                 user.username
               }</td>
-              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-800 dark:text-gray-200">${
+              <td class="px-2 md:px-4 py-1.5 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">${
                 user.nama
               }</td>
-              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 text-xs font-semibold rounded-full ${
-                    user.role === "admin"
-                      ? "bg-gradient-to-r from-red-100 to-red-200 text-red-800 dark:from-red-900 dark:to-red-800 dark:text-red-200"
-                      : "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 dark:from-blue-900 dark:to-blue-800 dark:text-blue-200"
-                  }">${user.role}</span>
+              <td class="px-2 md:px-4 py-1.5 whitespace-nowrap">
+                  <span class="px-2 py-0.5 text-xs font-semibold rounded-full capitalize ${badgeClass}" data-role="${role}">${user.role || "unknown"}</span>
               </td>
-              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm">
+              <td class="px-2 md:px-4 py-1.5 whitespace-nowrap text-xs">
                   ${
                     isAdmin || isPengurus
                       ? `
-                      <button onclick="editUser(${user.id})" class="inline-flex items-center justify-center w-8 h-8 text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg transition-all duration-200 mr-2 ${
+                      <button onclick="editUser(${user.id})" class="inline-flex items-center justify-center w-7 h-7 text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg transition-all duration-200 mr-1 ${
                         user.role === "admin" && !isAdmin ? "opacity-50 cursor-not-allowed" : ""
                       }" title="${
                         user.role === "admin" && !isAdmin
                           ? "Hanya administrator yang dapat mengedit user administrator"
                           : "Edit"
                       }" ${user.role === "admin" && !isAdmin ? "disabled" : ""}>
-                          <i class='bx bx-edit text-lg'></i>
+                          <i class='bx bx-edit text-base'></i>
                       </button>
                       ${isAdmin ? `
-                      <button onclick="changePassword(${user.id})" class="inline-flex items-center justify-center w-8 h-8 text-yellow-600 hover:text-white hover:bg-yellow-600 rounded-lg transition-all duration-200 mr-2" title="Ubah Password">
-                          <i class='bx bx-key text-lg'></i>
+                      <button onclick="changePassword(${user.id})" class="inline-flex items-center justify-center w-7 h-7 text-yellow-600 hover:text-white hover:bg-yellow-600 rounded-lg transition-all duration-200 mr-1" title="Ubah Password">
+                          <i class='bx bx-key text-base'></i>
                       </button>
                       ` : ""}
                       ${isAdmin || isPengurus ? `
-                      <button onclick="deleteUser(${user.id})" class="inline-flex items-center justify-center w-8 h-8 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200 ${
+                      <button onclick="deleteUser(${user.id})" class="inline-flex items-center justify-center w-7 h-7 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200 ${
                         user.id === currentUserId ? "opacity-50 cursor-not-allowed" : ""
                       }" title="${user.id === currentUserId ? "Tidak dapat menghapus akun sendiri" : "Hapus"}" ${user.id === currentUserId ? "disabled" : ""}>
-                          <i class='bx bx-trash text-lg'></i>
+                          <i class='bx bx-trash text-base'></i>
                       </button>
                       ` : ""}
                   `
@@ -322,7 +336,7 @@
 
   // Set nama value berdasarkan role
   function setNamaValue(role, nama) {
-    if (role === "pengurus" || role === "admin") {
+    if (role === "pengurus" || role === "admin" || role === "tentor") {
       document.getElementById("namaInput").value = nama || "";
     } else {
       document.getElementById("namaSelect").value = nama || "";
@@ -346,7 +360,7 @@
       return;
     }
 
-    if (role === "pengurus" || role === "admin") {
+    if (role === "pengurus" || role === "admin" || role === "tentor") {
       // Tampilkan input manual, sembunyikan dropdown
       namaInput.classList.remove("hidden");
       namaInput.setAttribute("required", "required");
@@ -386,12 +400,13 @@
     if (isAdmin) {
       roleSelect.innerHTML = `
         <option value="user">User</option>
+        <option value="tentor">Tentor</option>
         <option value="pengurus">Pengurus</option>
         <option value="admin">Admin</option>
       `;
       roleHint.textContent = "Admin dapat mengubah semua role";
     }
-    // Pengurus hanya bisa set pengurus dan user
+    // Pengurus hanya bisa set pengurus, tentor, dan user
     else if (isPengurus) {
       // Jika edit mode dan target user adalah admin, disable dan hanya tampilkan admin
       if (editMode && targetUser) {
@@ -404,16 +419,18 @@
         } else {
           roleSelect.innerHTML = `
             <option value="user">User</option>
+            <option value="tentor">Tentor</option>
             <option value="pengurus">Pengurus</option>
           `;
-          roleHint.textContent = "Pengurus hanya dapat mengubah role menjadi User atau Pengurus";
+          roleHint.textContent = "Pengurus hanya dapat mengubah role menjadi User, Tentor, atau Pengurus";
         }
       } else {
         roleSelect.innerHTML = `
           <option value="user">User</option>
+          <option value="tentor">Tentor</option>
           <option value="pengurus">Pengurus</option>
         `;
-        roleHint.textContent = "Pengurus hanya dapat mengubah role menjadi User atau Pengurus";
+        roleHint.textContent = "Pengurus hanya dapat mengubah role menjadi User, Tentor, atau Pengurus";
       }
     }
     // User biasa tidak bisa mengubah role
@@ -635,7 +652,7 @@
 
     // Ambil nama berdasarkan role
     let nama;
-    if (role === "pengurus" || role === "admin") {
+    if (role === "pengurus" || role === "admin" || role === "tentor") {
       nama = document.getElementById("namaInput").value;
     } else {
       nama = document.getElementById("namaSelect").value;
@@ -719,6 +736,7 @@
       Swal.fire("Error!", response.message, "error");
     }
   });
+
 
   // Load data on page load
   loadUsers();

@@ -98,9 +98,17 @@ function renderHTML(filePath, options = {}) {
         /\{\{#if active\.isUser\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
       layout = layout.replace(isUserRegexWithElse, isUser ? "$1" : "$2");
       // Handle without else clause (will be processed later in active section)
+
+      // Handle isTentor condition automatically (with or without else)
+      const isTentor = options.user.role === "tentor";
+      // Handle with else clause
+      const isTentorRegexWithElse =
+        /\{\{#if active\.isTentor\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
+      layout = layout.replace(isTentorRegexWithElse, isTentor ? "$1" : "$2");
+      // Handle without else clause (will be processed later in active section)
     }
     if (options.active) {
-      // Always add isAdmin, isAdminOrPengurus, and isUser to active if user exists
+      // Always add isAdmin, isAdminOrPengurus, isUser, and isTentor to active if user exists
       // This ensures these conditions are always processed
       if (options.user) {
         if (!options.active.hasOwnProperty("isAdmin")) {
@@ -113,6 +121,15 @@ function renderHTML(filePath, options = {}) {
         if (!options.active.hasOwnProperty("isUser")) {
           options.active.isUser = options.user.role === "user";
         }
+        if (!options.active.hasOwnProperty("isTentor")) {
+          options.active.isTentor = options.user.role === "tentor";
+        }
+        if (!options.active.hasOwnProperty("isAdminOrPengurusOrTentor")) {
+          options.active.isAdminOrPengurusOrTentor =
+            options.user.role === "admin" ||
+            options.user.role === "pengurus" ||
+            options.user.role === "tentor";
+        }
       }
 
       // Process all conditions - iterate multiple times to handle nested/adjacent conditions
@@ -122,7 +139,13 @@ function renderHTML(filePath, options = {}) {
       let previousLayout = "";
 
       // Priority order: process role-based conditions first
-      const priorityKeys = ["isAdmin", "isUser", "isAdminOrPengurus"];
+      const priorityKeys = [
+        "isAdmin",
+        "isUser",
+        "isTentor",
+        "isAdminOrPengurus",
+        "isAdminOrPengurusOrTentor",
+      ];
       const otherKeys = Object.keys(options.active).filter(
         (key) => !priorityKeys.includes(key)
       );

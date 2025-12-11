@@ -35,9 +35,36 @@ function requireUser(req, res, next) {
     .send("Akses ditolak. Hanya role user yang dapat mengakses halaman ini.");
 }
 
+function requireTentor(req, res, next) {
+  if (!req.session || !req.session.user) {
+    return res.redirect("/auth/login");
+  }
+  if (req.session.user.role === "tentor") {
+    return next();
+  }
+  res
+    .status(403)
+    .send("Akses ditolak. Hanya role tentor yang dapat mengakses halaman ini.");
+}
+
+function requireAdminOrPengurusOrTentor(req, res, next) {
+  if (
+    req.session &&
+    req.session.user &&
+    (req.session.user.role === "admin" ||
+      req.session.user.role === "pengurus" ||
+      req.session.user.role === "tentor")
+  ) {
+    return next();
+  }
+  res.status(403).send("Akses ditolak");
+}
+
 module.exports = {
   requireAuth,
   requireAdmin,
   requireAdminOrPengurus,
   requireUser,
+  requireTentor,
+  requireAdminOrPengurusOrTentor,
 };

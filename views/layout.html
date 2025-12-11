@@ -74,7 +74,7 @@
               Data Organisasi
             </a>
           </li>
-          {{/if}} {{#if active.isAdminOrPengurus}}
+          {{/if}}
           <li>
             <a
               href="/user"
@@ -95,6 +95,7 @@
               Data Anggota
             </a>
           </li>
+          {{/if}} {{#if active.isAdminOrPengurusOrTentor}}
           <li>
             <a
               href="/iuran"
@@ -105,6 +106,7 @@
               Iuran Bulanan
             </a>
           </li>
+          {{/if}} {{#if active.isAdminOrPengurus}}
           <li>
             <a
               href="/buku-kas"
@@ -125,6 +127,7 @@
               Data Tarif
             </a>
           </li>
+          {{/if}} {{#if active.isAdminOrPengurusOrTentor}}
           <li>
             <a
               href="/jenis-penilaian"
@@ -143,6 +146,17 @@
             >
               <i class="bx bx-check-square text-xl mr-3"></i>
               Penilaian Bulanan
+            </a>
+          </li>
+          {{/if}} {{#if active.isTentor}}
+          <li>
+            <a
+              href="/arus-kas"
+              onclick="closeMobileMenu()"
+              class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 {{#if active.arusKas}}bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400{{/if}}"
+            >
+              <i class="bx bx-book text-xl mr-3"></i>
+              Arus Kas
             </a>
           </li>
           {{/if}} {{#if active.isUser}}

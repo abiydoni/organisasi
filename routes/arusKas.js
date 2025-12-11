@@ -2,15 +2,31 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const fs = require("fs");
-const { requireAuth, requireUser } = require("../middleware/auth");
+const {
+  requireAuth,
+  requireUser,
+  requireAdminOrPengurusOrTentor,
+} = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
 
 router.use(requireAuth);
-// Hanya user yang bisa akses
-router.use(requireUser);
 
+// Route untuk semua role (admin, pengurus, tentor, dan user)
 router.get("/", (req, res) => {
+  const userRole = req.session.user.role;
+
+  // Cek apakah user memiliki akses
+  const hasAccess =
+    userRole === "admin" ||
+    userRole === "pengurus" ||
+    userRole === "tentor" ||
+    userRole === "user";
+
+  if (!hasAccess) {
+    return res.status(403).send("Akses ditolak");
+  }
+
   // Get organisasi data first
   db.get(
     "SELECT * FROM organisasi ORDER BY id DESC LIMIT 1",
@@ -35,13 +51,17 @@ router.get("/", (req, res) => {
                   };
 
                   // Set active flags based on user role
-                  const userRole = req.session.user.role;
                   const active = {
                     arusKas: true,
                     isAdmin: userRole === "admin",
                     isAdminOrPengurus:
                       userRole === "admin" || userRole === "pengurus",
                     isUser: userRole === "user",
+                    isTentor: userRole === "tentor",
+                    isAdminOrPengurusOrTentor:
+                      userRole === "admin" ||
+                      userRole === "pengurus" ||
+                      userRole === "tentor",
                   };
 
                   const layout = renderHTML("arusKas.html", {
@@ -74,4 +94,3 @@ router.get("/", (req, res) => {
 });
 
 module.exports = router;
-
