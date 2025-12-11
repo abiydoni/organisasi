@@ -12,6 +12,41 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Middleware untuk set no-cache header pada halaman HTML dinamis
+// HARUS SETELAH express.static agar tidak mempengaruhi static files
+app.use((req, res, next) => {
+  // Set no-cache untuk route dinamis (dashboard, anggota, iuran, dll)
+  // Skip untuk static files (CSS, JS, images, dll) yang sudah di-handle oleh express.static
+  const isStaticFile =
+    req.path.startsWith("/css/") ||
+    req.path.startsWith("/js/") ||
+    req.path.startsWith("/icons/") ||
+    req.path.startsWith("/uploads/") ||
+    req.path.startsWith("/manifest.json") ||
+    req.path.startsWith("/service-worker.js") ||
+    req.path.match(/\.(css|js|png|jpg|jpeg|gif|svg|woff|woff2|ttf|ico)$/i);
+
+  // Set no-cache untuk route dinamis (bukan static files)
+  if (!isStaticFile && req.method === "GET") {
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+  }
+  next();
+});
+
+// Serve manifest.json with correct content-type
+app.get("/manifest.json", (req, res) => {
+  res.setHeader("Content-Type", "application/manifest+json");
+  res.sendFile(path.join(__dirname, "public", "manifest.json"));
+});
+
+// Serve service-worker.js with correct content-type
+app.get("/service-worker.js", (req, res) => {
+  res.setHeader("Content-Type", "application/javascript");
+  res.sendFile(path.join(__dirname, "public", "service-worker.js"));
+});
+
 // Session
 app.use(
   session({

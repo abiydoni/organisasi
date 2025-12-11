@@ -75,12 +75,37 @@
       <div
         class="mt-4 md:mt-6 text-center text-xs md:text-sm text-gray-600 dark:text-gray-400"
       >
-        <p>Default: <strong>admin</strong> / <strong>admin123</strong></p>
+        <p>© 2025 <strong>appsbee</strong></p>
       </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+      // Clear cache saat masuk ke halaman login (setelah logout)
+      if ("serviceWorker" in navigator && "caches" in window) {
+        // Clear all caches
+        caches.keys().then((cacheNames) => {
+          cacheNames.forEach((cacheName) => {
+            caches.delete(cacheName);
+          });
+        });
+
+        // Send message to service worker to clear cache
+        navigator.serviceWorker.ready.then((registration) => {
+          if (registration.active) {
+            const channel = new MessageChannel();
+            channel.port1.onmessage = (event) => {
+              if (event.data.success) {
+                console.log("Cache cleared successfully");
+              }
+            };
+            registration.active.postMessage({ type: "CLEAR_CACHE" }, [
+              channel.port2,
+            ]);
+          }
+        });
+      }
+
       document
         .getElementById("loginForm")
         .addEventListener("submit", async (e) => {
