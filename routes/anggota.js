@@ -9,6 +9,7 @@ const {
 } = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
+const { logInsert, logUpdate, logDelete } = require("../utils/logger");
 
 router.use(requireAuth);
 
@@ -164,6 +165,23 @@ router.post("/create", (req, res) => {
 
       const anggotaId = this.lastID;
 
+      // Log insert
+      logInsert(
+        req,
+        "anggota",
+        anggotaId,
+        `Menambahkan anggota baru: ${nama}`,
+        {
+          nama,
+          nik,
+          alamat,
+          telepon,
+          email,
+          tanggal_bergabung,
+          status: status || "aktif",
+        }
+      );
+
       // Jika ada tarif_ids yang dipilih, simpan ke anggota_tarif
       if (tarif_ids && Array.isArray(tarif_ids) && tarif_ids.length > 0) {
         const validTarifIds = tarif_ids
@@ -205,59 +223,107 @@ router.put("/update/:id", (req, res) => {
     tarif_ids,
   } = req.body;
 
-  db.serialize(() => {
-    // Update data anggota
-    db.run(
-      "UPDATE anggota SET nama=?, nik=?, alamat=?, telepon=?, email=?, tanggal_bergabung=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
-      [nama, nik, alamat, telepon, email, tanggal_bergabung, status, id],
-      (err) => {
-        if (err) {
-          return res.json({ success: false, message: "Error update data" });
-        }
+  // Get old data for logging
+  db.get("SELECT * FROM anggota WHERE id=?", [id], (err, oldData) => {
+    if (err) {
+      return res.json({ success: false, message: "Error get data lama" });
+    }
 
-        // Update tarif anggota
-        db.run("DELETE FROM anggota_tarif WHERE anggota_id=?", [id], (err) => {
+    db.serialize(() => {
+      // Update data anggota
+      db.run(
+        "UPDATE anggota SET nama=?, nik=?, alamat=?, telepon=?, email=?, tanggal_bergabung=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
+        [nama, nik, alamat, telepon, email, tanggal_bergabung, status, id],
+        (err) => {
           if (err) {
-            console.error("Error deleting existing tarif:", err);
+            return res.json({ success: false, message: "Error update data" });
           }
 
-          // Jika ada tarif_ids yang dipilih, insert semuanya
-          if (tarif_ids && Array.isArray(tarif_ids) && tarif_ids.length > 0) {
-            const validTarifIds = tarif_ids
-              .map((tid) => parseInt(tid))
-              .filter((tid) => !isNaN(tid));
+          // Log update
+          logUpdate(
+            req,
+            "anggota",
+            id,
+            `Mengupdate data anggota: ${nama}`,
+            oldData,
+            { nama, nik, alamat, telepon, email, tanggal_bergabung, status }
+          );
 
-            if (validTarifIds.length > 0) {
-              const placeholders = validTarifIds.map(() => "(?, ?)").join(", ");
-              const values = validTarifIds.flatMap((tid) => [id, tid]);
+          // Update tarif anggota
+          db.run(
+            "DELETE FROM anggota_tarif WHERE anggota_id=?",
+            [id],
+            (err) => {
+              if (err) {
+                console.error("Error deleting existing tarif:", err);
+              }
 
-              db.run(
-                `INSERT INTO anggota_tarif (anggota_id, tarif_id) VALUES ${placeholders}`,
-                values,
-                (err) => {
-                  if (err) {
-                    console.error("Error inserting tarif:", err);
-                  }
+              // Jika ada tarif_ids yang dipilih, insert semuanya
+              if (
+                tarif_ids &&
+                Array.isArray(tarif_ids) &&
+                tarif_ids.length > 0
+              ) {
+                const validTarifIds = tarif_ids
+                  .map((tid) => parseInt(tid))
+                  .filter((tid) => !isNaN(tid));
+
+                if (validTarifIds.length > 0) {
+                  const placeholders = validTarifIds
+                    .map(() => "(?, ?)")
+                    .join(", ");
+                  const values = validTarifIds.flatMap((tid) => [id, tid]);
+
+                  db.run(
+                    `INSERT INTO anggota_tarif (anggota_id, tarif_id) VALUES ${placeholders}`,
+                    values,
+                    (err) => {
+                      if (err) {
+                        console.error("Error inserting tarif:", err);
+                      }
+                    }
+                  );
                 }
-              );
-            }
-          }
+              }
 
-          res.json({ success: true, message: "Anggota berhasil diupdate" });
-        });
-      }
-    );
+              res.json({ success: true, message: "Anggota berhasil diupdate" });
+            }
+          );
+        }
+      );
+    });
   });
 });
 
 router.delete("/delete/:id", (req, res) => {
   const { id } = req.params;
 
-  db.run("DELETE FROM anggota WHERE id=?", [id], (err) => {
+  // Get old data for logging
+  db.get("SELECT * FROM anggota WHERE id=?", [id], (err, oldData) => {
     if (err) {
-      return res.json({ success: false, message: "Error hapus data" });
+      return res.json({ success: false, message: "Error get data" });
     }
-    res.json({ success: true, message: "Anggota berhasil dihapus" });
+
+    if (!oldData) {
+      return res.json({ success: false, message: "Data tidak ditemukan" });
+    }
+
+    db.run("DELETE FROM anggota WHERE id=?", [id], (err) => {
+      if (err) {
+        return res.json({ success: false, message: "Error hapus data" });
+      }
+
+      // Log delete
+      logDelete(
+        req,
+        "anggota",
+        id,
+        `Menghapus anggota: ${oldData.nama}`,
+        oldData
+      );
+
+      res.json({ success: true, message: "Anggota berhasil dihapus" });
+    });
   });
 });
 

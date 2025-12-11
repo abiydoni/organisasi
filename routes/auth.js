@@ -3,6 +3,7 @@ const router = express.Router();
 const path = require("path");
 const bcrypt = require("bcryptjs");
 const db = require("../config/database");
+const { logLogin, logLogout } = require("../utils/logger");
 
 // Login page
 router.get("/login", (req, res) => {
@@ -30,6 +31,8 @@ router.post("/login", (req, res) => {
 
     bcrypt.compare(password, user.password, (err, match) => {
       if (err || !match) {
+        // Log failed login
+        logLogin(req, null, username, false);
         return res.json({
           success: false,
           message: "Username atau password salah",
@@ -43,6 +46,9 @@ router.post("/login", (req, res) => {
         role: user.role,
       };
 
+      // Log successful login
+      logLogin(req, user.id, user.username, true);
+
       res.json({ success: true, message: "Login berhasil", role: user.role });
     });
   });
@@ -50,6 +56,8 @@ router.post("/login", (req, res) => {
 
 // Logout
 router.get("/logout", (req, res) => {
+  // Log logout before destroying session
+  logLogout(req);
   req.session.destroy();
   res.redirect("/auth/login");
 });

@@ -9,6 +9,7 @@ const {
 } = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
+const { logInsert, logUpdate, logDelete } = require("../utils/logger");
 
 // Helper function untuk mendapatkan nama bulan dengan kapitalisasi
 function getNamaBulan(bulan) {
@@ -306,6 +307,34 @@ router.post("/create", (req, res) => {
         );
       }
 
+      // Log insert
+      db.get(
+        "SELECT nama FROM anggota WHERE id = ?",
+        [anggotaIdInt],
+        (err, anggota) => {
+          const namaAnggota = anggota?.nama || "Unknown";
+          logInsert(
+            req,
+            "iuran",
+            this.lastID,
+            `Menambahkan iuran untuk anggota: ${namaAnggota} (Bulan: ${bulan}/${tahun}, Jumlah: Rp ${parseInt(
+              jumlah
+            ).toLocaleString("id-ID")})`,
+            {
+              anggota_id: anggotaIdInt,
+              bulan,
+              tahun,
+              jumlah,
+              frekuensi: frekuensi || "bulanan",
+              tarif_id,
+              tanggal_bayar,
+              status: status || "lunas",
+              keterangan,
+            }
+          );
+        }
+      );
+
       res.json({ success: true, message: "Iuran berhasil ditambahkan" });
     }
   );
@@ -325,27 +354,62 @@ router.put("/update/:id", (req, res) => {
     keterangan,
   } = req.body;
 
-  db.run(
-    `UPDATE iuran SET anggota_id=?, bulan=?, tahun=?, jumlah=?, frekuensi=?, tarif_id=?, tanggal_bayar=?, status=?, keterangan=? WHERE id=?`,
-    [
-      anggota_id,
-      bulan,
-      tahun,
-      jumlah,
-      frekuensi || "bulanan",
-      tarif_id || null,
-      tanggal_bayar,
-      status,
-      keterangan,
-      id,
-    ],
-    (err) => {
-      if (err) {
-        return res.json({ success: false, message: "Error update data" });
-      }
-      res.json({ success: true, message: "Iuran berhasil diupdate" });
+  // Get old data for logging
+  db.get("SELECT * FROM iuran WHERE id=?", [id], (err, oldData) => {
+    if (err || !oldData) {
+      return res.json({ success: false, message: "Iuran tidak ditemukan" });
     }
-  );
+
+    db.run(
+      `UPDATE iuran SET anggota_id=?, bulan=?, tahun=?, jumlah=?, frekuensi=?, tarif_id=?, tanggal_bayar=?, status=?, keterangan=? WHERE id=?`,
+      [
+        anggota_id,
+        bulan,
+        tahun,
+        jumlah,
+        frekuensi || "bulanan",
+        tarif_id || null,
+        tanggal_bayar,
+        status,
+        keterangan,
+        id,
+      ],
+      (err) => {
+        if (err) {
+          return res.json({ success: false, message: "Error update data" });
+        }
+
+        // Log update
+        db.get(
+          "SELECT nama FROM anggota WHERE id = ?",
+          [anggota_id],
+          (err, anggota) => {
+            const namaAnggota = anggota?.nama || "Unknown";
+            logUpdate(
+              req,
+              "iuran",
+              id,
+              `Mengupdate iuran untuk anggota: ${namaAnggota} (Bulan: ${bulan}/${tahun})`,
+              oldData,
+              {
+                anggota_id,
+                bulan,
+                tahun,
+                jumlah,
+                frekuensi: frekuensi || "bulanan",
+                tarif_id,
+                tanggal_bayar,
+                status,
+                keterangan,
+              }
+            );
+          }
+        );
+
+        res.json({ success: true, message: "Iuran berhasil diupdate" });
+      }
+    );
+  });
 });
 
 router.delete("/delete/:id", (req, res) => {
@@ -362,6 +426,26 @@ router.delete("/delete/:id", (req, res) => {
       if (err) {
         return res.json({ success: false, message: "Error hapus data" });
       }
+
+      // Log delete
+      db.get(
+        "SELECT nama FROM anggota WHERE id = ?",
+        [iuranData.anggota_id],
+        (err, anggota) => {
+          const namaAnggota = anggota?.nama || "Unknown";
+          logDelete(
+            req,
+            "iuran",
+            id,
+            `Menghapus iuran untuk anggota: ${namaAnggota} (Bulan: ${
+              iuranData.bulan
+            }/${iuranData.tahun}, Jumlah: Rp ${parseInt(
+              iuranData.jumlah
+            ).toLocaleString("id-ID")})`,
+            iuranData
+          );
+        }
+      );
 
       // If iuran was lunas, need to adjust buku_kas (reverse the debet)
       if (iuranData.status === "lunas" && iuranData.jumlah > 0) {

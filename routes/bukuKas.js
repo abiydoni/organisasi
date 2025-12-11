@@ -5,6 +5,7 @@ const fs = require("fs");
 const { requireAuth, requireAdminOrPengurus } = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
+const { logInsert, logUpdate, logDelete } = require("../utils/logger");
 
 router.use(requireAuth);
 // Hanya admin dan pengurus yang bisa akses
@@ -99,6 +100,24 @@ router.post("/create", (req, res) => {
           if (err) {
             return res.json({ success: false, message: "Error simpan data" });
           }
+
+          logInsert(
+            req,
+            "buku_kas",
+            this.lastID,
+            `Menambahkan transaksi buku kas: ${keterangan} (Debet: Rp ${debetAmount.toLocaleString(
+              "id-ID"
+            )}, Kredit: Rp ${kreditAmount.toLocaleString("id-ID")})`,
+            {
+              tanggal,
+              keterangan,
+              kategori,
+              debet: debetAmount,
+              kredit: kreditAmount,
+              saldo: newSaldo,
+            }
+          );
+
           res.json({
             success: true,
             message: "Data buku kas berhasil ditambahkan",
@@ -144,58 +163,109 @@ router.put("/update/:id", (req, res) => {
         ? updatedRows[rowIndex - 1].saldo + debetAmount - kreditAmount
         : debetAmount - kreditAmount;
 
-    db.run(
-      "UPDATE buku_kas SET tanggal=?, keterangan=?, kategori=?, debet=?, kredit=?, saldo=? WHERE id=?",
-      [tanggal, keterangan, kategori, debetAmount, kreditAmount, newSaldo, id],
-      (err) => {
-        if (err) {
-          return res.json({ success: false, message: "Error update data" });
-        }
-
-        // Recalculate all subsequent rows
-        db.all(
-          "SELECT * FROM buku_kas WHERE id > ? ORDER BY id ASC",
-          [id],
-          (err, subsequentRows) => {
-            let currentSaldo = newSaldo;
-            subsequentRows.forEach((row) => {
-              currentSaldo =
-                currentSaldo + (row.debet || 0) - (row.kredit || 0);
-              db.run("UPDATE buku_kas SET saldo=? WHERE id=?", [
-                currentSaldo,
-                row.id,
-              ]);
-            });
-          }
-        );
-
-        res.json({ success: true, message: "Data buku kas berhasil diupdate" });
+    // Get old data for logging
+    db.get("SELECT * FROM buku_kas WHERE id=?", [id], (err, oldData) => {
+      if (err || !oldData) {
+        return res.json({ success: false, message: "Data tidak ditemukan" });
       }
-    );
+
+      db.run(
+        "UPDATE buku_kas SET tanggal=?, keterangan=?, kategori=?, debet=?, kredit=?, saldo=? WHERE id=?",
+        [
+          tanggal,
+          keterangan,
+          kategori,
+          debetAmount,
+          kreditAmount,
+          newSaldo,
+          id,
+        ],
+        (err) => {
+          if (err) {
+            return res.json({ success: false, message: "Error update data" });
+          }
+
+          // Log update
+          logUpdate(
+            req,
+            "buku_kas",
+            id,
+            `Mengupdate transaksi buku kas: ${keterangan}`,
+            oldData,
+            {
+              tanggal,
+              keterangan,
+              kategori,
+              debet: debetAmount,
+              kredit: kreditAmount,
+              saldo: newSaldo,
+            }
+          );
+
+          // Recalculate all subsequent rows
+          db.all(
+            "SELECT * FROM buku_kas WHERE id > ? ORDER BY id ASC",
+            [id],
+            (err, subsequentRows) => {
+              let currentSaldo = newSaldo;
+              subsequentRows.forEach((row) => {
+                currentSaldo =
+                  currentSaldo + (row.debet || 0) - (row.kredit || 0);
+                db.run("UPDATE buku_kas SET saldo=? WHERE id=?", [
+                  currentSaldo,
+                  row.id,
+                ]);
+              });
+            }
+          );
+
+          res.json({
+            success: true,
+            message: "Data buku kas berhasil diupdate",
+          });
+        }
+      );
+    });
   });
 });
 
 router.delete("/delete/:id", (req, res) => {
   const { id } = req.params;
 
-  db.run("DELETE FROM buku_kas WHERE id=?", [id], (err) => {
-    if (err) {
-      return res.json({ success: false, message: "Error hapus data" });
+  // Get old data for logging
+  db.get("SELECT * FROM buku_kas WHERE id=?", [id], (err, oldData) => {
+    if (err || !oldData) {
+      return res.json({ success: false, message: "Data tidak ditemukan" });
     }
 
-    // Recalculate all saldo after delete
-    db.all("SELECT * FROM buku_kas ORDER BY id ASC", [], (err, allRows) => {
-      let runningSaldo = 0;
-      allRows.forEach((row) => {
-        runningSaldo = runningSaldo + (row.debet || 0) - (row.kredit || 0);
-        db.run("UPDATE buku_kas SET saldo=? WHERE id=?", [
-          runningSaldo,
-          row.id,
-        ]);
-      });
-    });
+    db.run("DELETE FROM buku_kas WHERE id=?", [id], (err) => {
+      if (err) {
+        return res.json({ success: false, message: "Error hapus data" });
+      }
 
-    res.json({ success: true, message: "Data buku kas berhasil dihapus" });
+      // Log delete
+      logDelete(
+        req,
+        "buku_kas",
+        id,
+        `Menghapus transaksi buku kas: ${oldData.keterangan}`,
+        oldData
+      );
+
+      // Recalculate all saldo after delete
+      db.all("SELECT * FROM buku_kas ORDER BY id ASC", [], (err, allRows) => {
+        let runningSaldo = 0;
+        allRows.forEach((row) => {
+          runningSaldo = runningSaldo + (row.debet || 0) - (row.kredit || 0);
+          db.run("UPDATE buku_kas SET saldo=? WHERE id=?", [
+            runningSaldo,
+            row.id,
+          ]);
+        });
+      });
+
+      res.json({ success: true, message: "Data buku kas berhasil dihapus" });
+    });
   });
 });
 

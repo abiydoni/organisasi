@@ -10,6 +10,7 @@ const {
 } = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
+const { logInsert, logUpdate, logDelete } = require("../utils/logger");
 
 router.use(requireAuth);
 // Hanya admin dan pengurus yang bisa akses
@@ -108,6 +109,16 @@ router.post("/create", (req, res) => {
         }
         return res.json({ success: false, message: "Error simpan data" });
       }
+
+      // Log insert
+      logInsert(
+        req,
+        "users",
+        this.lastID,
+        `Menambahkan user baru: ${nama} (${username})`,
+        { username, nama, role: role || "user" }
+      );
+
       res.json({ success: true, message: "User berhasil ditambahkan" });
     }
   );
@@ -168,16 +179,37 @@ router.put("/update/:id", (req, res) => {
       }
     }
 
-    db.run(
-      "UPDATE users SET nama=?, role=? WHERE id=?",
-      [nama, role, id],
-      (err) => {
-        if (err) {
-          return res.json({ success: false, message: "Error update data" });
-        }
-        res.json({ success: true, message: "User berhasil diupdate" });
+    // Get old data for logging
+    db.get("SELECT * FROM users WHERE id=?", [id], (err, oldData) => {
+      if (err || !oldData) {
+        return res.json({
+          success: false,
+          message: "User tidak ditemukan",
+        });
       }
-    );
+
+      db.run(
+        "UPDATE users SET nama=?, role=? WHERE id=?",
+        [nama, role, id],
+        (err) => {
+          if (err) {
+            return res.json({ success: false, message: "Error update data" });
+          }
+
+          // Log update
+          logUpdate(
+            req,
+            "users",
+            id,
+            `Mengupdate user: ${nama}`,
+            { nama: oldData.nama, role: oldData.role },
+            { nama, role }
+          );
+
+          res.json({ success: true, message: "User berhasil diupdate" });
+        }
+      );
+    });
   });
 });
 
@@ -198,16 +230,34 @@ router.put("/change-password/:id", (req, res) => {
 
   const hashedPassword = bcrypt.hashSync(password, 10);
 
-  db.run(
-    "UPDATE users SET password=? WHERE id=?",
-    [hashedPassword, id],
-    (err) => {
-      if (err) {
-        return res.json({ success: false, message: "Error update password" });
-      }
-      res.json({ success: true, message: "Password berhasil diubah" });
+  // Get user data for logging
+  db.get("SELECT username, nama FROM users WHERE id=?", [id], (err, user) => {
+    if (err || !user) {
+      return res.json({ success: false, message: "User tidak ditemukan" });
     }
-  );
+
+    db.run(
+      "UPDATE users SET password=? WHERE id=?",
+      [hashedPassword, id],
+      (err) => {
+        if (err) {
+          return res.json({ success: false, message: "Error update password" });
+        }
+
+        // Log password change (without logging the actual password)
+        logUpdate(
+          req,
+          "users",
+          id,
+          `Mengubah password user: ${user.nama} (${user.username})`,
+          { password: "***" },
+          { password: "***" }
+        );
+
+        res.json({ success: true, message: "Password berhasil diubah" });
+      }
+    );
+  });
 });
 
 router.delete("/delete/:id", (req, res) => {
@@ -229,8 +279,8 @@ router.delete("/delete/:id", (req, res) => {
     });
   }
 
-  // Get user yang akan dihapus untuk validasi
-  db.get("SELECT role FROM users WHERE id=?", [id], (err, targetUser) => {
+  // Get user yang akan dihapus untuk validasi dan logging
+  db.get("SELECT * FROM users WHERE id=?", [id], (err, targetUser) => {
     if (err || !targetUser) {
       return res.json({
         success: false,
@@ -250,6 +300,20 @@ router.delete("/delete/:id", (req, res) => {
       if (err) {
         return res.json({ success: false, message: "Error hapus data" });
       }
+
+      // Log delete
+      logDelete(
+        req,
+        "users",
+        id,
+        `Menghapus user: ${targetUser.nama} (${targetUser.username})`,
+        {
+          username: targetUser.username,
+          nama: targetUser.nama,
+          role: targetUser.role,
+        }
+      );
+
       res.json({ success: true, message: "User berhasil dihapus" });
     });
   });

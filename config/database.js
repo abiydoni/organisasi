@@ -180,6 +180,37 @@ function initializeDatabase() {
       FOREIGN KEY (jenis_penilaian_id) REFERENCES jenis_penilaian(id) ON DELETE CASCADE,
       UNIQUE(anggota_id, jenis_penilaian_id, bulan, tahun)
     )`);
+
+    // Tabel Activity Log (log semua aktivitas dan perubahan database)
+    db.run(`CREATE TABLE IF NOT EXISTS activity_log (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      username TEXT,
+      action TEXT NOT NULL,
+      table_name TEXT,
+      record_id INTEGER,
+      description TEXT,
+      old_data TEXT,
+      new_data TEXT,
+      ip_address TEXT,
+      user_agent TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    )`);
+
+    // Create index for better query performance
+    db.run(
+      `CREATE INDEX IF NOT EXISTS idx_activity_log_created_at ON activity_log(created_at DESC)`,
+      () => {}
+    );
+    db.run(
+      `CREATE INDEX IF NOT EXISTS idx_activity_log_user_id ON activity_log(user_id)`,
+      () => {}
+    );
+    db.run(
+      `CREATE INDEX IF NOT EXISTS idx_activity_log_table_name ON activity_log(table_name)`,
+      () => {}
+    );
   });
 }
 

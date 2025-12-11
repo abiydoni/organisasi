@@ -9,6 +9,7 @@ const {
 } = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
+const { logInsert, logUpdate, logDelete } = require("../utils/logger");
 
 router.use(requireAuth);
 // Admin, pengurus, dan tentor bisa akses
@@ -94,6 +95,20 @@ router.post("/create", (req, res) => {
       if (err) {
         return res.json({ success: false, message: "Error simpan data" });
       }
+
+      logInsert(
+        req,
+        "jenis_penilaian",
+        this.lastID,
+        `Menambahkan jenis penilaian: ${nama}`,
+        {
+          nama,
+          deskripsi,
+          bobot: parseFloat(bobot) || 1.0,
+          status: status || "aktif",
+        }
+      );
+
       res.json({
         success: true,
         message: "Jenis penilaian berhasil ditambahkan",
@@ -110,31 +125,69 @@ router.put("/update/:id", (req, res) => {
     return res.json({ success: false, message: "Nama wajib diisi" });
   }
 
-  db.run(
-    "UPDATE jenis_penilaian SET nama=?, deskripsi=?, bobot=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
-    [nama, deskripsi || "", parseFloat(bobot) || 1.0, status || "aktif", id],
-    (err) => {
-      if (err) {
-        return res.json({ success: false, message: "Error update data" });
-      }
-      res.json({
-        success: true,
-        message: "Jenis penilaian berhasil diupdate",
-      });
+  // Get old data for logging
+  db.get("SELECT * FROM jenis_penilaian WHERE id=?", [id], (err, oldData) => {
+    if (err || !oldData) {
+      return res.json({ success: false, message: "Data tidak ditemukan" });
     }
-  );
+
+    db.run(
+      "UPDATE jenis_penilaian SET nama=?, deskripsi=?, bobot=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
+      [nama, deskripsi || "", parseFloat(bobot) || 1.0, status || "aktif", id],
+      (err) => {
+        if (err) {
+          return res.json({ success: false, message: "Error update data" });
+        }
+
+        logUpdate(
+          req,
+          "jenis_penilaian",
+          id,
+          `Mengupdate jenis penilaian: ${nama}`,
+          oldData,
+          {
+            nama,
+            deskripsi,
+            bobot: parseFloat(bobot) || 1.0,
+            status: status || "aktif",
+          }
+        );
+
+        res.json({
+          success: true,
+          message: "Jenis penilaian berhasil diupdate",
+        });
+      }
+    );
+  });
 });
 
 router.delete("/delete/:id", (req, res) => {
   const { id } = req.params;
 
-  db.run("DELETE FROM jenis_penilaian WHERE id=?", [id], (err) => {
-    if (err) {
-      return res.json({ success: false, message: "Error hapus data" });
+  // Get old data for logging
+  db.get("SELECT * FROM jenis_penilaian WHERE id=?", [id], (err, oldData) => {
+    if (err || !oldData) {
+      return res.json({ success: false, message: "Data tidak ditemukan" });
     }
-    res.json({
-      success: true,
-      message: "Jenis penilaian berhasil dihapus",
+
+    db.run("DELETE FROM jenis_penilaian WHERE id=?", [id], (err) => {
+      if (err) {
+        return res.json({ success: false, message: "Error hapus data" });
+      }
+
+      logDelete(
+        req,
+        "jenis_penilaian",
+        id,
+        `Menghapus jenis penilaian: ${oldData.nama}`,
+        oldData
+      );
+
+      res.json({
+        success: true,
+        message: "Jenis penilaian berhasil dihapus",
+      });
     });
   });
 });

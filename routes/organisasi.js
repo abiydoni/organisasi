@@ -7,6 +7,7 @@ const sharp = require("sharp");
 const { requireAuth, requireAdmin } = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
+const { logInsert, logUpdate } = require("../utils/logger");
 
 router.use(requireAuth);
 router.use(requireAdmin); // Hanya admin yang bisa akses
@@ -217,6 +218,8 @@ router.post("/save", (req, res) => {
           }
         }
 
+        // Log update
+        const oldData = { ...existing };
         db.run(
           `UPDATE organisasi SET nama=?, alamat=?, telepon=?, email=?, logo=?, website=?, deskripsi=?, updated_at=CURRENT_TIMESTAMP WHERE id=?`,
           [nama, alamat, telepon, email, logo, website, deskripsi, existing.id],
@@ -224,6 +227,16 @@ router.post("/save", (req, res) => {
             if (err) {
               return res.json({ success: false, message: "Error update data" });
             }
+
+            logUpdate(
+              req,
+              "organisasi",
+              existing.id,
+              `Mengupdate data organisasi: ${nama}`,
+              oldData,
+              { nama, alamat, telepon, email, logo, website, deskripsi }
+            );
+
             res.json({
               success: true,
               message: "Data organisasi berhasil diupdate",
@@ -234,10 +247,19 @@ router.post("/save", (req, res) => {
         db.run(
           `INSERT INTO organisasi (nama, alamat, telepon, email, logo, website, deskripsi) VALUES (?, ?, ?, ?, ?, ?, ?)`,
           [nama, alamat, telepon, email, logo, website, deskripsi],
-          (err) => {
+          function (err) {
             if (err) {
               return res.json({ success: false, message: "Error simpan data" });
             }
+
+            logInsert(
+              req,
+              "organisasi",
+              this.lastID,
+              `Menambahkan data organisasi: ${nama}`,
+              { nama, alamat, telepon, email, logo, website, deskripsi }
+            );
+
             res.json({
               success: true,
               message: "Data organisasi berhasil disimpan",

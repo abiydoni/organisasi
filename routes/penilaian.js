@@ -10,6 +10,7 @@ const {
 } = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
+const { logInsert, logUpdate, logDelete } = require("../utils/logger");
 
 // Admin, pengurus, dan tentor bisa akses route ini
 router.use(requireAuth);
@@ -260,21 +261,53 @@ router.post("/create", (req, res) => {
       }
 
       if (existing) {
-        // Update existing
-        db.run(
-          "UPDATE penilaian SET nilai=?, keterangan=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
-          [parseFloat(nilai), keterangan || "", existing.id],
-          (err) => {
-            if (err) {
-              return res.json({
-                success: false,
-                message: "Error update data",
-              });
-            }
-            res.json({
-              success: true,
-              message: "Penilaian berhasil diupdate",
-            });
+        // Get old data for logging
+        db.get(
+          "SELECT * FROM penilaian WHERE id=?",
+          [existing.id],
+          (err, oldData) => {
+            // Update existing
+            db.run(
+              "UPDATE penilaian SET nilai=?, keterangan=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
+              [parseFloat(nilai), keterangan || "", existing.id],
+              (err) => {
+                if (err) {
+                  return res.json({
+                    success: false,
+                    message: "Error update data",
+                  });
+                }
+
+                // Log update
+                db.get(
+                  "SELECT nama FROM anggota WHERE id=?",
+                  [anggota_id],
+                  (err, anggota) => {
+                    const namaAnggota = anggota?.nama || "Unknown";
+                    logUpdate(
+                      req,
+                      "penilaian",
+                      existing.id,
+                      `Mengupdate penilaian untuk anggota: ${namaAnggota} (Bulan: ${bulan}/${tahun})`,
+                      oldData,
+                      {
+                        anggota_id,
+                        jenis_penilaian_id,
+                        bulan,
+                        tahun,
+                        nilai: parseFloat(nilai),
+                        keterangan,
+                      }
+                    );
+                  }
+                );
+
+                res.json({
+                  success: true,
+                  message: "Penilaian berhasil diupdate",
+                });
+              }
+            );
           }
         );
       } else {
@@ -302,6 +335,32 @@ router.post("/create", (req, res) => {
                 message: "Error simpan data",
               });
             }
+
+            // Log insert
+            db.get(
+              "SELECT nama FROM anggota WHERE id=?",
+              [anggota_id],
+              (err, anggota) => {
+                const namaAnggota = anggota?.nama || "Unknown";
+                logInsert(
+                  req,
+                  "penilaian",
+                  this.lastID,
+                  `Menambahkan penilaian untuk anggota: ${namaAnggota} (Bulan: ${bulan}/${tahun}, Nilai: ${parseFloat(
+                    nilai
+                  )})`,
+                  {
+                    anggota_id,
+                    jenis_penilaian_id,
+                    bulan,
+                    tahun,
+                    nilai: parseFloat(nilai),
+                    keterangan,
+                  }
+                );
+              }
+            );
+
             res.json({
               success: true,
               message: "Penilaian berhasil ditambahkan",
@@ -321,26 +380,75 @@ router.put("/update/:id", (req, res) => {
     return res.json({ success: false, message: "Nilai wajib diisi" });
   }
 
-  db.run(
-    "UPDATE penilaian SET nilai=?, keterangan=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
-    [parseFloat(nilai), keterangan || "", id],
-    (err) => {
-      if (err) {
-        return res.json({ success: false, message: "Error update data" });
-      }
-      res.json({ success: true, message: "Penilaian berhasil diupdate" });
+  // Get old data for logging
+  db.get("SELECT * FROM penilaian WHERE id=?", [id], (err, oldData) => {
+    if (err || !oldData) {
+      return res.json({ success: false, message: "Penilaian tidak ditemukan" });
     }
-  );
+
+    db.run(
+      "UPDATE penilaian SET nilai=?, keterangan=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
+      [parseFloat(nilai), keterangan || "", id],
+      (err) => {
+        if (err) {
+          return res.json({ success: false, message: "Error update data" });
+        }
+
+        // Log update
+        db.get(
+          "SELECT nama FROM anggota WHERE id=?",
+          [oldData.anggota_id],
+          (err, anggota) => {
+            const namaAnggota = anggota?.nama || "Unknown";
+            logUpdate(
+              req,
+              "penilaian",
+              id,
+              `Mengupdate penilaian untuk anggota: ${namaAnggota} (Bulan: ${oldData.bulan}/${oldData.tahun})`,
+              oldData,
+              { nilai: parseFloat(nilai), keterangan }
+            );
+          }
+        );
+
+        res.json({ success: true, message: "Penilaian berhasil diupdate" });
+      }
+    );
+  });
 });
 
 router.delete("/delete/:id", (req, res) => {
   const { id } = req.params;
 
-  db.run("DELETE FROM penilaian WHERE id=?", [id], (err) => {
-    if (err) {
-      return res.json({ success: false, message: "Error hapus data" });
+  // Get old data for logging
+  db.get("SELECT * FROM penilaian WHERE id=?", [id], (err, oldData) => {
+    if (err || !oldData) {
+      return res.json({ success: false, message: "Penilaian tidak ditemukan" });
     }
-    res.json({ success: true, message: "Penilaian berhasil dihapus" });
+
+    db.run("DELETE FROM penilaian WHERE id=?", [id], (err) => {
+      if (err) {
+        return res.json({ success: false, message: "Error hapus data" });
+      }
+
+      // Log delete
+      db.get(
+        "SELECT nama FROM anggota WHERE id=?",
+        [oldData.anggota_id],
+        (err, anggota) => {
+          const namaAnggota = anggota?.nama || "Unknown";
+          logDelete(
+            req,
+            "penilaian",
+            id,
+            `Menghapus penilaian untuk anggota: ${namaAnggota} (Bulan: ${oldData.bulan}/${oldData.tahun}, Nilai: ${oldData.nilai})`,
+            oldData
+          );
+        }
+      );
+
+      res.json({ success: true, message: "Penilaian berhasil dihapus" });
+    });
   });
 });
 

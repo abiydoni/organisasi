@@ -5,6 +5,7 @@ const fs = require("fs");
 const { requireAuth, requireAdminOrPengurus } = require("../middleware/auth");
 const { renderHTML } = require("../utils/render");
 const db = require("../config/database");
+const { logInsert, logUpdate, logDelete } = require("../utils/logger");
 
 router.use(requireAuth);
 // Hanya admin dan pengurus yang bisa akses
@@ -71,6 +72,23 @@ router.post("/create", (req, res) => {
       if (err) {
         return res.json({ success: false, message: "Error simpan data" });
       }
+
+      logInsert(
+        req,
+        "tarif",
+        this.lastID,
+        `Menambahkan tarif: ${nama} (Rp ${parseInt(jumlah).toLocaleString(
+          "id-ID"
+        )}, ${frekuensi || "bulanan"})`,
+        {
+          nama,
+          jumlah,
+          frekuensi: frekuensi || "bulanan",
+          keterangan,
+          status: status || "aktif",
+        }
+      );
+
       res.json({ success: true, message: "Tarif berhasil ditambahkan" });
     }
   );
@@ -84,33 +102,59 @@ router.put("/update/:id", (req, res) => {
     return res.json({ success: false, message: "Nama dan jumlah wajib diisi" });
   }
 
-  db.run(
-    "UPDATE tarif SET nama=?, jumlah=?, frekuensi=?, keterangan=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
-    [
-      nama,
-      jumlah,
-      frekuensi || "bulanan",
-      keterangan || "",
-      status || "aktif",
-      id,
-    ],
-    (err) => {
-      if (err) {
-        return res.json({ success: false, message: "Error update data" });
-      }
-      res.json({ success: true, message: "Tarif berhasil diupdate" });
+  // Get old data for logging
+  db.get("SELECT * FROM tarif WHERE id=?", [id], (err, oldData) => {
+    if (err || !oldData) {
+      return res.json({ success: false, message: "Tarif tidak ditemukan" });
     }
-  );
+
+    db.run(
+      "UPDATE tarif SET nama=?, jumlah=?, frekuensi=?, keterangan=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
+      [
+        nama,
+        jumlah,
+        frekuensi || "bulanan",
+        keterangan || "",
+        status || "aktif",
+        id,
+      ],
+      (err) => {
+        if (err) {
+          return res.json({ success: false, message: "Error update data" });
+        }
+
+        logUpdate(req, "tarif", id, `Mengupdate tarif: ${nama}`, oldData, {
+          nama,
+          jumlah,
+          frekuensi: frekuensi || "bulanan",
+          keterangan,
+          status: status || "aktif",
+        });
+
+        res.json({ success: true, message: "Tarif berhasil diupdate" });
+      }
+    );
+  });
 });
 
 router.delete("/delete/:id", (req, res) => {
   const { id } = req.params;
 
-  db.run("DELETE FROM tarif WHERE id=?", [id], (err) => {
-    if (err) {
-      return res.json({ success: false, message: "Error hapus data" });
+  // Get old data for logging
+  db.get("SELECT * FROM tarif WHERE id=?", [id], (err, oldData) => {
+    if (err || !oldData) {
+      return res.json({ success: false, message: "Tarif tidak ditemukan" });
     }
-    res.json({ success: true, message: "Tarif berhasil dihapus" });
+
+    db.run("DELETE FROM tarif WHERE id=?", [id], (err) => {
+      if (err) {
+        return res.json({ success: false, message: "Error hapus data" });
+      }
+
+      logDelete(req, "tarif", id, `Menghapus tarif: ${oldData.nama}`, oldData);
+
+      res.json({ success: true, message: "Tarif berhasil dihapus" });
+    });
   });
 });
 
