@@ -3,3 +3,4 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home2/appsbeem/was-adm.appsbee.my.id
     - /bin/cp -R * $DEPLOYPATH
+
