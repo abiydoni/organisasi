@@ -1,0 +1,494 @@
+<div class="space-y-4 md:space-y-6">
+  <!-- Header dengan tombol kembali -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2 md:gap-3">
+      <a
+        href="/panahan"
+        class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+        title="Kembali"
+      >
+        <i class="bx bx-arrow-back text-xl md:text-2xl"></i>
+      </a>
+      <div>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
+          <i
+            class="bx bx-target-lock text-indigo-600 dark:text-indigo-400"
+          ></i>
+          Scoring Panahan
+        </h2>
+        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+          Input scoring untuk game panahan
+        </p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button
+        onclick="saveScoring()"
+        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all text-sm font-medium flex items-center gap-2"
+      >
+        <i class="bx bx-save"></i>
+        Simpan Scoring
+      </button>
+    </div>
+  </div>
+
+  <!-- Informasi Game -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <div>
+        <span class="text-gray-500 dark:text-gray-400">Anggota:</span>
+        <span
+          class="text-gray-800 dark:text-white block font-semibold"
+          id="gameAnggota"
+          >-</span
+        >
+      </div>
+      <div>
+        <span class="text-gray-500 dark:text-gray-400">Tanggal:</span>
+        <span class="text-gray-800 dark:text-white block" id="gameTanggal"
+          >-</span
+        >
+      </div>
+      <div>
+        <span class="text-gray-500 dark:text-gray-400">Total Score:</span>
+        <span class="text-gray-800 dark:text-white block font-bold text-lg" id="gameTotalScore"
+          >0</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Scoring Form -->
+  <div class="space-y-6">
+    <!-- Session 1 -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6"
+    >
+      <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+        Sesi 1
+      </h3>
+      <div id="session1Container" class="space-y-4">
+        <!-- Groups akan diisi oleh JavaScript -->
+      </div>
+    </div>
+
+    <!-- Session 2 -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6"
+    >
+      <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+        Sesi 2
+      </h3>
+      <div id="session2Container" class="space-y-4">
+        <!-- Groups akan diisi oleh JavaScript -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Load data
+  const game = {{game}} || {};
+  const shots = {{shots}} || [];
+
+  // Create shots map for easy lookup (menyimpan score dan display_value)
+  const shotsMap = {};
+  shots.forEach((shot) => {
+    const key = `${shot.session_number}-${shot.group_number}-${shot.shot_number}`;
+    shotsMap[key] = {
+      score: shot.score || 0,
+      displayValue: shot.display_value || (shot.score === 10 ? '10' : shot.score?.toString() || '0')
+    };
+  });
+
+  function formatDate(dateString) {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("id-ID", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
+  function loadGameInfo() {
+    document.getElementById("gameAnggota").textContent = game.nama_anggota || "-";
+    document.getElementById("gameTanggal").textContent = formatDate(game.tanggal);
+    document.getElementById("gameTotalScore").textContent = game.total_score || 0;
+  }
+
+  // Fungsi untuk mendapatkan warna berdasarkan score sesuai standar panahan
+  // X, 10, 9 = kuning; 8, 7 = merah; 6, 5 = biru; 4, 3 = hitam; 2, 1, 0 = putih
+  function getScoreColor(score) {
+    if (score === 10 || score === 9) {
+      // Kuning - #FFD700 atau #FFEB3B
+      return {
+        bg: 'bg-[#FFEB3B] dark:bg-[#FFD700]',
+        text: 'text-black',
+        border: 'border-2 border-[#FFC107] dark:border-[#FFD700]',
+        hover: 'hover:bg-[#FFD700] dark:hover:bg-[#FFC107]',
+        active: 'bg-[#FFD700] dark:bg-[#FFC107] ring-2 ring-[#FFC107] dark:ring-[#FFD700] border-[#FFC107] dark:border-[#FFD700]'
+      };
+    } else if (score === 8 || score === 7) {
+      // Merah - #F44336 atau #E53935
+      return {
+        bg: 'bg-[#F44336] dark:bg-[#E53935]',
+        text: 'text-white',
+        border: 'border-2 border-[#D32F2F] dark:border-[#C62828]',
+        hover: 'hover:bg-[#E53935] dark:hover:bg-[#D32F2F]',
+        active: 'bg-[#E53935] dark:bg-[#D32F2F] ring-2 ring-[#EF5350] dark:ring-[#E53935] border-[#D32F2F] dark:border-[#C62828]'
+      };
+    } else if (score === 6 || score === 5) {
+      // Biru - #2196F3 atau #1976D2
+      return {
+        bg: 'bg-[#2196F3] dark:bg-[#1976D2]',
+        text: 'text-white',
+        border: 'border-2 border-[#1976D2] dark:border-[#1565C0]',
+        hover: 'hover:bg-[#1976D2] dark:hover:bg-[#1565C0]',
+        active: 'bg-[#1976D2] dark:bg-[#1565C0] ring-2 ring-[#42A5F5] dark:ring-[#2196F3] border-[#1565C0] dark:border-[#0D47A1]'
+      };
+    } else if (score === 4 || score === 3) {
+      // Hitam - #000000
+      return {
+        bg: 'bg-black dark:bg-[#212121]',
+        text: 'text-white',
+        border: 'border-2 border-[#424242] dark:border-[#616161]',
+        hover: 'hover:bg-[#212121] dark:hover:bg-[#424242]',
+        active: 'bg-[#212121] dark:bg-[#424242] ring-2 ring-[#616161] dark:ring-[#757575] border-[#424242] dark:border-[#616161]'
+      };
+    } else { // 2, 1, 0
+      // Putih - #FFFFFF
+      return {
+        bg: 'bg-white dark:bg-white',
+        text: 'text-black',
+        border: 'border-2 border-gray-300 dark:border-gray-400',
+        hover: 'hover:bg-gray-50 dark:hover:bg-gray-100',
+        active: 'bg-gray-50 dark:bg-gray-100 ring-2 ring-gray-400 dark:ring-gray-500 border-gray-400 dark:border-gray-500'
+      };
+    }
+  }
+
+  function createGroupInput(session, group) {
+    const groupDiv = document.createElement("div");
+    groupDiv.className = "border border-gray-200 dark:border-gray-700 rounded-lg p-3 md:p-4";
+    
+    // Score options: X (10), 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+    const scoreOptions = ['X', '10', '9', '8', '7', '6', '5', '4', '3', '2', '1', '0'];
+    
+    groupDiv.innerHTML = `
+      <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+        Group ${group}
+      </h4>
+      <div class="space-y-3">
+        ${[1, 2, 3, 4, 5, 6]
+          .map(
+            (shot) => {
+              const shotData = shotsMap[`${session}-${group}-${shot}`] || { score: 0, displayValue: '0' };
+              const currentScore = shotData.score;
+              const currentDisplay = shotData.displayValue;
+              return `
+          <div>
+            <label class="block text-xs text-gray-600 dark:text-gray-400 mb-2">
+              Tembakan ${shot}
+            </label>
+            <!-- Layout satu baris untuk semua device -->
+            <div class="flex flex-wrap gap-1.5 md:gap-2 items-center">
+              <!-- Card Nilai Terpilih di depan -->
+              <div
+                id="selected-card-${session}-${group}-${shot}"
+                class="flex items-center justify-center px-2 py-2 md:px-4 md:py-3 min-w-[2.5rem] md:min-w-[4rem] rounded-lg border-2 border-indigo-300 dark:border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 shadow-md ${
+                  currentScore > 0 ? '' : 'opacity-50'
+                }"
+              >
+                <span class="text-lg md:text-2xl font-bold text-indigo-700 dark:text-indigo-300" id="selected-value-${session}-${group}-${shot}">
+                  ${currentScore > 0 ? currentDisplay : '-'}
+                </span>
+              </div>
+              ${scoreOptions.map((option) => {
+                const scoreValue = option === 'X' ? 10 : parseInt(option);
+                const isActive = currentScore === scoreValue && currentDisplay === option;
+                let bgColor, textColor, borderColor;
+                if (scoreValue === 10 || scoreValue === 9) {
+                  bgColor = isActive ? '#FFD700' : '#FFEB3B';
+                  textColor = '#000000';
+                  borderColor = '#FFC107';
+                } else if (scoreValue === 8 || scoreValue === 7) {
+                  bgColor = isActive ? '#E53935' : '#F44336';
+                  textColor = '#FFFFFF';
+                  borderColor = '#D32F2F';
+                } else if (scoreValue === 6 || scoreValue === 5) {
+                  bgColor = isActive ? '#1976D2' : '#2196F3';
+                  textColor = '#FFFFFF';
+                  borderColor = '#1976D2';
+                } else if (scoreValue === 4 || scoreValue === 3) {
+                  bgColor = '#000000';
+                  textColor = '#FFFFFF';
+                  borderColor = '#424242';
+                } else {
+                  bgColor = isActive ? '#F5F5F5' : '#FFFFFF';
+                  textColor = '#000000';
+                  borderColor = '#CCCCCC';
+                }
+                return `
+                <button
+                  type="button"
+                  data-session="${session}"
+                  data-group="${group}"
+                  data-shot="${shot}"
+                  data-score="${scoreValue}"
+                  data-display="${option}"
+                  style="background-color: ${bgColor}; color: ${textColor}; border: 2px solid ${borderColor};"
+                  class="shot-button px-2.5 py-2 md:px-3 md:py-2 text-sm md:text-base font-bold rounded-lg transition-all min-w-[2.5rem] md:min-w-[3rem] shadow-md ${
+                    isActive ? 'ring-2 ring-offset-1' : 'hover:opacity-90 active:scale-95'
+                  }"
+                  onclick="selectScore(${session}, ${group}, ${shot}, ${scoreValue}, '${option}')"
+                >
+                  ${option}
+                </button>
+              `;
+              }).join('')}
+            </div>
+            <input
+              type="hidden"
+              data-session="${session}"
+              data-group="${group}"
+              data-shot="${shot}"
+              class="shot-input"
+              data-display-value="${currentDisplay}"
+              value="${currentScore}"
+            />
+          </div>
+        `;
+            }
+          )
+          .join("")}
+        <div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-600 dark:text-gray-400">Subtotal Group:</span>
+            <span class="text-sm font-semibold text-gray-800 dark:text-white" id="subtotal-${session}-${group}">0</span>
+          </div>
+        </div>
+      </div>
+    `;
+    return groupDiv;
+  }
+
+  function selectScore(session, group, shot, score, display) {
+    // Get current input
+    const input = document.querySelector(
+      `input.shot-input[data-session="${session}"][data-group="${group}"][data-shot="${shot}"]`
+    );
+    
+    if (!input) return;
+    
+    const currentScore = parseInt(input.value) || 0;
+    const currentDisplay = input.dataset.displayValue || '0';
+    
+    // Toggle: jika klik tombol yang sama, set ke 0
+    if (currentScore === score && currentDisplay === display) {
+      // Reset ke 0
+      input.value = 0;
+      input.dataset.displayValue = '0';
+      
+      // Update display card
+      const displayText = document.getElementById(`selected-value-${session}-${group}-${shot}`);
+      const displayCard = document.getElementById(`selected-card-${session}-${group}-${shot}`);
+      if (displayText) displayText.textContent = '-';
+      if (displayCard) displayCard.classList.add('opacity-50');
+    } else {
+      // Set nilai baru
+      input.value = score;
+      input.dataset.displayValue = display;
+      
+      // Update display card
+      const displayText = document.getElementById(`selected-value-${session}-${group}-${shot}`);
+      const displayCard = document.getElementById(`selected-card-${session}-${group}-${shot}`);
+      if (displayText) displayText.textContent = display;
+      if (displayCard) displayCard.classList.remove('opacity-50');
+    }
+
+    // Update button states for this shot (mobile dan desktop)
+    const buttons = document.querySelectorAll(
+      `button.shot-button[data-session="${session}"][data-group="${group}"][data-shot="${shot}"]`
+    );
+    buttons.forEach((btn) => {
+      const btnScore = parseInt(btn.dataset.score);
+      const btnDisplay = btn.dataset.display;
+      const isActive = parseInt(input.value) === btnScore && input.dataset.displayValue === btnDisplay;
+      
+      let bgColor, textColor, borderColor;
+      
+      if (btnScore === 10 || btnScore === 9) {
+        bgColor = isActive ? '#FFD700' : '#FFEB3B';
+        textColor = '#000000';
+        borderColor = '#FFC107';
+      } else if (btnScore === 8 || btnScore === 7) {
+        bgColor = isActive ? '#E53935' : '#F44336';
+        textColor = '#FFFFFF';
+        borderColor = '#D32F2F';
+      } else if (btnScore === 6 || btnScore === 5) {
+        bgColor = isActive ? '#1976D2' : '#2196F3';
+        textColor = '#FFFFFF';
+        borderColor = '#1976D2';
+      } else if (btnScore === 4 || btnScore === 3) {
+        bgColor = '#000000';
+        textColor = '#FFFFFF';
+        borderColor = '#424242';
+      } else {
+        bgColor = isActive ? '#F5F5F5' : '#FFFFFF';
+        textColor = '#000000';
+        borderColor = '#CCCCCC';
+      }
+      
+      btn.style.backgroundColor = bgColor;
+      btn.style.color = textColor;
+      btn.style.border = `2px solid ${borderColor}`;
+      
+      if (isActive) {
+        btn.className = 'shot-button px-2.5 py-2 md:px-3 md:py-2 text-sm md:text-base font-bold rounded-lg transition-all min-w-[2.5rem] md:min-w-[3rem] shadow-md ring-2 ring-offset-1';
+      } else {
+        btn.className = 'shot-button px-2.5 py-2 md:px-3 md:py-2 text-sm md:text-base font-bold rounded-lg transition-all min-w-[2.5rem] md:min-w-[3rem] shadow-md hover:opacity-90 active:scale-95';
+      }
+    });
+
+    // Update totals
+    updateTotalScore();
+  }
+
+  function loadScoringForm() {
+    const session1Container = document.getElementById("session1Container");
+    const session2Container = document.getElementById("session2Container");
+
+    session1Container.innerHTML = "";
+    session2Container.innerHTML = "";
+
+    // Create 6 groups for session 1
+    for (let group = 1; group <= 6; group++) {
+      session1Container.appendChild(createGroupInput(1, group));
+    }
+
+    // Create 6 groups for session 2
+    for (let group = 1; group <= 6; group++) {
+      session2Container.appendChild(createGroupInput(2, group));
+    }
+
+    // Calculate initial subtotals and update display values
+    updateTotalScore();
+    
+    // Update display values for all shots
+    for (let session = 1; session <= 2; session++) {
+      for (let group = 1; group <= 6; group++) {
+        for (let shot = 1; shot <= 6; shot++) {
+          const shotData = shotsMap[`${session}-${group}-${shot}`];
+          const displayText = document.getElementById(`selected-value-${session}-${group}-${shot}`);
+          const displayCard = document.getElementById(`selected-card-${session}-${group}-${shot}`);
+          
+          const value = shotData && shotData.score > 0 ? shotData.displayValue : '-';
+          const hasValue = shotData && shotData.score > 0;
+          
+          if (displayText) displayText.textContent = value;
+          if (displayCard) {
+            if (hasValue) displayCard.classList.remove('opacity-50');
+            else displayCard.classList.add('opacity-50');
+          }
+        }
+      }
+    }
+  }
+
+  function updateTotalScore() {
+    // Update subtotals for each group
+    for (let session = 1; session <= 2; session++) {
+      for (let group = 1; group <= 6; group++) {
+        let subtotal = 0;
+        for (let shot = 1; shot <= 6; shot++) {
+          const input = document.querySelector(
+            `input.shot-input[data-session="${session}"][data-group="${group}"][data-shot="${shot}"]`
+          );
+          if (input) {
+            const value = parseInt(input.value) || 0;
+            subtotal += value;
+          }
+        }
+        const subtotalEl = document.getElementById(`subtotal-${session}-${group}`);
+        if (subtotalEl) {
+          subtotalEl.textContent = subtotal;
+        }
+      }
+    }
+
+    // Update total score
+    let total = 0;
+    document.querySelectorAll("input.shot-input").forEach((input) => {
+      total += parseInt(input.value) || 0;
+    });
+    document.getElementById("gameTotalScore").textContent = total;
+  }
+
+  function saveScoring() {
+    const shots = [];
+    document.querySelectorAll("input.shot-input").forEach((input) => {
+      shots.push({
+        session_number: parseInt(input.dataset.session),
+        group_number: parseInt(input.dataset.group),
+        shot_number: parseInt(input.dataset.shot),
+        score: parseInt(input.value) || 0,
+        display_value: input.dataset.displayValue || (parseInt(input.value) || 0).toString(),
+      });
+    });
+
+    // Show loading
+    Swal.fire({
+      title: "Menyimpan scoring...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    fetch(`/panahan/${game.id}/shots`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ shots }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: data.message,
+            timer: 1500,
+            showConfirmButton: false,
+          }).then(() => {
+            // Update total score display
+            document.getElementById("gameTotalScore").textContent = data.totalScore || 0;
+            // Reload page to get updated data
+            window.location.reload();
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: data.message,
+          });
+        }
+      })
+      .catch((err) => {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Terjadi kesalahan saat menyimpan scoring",
+        });
+      });
+  }
+
+  // Initialize
+  loadGameInfo();
+  loadScoringForm();
+</script>
+

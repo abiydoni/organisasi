@@ -1,0 +1,172 @@
+<div class="space-y-4 md:space-y-6">
+  <div
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+  >
+    <div>
+      <h2
+        class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-1"
+      >
+        <i class="bx bx-target-lock text-indigo-600 dark:text-indigo-400"></i>
+        Scoring Panahan
+      </h2>
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Daftar game panahan dan scoring
+      </p>
+    </div>
+    <a
+      href="/panahan/create"
+      class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all text-sm font-medium flex items-center gap-2"
+    >
+      <i class="bx bx-plus"></i>
+      Game Baru
+    </a>
+  </div>
+
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              No
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Anggota
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Tanggal
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Total Score
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="gamesTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Load data
+  const games = {{games}} || [];
+
+  function formatDate(dateString) {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("id-ID", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
+  function loadGames() {
+    const tbody = document.getElementById("gamesTableBody");
+
+    if (games.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+            Belum ada game. <a href="/panahan/create" class="text-indigo-600 dark:text-indigo-400 hover:underline">Buat game baru</a>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = games
+      .map((game, index) => {
+        return `
+          <tr class="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-medium">
+              ${index + 1}
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold">
+              ${game.nama_anggota}
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">
+              ${formatDate(game.tanggal)}
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-center text-xs text-gray-800 dark:text-gray-200 font-semibold">
+              ${game.total_score || 0}
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs">
+              <div class="flex items-center gap-2">
+                <a href="/panahan/${game.id}" class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 text-indigo-600 hover:text-white hover:bg-indigo-600 rounded-lg transition-all duration-200" title="Lihat & Edit Scoring">
+                  <i class='bx bx-edit text-base md:text-lg'></i>
+                </a>
+                <button onclick="deleteGame(${game.id})" class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200" title="Hapus">
+                  <i class='bx bx-trash text-base md:text-lg'></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      })
+      .join("");
+  }
+
+  function deleteGame(id) {
+    if (!confirm("Yakin ingin menghapus game ini?")) return;
+
+    fetch(`/panahan/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: data.message,
+            timer: 1500,
+            showConfirmButton: false,
+          }).then(() => {
+            window.location.reload();
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: data.message,
+          });
+        }
+      })
+      .catch((err) => {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Terjadi kesalahan saat menghapus game",
+        });
+      });
+  }
+
+  loadGames();
+</script>
+

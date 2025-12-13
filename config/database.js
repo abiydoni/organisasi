@@ -211,6 +211,55 @@ function initializeDatabase() {
       `CREATE INDEX IF NOT EXISTS idx_activity_log_table_name ON activity_log(table_name)`,
       () => {}
     );
+
+    // Tabel Panahan Game (1 kali main = 2 sesi)
+    db.run(`CREATE TABLE IF NOT EXISTS panahan_game (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      anggota_id INTEGER NOT NULL,
+      tanggal DATE NOT NULL,
+      total_score INTEGER DEFAULT 0,
+      keterangan TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (anggota_id) REFERENCES anggota(id) ON DELETE CASCADE
+    )`);
+
+    // Tabel Panahan Shot (tembakan per game)
+    // Struktur: 1 game = 2 sesi, 1 sesi = 6 group, 1 group = 6 tembakan
+    // Total: 2 x 6 x 6 = 72 tembakan per game
+    db.run(`CREATE TABLE IF NOT EXISTS panahan_shot (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      game_id INTEGER NOT NULL,
+      session_number INTEGER NOT NULL CHECK(session_number IN (1, 2)),
+      group_number INTEGER NOT NULL CHECK(group_number BETWEEN 1 AND 6),
+      shot_number INTEGER NOT NULL CHECK(shot_number BETWEEN 1 AND 6),
+      score INTEGER NOT NULL CHECK(score BETWEEN 0 AND 10),
+      display_value TEXT DEFAULT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (game_id) REFERENCES panahan_game(id) ON DELETE CASCADE,
+      UNIQUE(game_id, session_number, group_number, shot_number)
+    )`);
+
+    // Migrate: Add display_value column if not exists
+    db.run(
+      `ALTER TABLE panahan_shot ADD COLUMN display_value TEXT DEFAULT NULL`,
+      () => {}
+    );
+
+    // Create indexes for better query performance
+    db.run(
+      `CREATE INDEX IF NOT EXISTS idx_panahan_game_anggota_id ON panahan_game(anggota_id)`,
+      () => {}
+    );
+    db.run(
+      `CREATE INDEX IF NOT EXISTS idx_panahan_game_tanggal ON panahan_game(tanggal DESC)`,
+      () => {}
+    );
+    db.run(
+      `CREATE INDEX IF NOT EXISTS idx_panahan_shot_game_id ON panahan_shot(game_id)`,
+      () => {}
+    );
   });
 }
 

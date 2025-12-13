@@ -1,0 +1,178 @@
+<div class="space-y-4 md:space-y-6">
+  <!-- Header dengan tombol kembali -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2 md:gap-3">
+      <a
+        href="/panahan"
+        class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+        title="Kembali"
+      >
+        <i class="bx bx-arrow-back text-xl md:text-2xl"></i>
+      </a>
+      <div>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
+          <i
+            class="bx bx-target-lock text-indigo-600 dark:text-indigo-400"
+          ></i>
+          Buat Game Panahan Baru
+        </h2>
+        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+          Buat game baru untuk scoring panahan
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Create Game -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6"
+  >
+    <form id="createGameForm" onsubmit="createGame(event)">
+      <div class="space-y-4">
+        <div>
+          <label
+            for="anggota_id"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            Anggota <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="anggota_id"
+            name="anggota_id"
+            required
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all"
+          >
+            <option value="">Pilih Anggota</option>
+            <!-- Options akan diisi oleh JavaScript -->
+          </select>
+        </div>
+
+        <div>
+          <label
+            for="tanggal"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            Tanggal <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            id="tanggal"
+            name="tanggal"
+            required
+            value="{{today}}"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all"
+          />
+        </div>
+
+        <div>
+          <label
+            for="keterangan"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            Keterangan
+          </label>
+          <textarea
+            id="keterangan"
+            name="keterangan"
+            rows="3"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all"
+            placeholder="Keterangan tambahan (opsional)"
+          ></textarea>
+        </div>
+
+        <div class="flex items-center gap-3 pt-4">
+          <button
+            type="submit"
+            class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all font-medium"
+          >
+            <i class="bx bx-save mr-2"></i>
+            Buat Game
+          </button>
+          <a
+            href="/panahan"
+            class="px-6 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg transition-all font-medium"
+          >
+            Batal
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Load data
+  const anggota = {{anggota}} || [];
+
+  function loadAnggota() {
+    const select = document.getElementById("anggota_id");
+    select.innerHTML = '<option value="">Pilih Anggota</option>';
+    
+    anggota.forEach((a) => {
+      const option = document.createElement("option");
+      option.value = a.id;
+      option.textContent = a.nama;
+      select.appendChild(option);
+    });
+  }
+
+  function createGame(event) {
+    event.preventDefault();
+
+    const formData = {
+      anggota_id: document.getElementById("anggota_id").value,
+      tanggal: document.getElementById("tanggal").value,
+      keterangan: document.getElementById("keterangan").value,
+    };
+
+    // Show loading
+    Swal.fire({
+      title: "Membuat game...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    fetch("/panahan/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: data.message,
+            timer: 1500,
+            showConfirmButton: false,
+          }).then(() => {
+            window.location.href = `/panahan/${data.gameId}`;
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: data.message,
+          });
+        }
+      })
+      .catch((err) => {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Terjadi kesalahan saat membuat game",
+        });
+      });
+  }
+
+  // Set default tanggal ke hari ini
+  document.getElementById("tanggal").value = new Date().toISOString().split("T")[0];
+
+  loadAnggota();
+</script>
+
