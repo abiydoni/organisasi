@@ -1,0 +1,93 @@
+<div class="space-y-4 md:space-y-6">
+  <div>
+    <h2
+      class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-1"
+    >
+      <i class="bx bx-target-lock text-indigo-600 dark:text-indigo-400"></i>
+      Scoring Panahan
+    </h2>
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+      Pilih anggota untuk melihat history atau membuat permainan baru
+    </p>
+  </div>
+
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              No
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Nama Anggota
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="anggotaTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Load data
+  const anggota = {{anggota}} || [];
+
+  function loadAnggota() {
+    const tbody = document.getElementById("anggotaTableBody");
+
+    if (anggota.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="3" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+            Belum ada anggota aktif
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = anggota
+      .map((a, index) => {
+        return `
+          <tr class="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-medium">
+              ${index + 1}
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold">
+              ${a.nama}
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs">
+              <a href="/panahan/anggota/${a.id}" class="inline-flex items-center justify-center px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all text-xs font-medium" title="Lihat History">
+                <i class='bx bx-show mr-1'></i>
+                Lihat History
+              </a>
+            </td>
+          </tr>
+        `;
+      })
+      .join("");
+  }
+
+  loadAnggota();
+</script>
+

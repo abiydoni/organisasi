@@ -96,7 +96,10 @@
   // Create shots map for easy lookup (menyimpan score dan display_value)
   const shotsMap = {};
   shots.forEach((shot) => {
-    const key = `${shot.session_number}-${shot.group_number}-${shot.shot_number}`;
+    // Support both old (group_number, shot_number) and new (shoot_number, arrow_number) column names
+    const shootNum = shot.shoot_number || shot.group_number;
+    const arrowNum = shot.arrow_number || shot.shot_number;
+    const key = `${shot.session_number}-${shootNum}-${arrowNum}`;
     shotsMap[key] = {
       score: shot.score || 0,
       displayValue: shot.display_value || (shot.score === 10 ? '10' : shot.score?.toString() || '0')
@@ -170,39 +173,39 @@
     }
   }
 
-  function createGroupInput(session, group) {
-    const groupDiv = document.createElement("div");
-    groupDiv.className = "border border-gray-200 dark:border-gray-700 rounded-lg p-3 md:p-4";
+  function createShootInput(session, shoot) {
+    const shootDiv = document.createElement("div");
+    shootDiv.className = "border border-gray-200 dark:border-gray-700 rounded-lg p-3 md:p-4";
     
     // Score options: X (10), 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
     const scoreOptions = ['X', '10', '9', '8', '7', '6', '5', '4', '3', '2', '1', '0'];
     
-    groupDiv.innerHTML = `
+    shootDiv.innerHTML = `
       <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-        Group ${group}
+        Shoot ${shoot}
       </h4>
       <div class="space-y-3">
         ${[1, 2, 3, 4, 5, 6]
           .map(
-            (shot) => {
-              const shotData = shotsMap[`${session}-${group}-${shot}`] || { score: 0, displayValue: '0' };
-              const currentScore = shotData.score;
-              const currentDisplay = shotData.displayValue;
+            (arrow) => {
+              const arrowData = shotsMap[`${session}-${shoot}-${arrow}`] || { score: 0, displayValue: '0' };
+              const currentScore = arrowData.score;
+              const currentDisplay = arrowData.displayValue;
               return `
           <div>
             <label class="block text-xs text-gray-600 dark:text-gray-400 mb-2">
-              Tembakan ${shot}
+              Anak Panah ${arrow}
             </label>
             <!-- Layout satu baris untuk semua device -->
             <div class="flex flex-wrap gap-1.5 md:gap-2 items-center">
               <!-- Card Nilai Terpilih di depan -->
               <div
-                id="selected-card-${session}-${group}-${shot}"
+                id="selected-card-${session}-${shoot}-${arrow}"
                 class="flex items-center justify-center px-2 py-2 md:px-4 md:py-3 min-w-[2.5rem] md:min-w-[4rem] rounded-lg border-2 border-indigo-300 dark:border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 shadow-md ${
                   currentScore > 0 ? '' : 'opacity-50'
                 }"
               >
-                <span class="text-lg md:text-2xl font-bold text-indigo-700 dark:text-indigo-300" id="selected-value-${session}-${group}-${shot}">
+                <span class="text-lg md:text-2xl font-bold text-indigo-700 dark:text-indigo-300" id="selected-value-${session}-${shoot}-${arrow}">
                   ${currentScore > 0 ? currentDisplay : '-'}
                 </span>
               </div>
@@ -235,15 +238,15 @@
                 <button
                   type="button"
                   data-session="${session}"
-                  data-group="${group}"
-                  data-shot="${shot}"
+                  data-shoot="${shoot}"
+                  data-arrow="${arrow}"
                   data-score="${scoreValue}"
                   data-display="${option}"
                   style="background-color: ${bgColor}; color: ${textColor}; border: 2px solid ${borderColor};"
                   class="shot-button px-2.5 py-2 md:px-3 md:py-2 text-sm md:text-base font-bold rounded-lg transition-all min-w-[2.5rem] md:min-w-[3rem] shadow-md ${
                     isActive ? 'ring-2 ring-offset-1' : 'hover:opacity-90 active:scale-95'
                   }"
-                  onclick="selectScore(${session}, ${group}, ${shot}, ${scoreValue}, '${option}')"
+                  onclick="selectScore(${session}, ${shoot}, ${arrow}, ${scoreValue}, '${option}')"
                 >
                   ${option}
                 </button>
@@ -253,8 +256,8 @@
             <input
               type="hidden"
               data-session="${session}"
-              data-group="${group}"
-              data-shot="${shot}"
+              data-shoot="${shoot}"
+              data-arrow="${arrow}"
               class="shot-input"
               data-display-value="${currentDisplay}"
               value="${currentScore}"
@@ -266,19 +269,19 @@
           .join("")}
         <div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
           <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-600 dark:text-gray-400">Subtotal Group:</span>
-            <span class="text-sm font-semibold text-gray-800 dark:text-white" id="subtotal-${session}-${group}">0</span>
+            <span class="text-xs text-gray-600 dark:text-gray-400">Subtotal Shoot:</span>
+            <span class="text-sm font-semibold text-gray-800 dark:text-white" id="subtotal-${session}-${shoot}">0</span>
           </div>
         </div>
       </div>
     `;
-    return groupDiv;
+    return shootDiv;
   }
 
-  function selectScore(session, group, shot, score, display) {
+  function selectScore(session, shoot, arrow, score, display) {
     // Get current input
     const input = document.querySelector(
-      `input.shot-input[data-session="${session}"][data-group="${group}"][data-shot="${shot}"]`
+      `input.shot-input[data-session="${session}"][data-shoot="${shoot}"][data-arrow="${arrow}"]`
     );
     
     if (!input) return;
@@ -293,8 +296,8 @@
       input.dataset.displayValue = '0';
       
       // Update display card
-      const displayText = document.getElementById(`selected-value-${session}-${group}-${shot}`);
-      const displayCard = document.getElementById(`selected-card-${session}-${group}-${shot}`);
+      const displayText = document.getElementById(`selected-value-${session}-${shoot}-${arrow}`);
+      const displayCard = document.getElementById(`selected-card-${session}-${shoot}-${arrow}`);
       if (displayText) displayText.textContent = '-';
       if (displayCard) displayCard.classList.add('opacity-50');
     } else {
@@ -303,15 +306,15 @@
       input.dataset.displayValue = display;
       
       // Update display card
-      const displayText = document.getElementById(`selected-value-${session}-${group}-${shot}`);
-      const displayCard = document.getElementById(`selected-card-${session}-${group}-${shot}`);
+      const displayText = document.getElementById(`selected-value-${session}-${shoot}-${arrow}`);
+      const displayCard = document.getElementById(`selected-card-${session}-${shoot}-${arrow}`);
       if (displayText) displayText.textContent = display;
       if (displayCard) displayCard.classList.remove('opacity-50');
     }
 
-    // Update button states for this shot (mobile dan desktop)
+    // Update button states for this arrow
     const buttons = document.querySelectorAll(
-      `button.shot-button[data-session="${session}"][data-group="${group}"][data-shot="${shot}"]`
+      `button.shot-button[data-session="${session}"][data-shoot="${shoot}"][data-arrow="${arrow}"]`
     );
     buttons.forEach((btn) => {
       const btnScore = parseInt(btn.dataset.score);
@@ -364,29 +367,29 @@
     session1Container.innerHTML = "";
     session2Container.innerHTML = "";
 
-    // Create 6 groups for session 1
-    for (let group = 1; group <= 6; group++) {
-      session1Container.appendChild(createGroupInput(1, group));
+    // Create 6 shoots for session 1
+    for (let shoot = 1; shoot <= 6; shoot++) {
+      session1Container.appendChild(createShootInput(1, shoot));
     }
 
-    // Create 6 groups for session 2
-    for (let group = 1; group <= 6; group++) {
-      session2Container.appendChild(createGroupInput(2, group));
+    // Create 6 shoots for session 2
+    for (let shoot = 1; shoot <= 6; shoot++) {
+      session2Container.appendChild(createShootInput(2, shoot));
     }
 
     // Calculate initial subtotals and update display values
     updateTotalScore();
     
-    // Update display values for all shots
+    // Update display values for all arrows
     for (let session = 1; session <= 2; session++) {
-      for (let group = 1; group <= 6; group++) {
-        for (let shot = 1; shot <= 6; shot++) {
-          const shotData = shotsMap[`${session}-${group}-${shot}`];
-          const displayText = document.getElementById(`selected-value-${session}-${group}-${shot}`);
-          const displayCard = document.getElementById(`selected-card-${session}-${group}-${shot}`);
+      for (let shoot = 1; shoot <= 6; shoot++) {
+        for (let arrow = 1; arrow <= 6; arrow++) {
+          const arrowData = shotsMap[`${session}-${shoot}-${arrow}`];
+          const displayText = document.getElementById(`selected-value-${session}-${shoot}-${arrow}`);
+          const displayCard = document.getElementById(`selected-card-${session}-${shoot}-${arrow}`);
           
-          const value = shotData && shotData.score > 0 ? shotData.displayValue : '-';
-          const hasValue = shotData && shotData.score > 0;
+          const value = arrowData && arrowData.score > 0 ? arrowData.displayValue : '-';
+          const hasValue = arrowData && arrowData.score > 0;
           
           if (displayText) displayText.textContent = value;
           if (displayCard) {
@@ -399,20 +402,20 @@
   }
 
   function updateTotalScore() {
-    // Update subtotals for each group
+    // Update subtotals for each shoot
     for (let session = 1; session <= 2; session++) {
-      for (let group = 1; group <= 6; group++) {
+      for (let shoot = 1; shoot <= 6; shoot++) {
         let subtotal = 0;
-        for (let shot = 1; shot <= 6; shot++) {
+        for (let arrow = 1; arrow <= 6; arrow++) {
           const input = document.querySelector(
-            `input.shot-input[data-session="${session}"][data-group="${group}"][data-shot="${shot}"]`
+            `input.shot-input[data-session="${session}"][data-shoot="${shoot}"][data-arrow="${arrow}"]`
           );
           if (input) {
             const value = parseInt(input.value) || 0;
             subtotal += value;
           }
         }
-        const subtotalEl = document.getElementById(`subtotal-${session}-${group}`);
+        const subtotalEl = document.getElementById(`subtotal-${session}-${shoot}`);
         if (subtotalEl) {
           subtotalEl.textContent = subtotal;
         }
@@ -432,8 +435,8 @@
     document.querySelectorAll("input.shot-input").forEach((input) => {
       shots.push({
         session_number: parseInt(input.dataset.session),
-        group_number: parseInt(input.dataset.group),
-        shot_number: parseInt(input.dataset.shot),
+        shoot_number: parseInt(input.dataset.shoot),
+        arrow_number: parseInt(input.dataset.arrow),
         score: parseInt(input.value) || 0,
         display_value: input.dataset.displayValue || (parseInt(input.value) || 0).toString(),
       });

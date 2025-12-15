@@ -1,0 +1,620 @@
+<div class="space-y-4 md:space-y-6">
+  <!-- Header dengan tombol kembali -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2 md:gap-3">
+      <a
+        href="/panahan/game/{{game.id}}"
+        class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+        title="Kembali"
+      >
+        <i class="bx bx-arrow-back text-xl md:text-2xl"></i>
+      </a>
+      <div>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
+          <i class="bx bx-target-lock text-indigo-600 dark:text-indigo-400"></i>
+          Sesi {{sessionNumber}} - {{game.nama_anggota}}
+        </h2>
+        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+          Tabel shoot dengan nilai per anak panah
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tombol Simpan Semua -->
+  <div class="flex justify-end mb-2">
+    <button
+      onclick="saveAllShoots()"
+      class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all text-sm font-medium flex items-center gap-2"
+    >
+      <i class="bx bx-save"></i>
+      Simpan Semua
+    </button>
+  </div>
+
+  <!-- Tabel Shoot dengan Input Inline -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-1 md:px-2 py-2 md:py-3 text-left text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Shoot
+            </th>
+            <th
+              class="px-1 md:px-2 py-2 md:py-3 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              title="Anak Panah 1"
+            >
+              1
+            </th>
+            <th
+              class="px-1 md:px-2 py-2 md:py-3 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              title="Anak Panah 2"
+            >
+              2
+            </th>
+            <th
+              class="px-1 md:px-2 py-2 md:py-3 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              title="Anak Panah 3"
+            >
+              3
+            </th>
+            <th
+              class="px-1 md:px-2 py-2 md:py-3 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              title="Anak Panah 4"
+            >
+              4
+            </th>
+            <th
+              class="px-1 md:px-2 py-2 md:py-3 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              title="Anak Panah 5"
+            >
+              5
+            </th>
+            <th
+              class="px-1 md:px-2 py-2 md:py-3 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+              title="Anak Panah 6"
+            >
+              6
+            </th>
+            <th
+              class="px-1 md:px-2 py-2 md:py-3 text-center text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Total
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="shootsTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+        <tfoot
+          class="bg-gray-50 dark:bg-gray-900 border-t-2 border-gray-300 dark:border-gray-600"
+        >
+          <tr>
+            <td
+              class="px-1 md:px-2 py-2 md:py-3 whitespace-nowrap text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-bold"
+            >
+              TOTAL
+            </td>
+            <td
+              colspan="6"
+              class="px-1 md:px-2 py-2 md:py-3 text-center text-[9px] md:text-xs text-gray-600 dark:text-gray-400"
+            >
+              -
+            </td>
+            <td
+              class="px-1 md:px-2 py-2 md:py-3 whitespace-nowrap text-center text-xs md:text-sm text-gray-800 dark:text-gray-200 font-bold text-base md:text-lg"
+              id="grandTotal"
+            >
+              0
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Score Picker -->
+<div
+  id="scorePickerModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-3"
+  onclick="closeScorePickerOnBackdrop(event)"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-[280px] p-3"
+    onclick="event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="text-sm font-semibold text-gray-800 dark:text-white">
+        Pilih Score
+      </h3>
+      <button
+        onclick="closeScorePicker()"
+        class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors p-0.5"
+      >
+        <i class="bx bx-x text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Label -->
+    <p
+      class="text-xs text-gray-500 dark:text-gray-400 mb-3 text-center"
+      id="scorePickerLabel"
+    >
+      Shoot 1 - Anak Panah 1
+    </p>
+
+    <!-- Grid tombol score seperti kalkulator -->
+    <div
+      id="scorePickerGrid"
+      class="grid grid-cols-3 gap-1.5"
+      style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px"
+    >
+      <!-- Buttons will be generated by JavaScript -->
+    </div>
+  </div>
+</div>
+
+<script>
+  // Load data
+  const game = {{game}} || {};
+  const sessionNumber = {{sessionNumber}} || 1;
+  const shootTotals = {{shootTotals}} || [];
+  const shootData = {{shootData}} || {};
+
+  // Score options: X (10), 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+  const scoreOptions = [
+    { value: '0', display: '0', score: 0 },
+    { value: '1', display: '1', score: 1 },
+    { value: '2', display: '2', score: 2 },
+    { value: '3', display: '3', score: 3 },
+    { value: '4', display: '4', score: 4 },
+    { value: '5', display: '5', score: 5 },
+    { value: '6', display: '6', score: 6 },
+    { value: '7', display: '7', score: 7 },
+    { value: '8', display: '8', score: 8 },
+    { value: '9', display: '9', score: 9 },
+    { value: '10', display: '10', score: 10 },
+    { value: 'X', display: 'X', score: 10 }
+  ];
+
+  function getScoreColor(score) {
+    // Tidak ada background, text color: hitam untuk light mode, putih untuk dark mode
+    return 'text-gray-900 dark:text-white';
+  }
+
+  function loadShoots() {
+    const tbody = document.getElementById("shootsTableBody");
+
+    // Create map for easy lookup
+    const totalMap = {};
+    shootTotals.forEach((s) => {
+      totalMap[s.shoot_number] = s.total_score || 0;
+    });
+
+    tbody.innerHTML = Array.from({ length: 6 }, (_, i) => {
+      const shootNum = i + 1;
+      const arrows = shootData[shootNum] || [];
+
+      // Get score data for each arrow (1-6)
+      const arrowData = [];
+      for (let arrow = 1; arrow <= 6; arrow++) {
+        const arrowInfo = arrows.find((a) => a.arrow_number === arrow);
+        if (arrowInfo && arrowInfo.score > 0) {
+          arrowData.push({
+            score: arrowInfo.score,
+            display: arrowInfo.display_value || arrowInfo.score.toString()
+          });
+        } else {
+          arrowData.push({ score: 0, display: '0' });
+        }
+      }
+
+      // Calculate total
+      const total = arrowData.reduce((sum, a) => sum + a.score, 0);
+
+      return `
+        <tr class="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700" data-shoot="${shootNum}">
+          <td class="px-1 md:px-2 py-2 md:py-3 whitespace-nowrap text-[10px] md:text-xs text-gray-800 dark:text-gray-200 font-semibold">
+            ${shootNum}
+          </td>
+          ${arrowData.map((arrow, idx) => {
+            const arrowNum = idx + 1;
+            const displayValue = arrow.display === '0' ? '-' : arrow.display;
+            return `
+              <td class="px-0.5 md:px-1 py-1 md:py-2 text-center">
+                <button
+                  type="button"
+                  data-shoot="${shootNum}"
+                  data-arrow="${arrowNum}"
+                  onclick="openScorePicker(${shootNum}, ${arrowNum}, ${arrow.score}, '${arrow.display}')"
+                  class="w-full px-1 py-1 md:px-2 md:py-2 text-xs md:text-sm font-bold text-center rounded border-2 border-gray-300 dark:border-gray-600 hover:border-indigo-500 dark:hover:border-indigo-400 transition-all bg-white dark:bg-gray-800 ${getScoreColor(arrow.score)}"
+                  style="min-width: 35px; max-width: 50px; font-weight: 700;"
+                >
+                  ${displayValue}
+                </button>
+              </td>
+            `;
+          }).join('')}
+          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-center text-xs text-gray-800 dark:text-gray-200 font-bold text-lg" id="total-${shootNum}">
+            ${total}
+          </td>
+        </tr>
+      `;
+    }).join("");
+
+    // Calculate and display initial grand total
+    updateGrandTotal();
+  }
+
+  // Variables untuk score picker
+  let currentShoot = null;
+  let currentArrow = null;
+
+  function openScorePicker(shootNum, arrowNum, currentScore, currentDisplay) {
+    currentShoot = shootNum;
+    currentArrow = arrowNum;
+
+    const modal = document.getElementById('scorePickerModal');
+    const label = document.getElementById('scorePickerLabel');
+    const grid = document.getElementById('scorePickerGrid');
+
+    label.textContent = `Shoot ${shootNum} - Anak Panah ${arrowNum}`;
+
+    // Generate buttons kecil seperti kalkulator dengan warna sesuai
+    const scoreButtons = [
+      { value: 'X', display: 'X', score: 10, color: 'yellow' },
+      { value: '10', display: '10', score: 10, color: 'yellow' },
+      { value: '9', display: '9', score: 9, color: 'yellow' },
+      { value: '8', display: '8', score: 8, color: 'red' },
+      { value: '7', display: '7', score: 7, color: 'red' },
+      { value: '6', display: '6', score: 6, color: 'blue' },
+      { value: '5', display: '5', score: 5, color: 'blue' },
+      { value: '4', display: '4', score: 4, color: 'black' },
+      { value: '3', display: '3', score: 3, color: 'black' },
+      { value: '2', display: '2', score: 2, color: 'white' },
+      { value: '1', display: '1', score: 1, color: 'white' },
+      { value: '0', display: '0', score: 0, color: 'white' }
+    ];
+
+    grid.innerHTML = scoreButtons.map(btn => {
+      let bgStyle, hoverBgStyle, textStyle, borderStyle, hoverBorderStyle, shadowStyle, hoverShadowStyle;
+
+      if (btn.color === 'yellow') {
+        bgStyle = 'background: linear-gradient(135deg, #FFEB3B 0%, #FFD700 100%);';
+        hoverBgStyle = 'background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);';
+        textStyle = 'color: #000000;';
+        borderStyle = 'border: 2px solid #FFC107;';
+        hoverBorderStyle = 'border: 2px solid #FFA000;';
+        shadowStyle = 'box-shadow: 0 2px 8px rgba(255, 235, 59, 0.4);';
+        hoverShadowStyle = 'box-shadow: 0 4px 12px rgba(255, 235, 59, 0.6);';
+      } else if (btn.color === 'red') {
+        bgStyle = 'background: linear-gradient(135deg, #F44336 0%, #E53935 100%);';
+        hoverBgStyle = 'background: linear-gradient(135deg, #E53935 0%, #D32F2F 100%);';
+        textStyle = 'color: #FFFFFF;';
+        borderStyle = 'border: 2px solid #D32F2F;';
+        hoverBorderStyle = 'border: 2px solid #C62828;';
+        shadowStyle = 'box-shadow: 0 2px 8px rgba(244, 67, 54, 0.4);';
+        hoverShadowStyle = 'box-shadow: 0 4px 12px rgba(244, 67, 54, 0.6);';
+      } else if (btn.color === 'blue') {
+        bgStyle = 'background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);';
+        hoverBgStyle = 'background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);';
+        textStyle = 'color: #FFFFFF;';
+        borderStyle = 'border: 2px solid #1565C0;';
+        hoverBorderStyle = 'border: 2px solid #0D47A1;';
+        shadowStyle = 'box-shadow: 0 2px 8px rgba(33, 150, 243, 0.4);';
+        hoverShadowStyle = 'box-shadow: 0 4px 12px rgba(33, 150, 243, 0.6);';
+      } else if (btn.color === 'black') {
+        bgStyle = 'background: linear-gradient(135deg, #212121 0%, #000000 100%);';
+        hoverBgStyle = 'background: linear-gradient(135deg, #424242 0%, #212121 100%);';
+        textStyle = 'color: #FFFFFF;';
+        borderStyle = 'border: 2px solid #424242;';
+        hoverBorderStyle = 'border: 2px solid #616161;';
+        shadowStyle = 'box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);';
+        hoverShadowStyle = 'box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);';
+      } else { // white
+        bgStyle = 'background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 100%);';
+        hoverBgStyle = 'background: linear-gradient(135deg, #F5F5F5 0%, #EEEEEE 100%);';
+        textStyle = 'color: #212121;';
+        borderStyle = 'border: 2px solid #E0E0E0;';
+        hoverBorderStyle = 'border: 2px solid #BDBDBD;';
+        shadowStyle = 'box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);';
+        hoverShadowStyle = 'box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);';
+      }
+
+      const buttonId = `score-btn-${btn.value}`;
+
+      return `
+        <button
+          type="button"
+          id="${buttonId}"
+          onclick="selectScoreFromPicker('${btn.value}', ${btn.score})"
+          class="font-bold transition-all duration-200 active:scale-90"
+          style="width: 100%; aspect-ratio: 1 / 1; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 28px; line-height: 1; border-radius: 8px; ${bgStyle} ${textStyle} ${borderStyle} ${shadowStyle}"
+          onmouseenter="this.style.background='${hoverBgStyle}'; this.style.border='${hoverBorderStyle}'; this.style.boxShadow='${hoverShadowStyle}'; this.style.transform='scale(1.05)';"
+          onmouseleave="this.style.background='${bgStyle}'; this.style.border='${borderStyle}'; this.style.boxShadow='${shadowStyle}'; this.style.transform='scale(1)';"
+        >
+          ${btn.display}
+        </button>
+      `;
+    }).join('');
+
+    modal.classList.remove('hidden');
+  }
+
+  function closeScorePicker() {
+    const modal = document.getElementById('scorePickerModal');
+    modal.classList.add('hidden');
+    currentShoot = null;
+    currentArrow = null;
+  }
+
+  function closeScorePickerOnBackdrop(event) {
+    if (event.target.id === 'scorePickerModal') {
+      closeScorePicker();
+    }
+  }
+
+  function selectScoreFromPicker(value, score) {
+    if (currentShoot === null || currentArrow === null) return;
+
+    updateScore(currentShoot, currentArrow, value, score);
+    closeScorePicker();
+  }
+
+  function updateScore(shootNum, arrowNum, value, score = null) {
+    // Find the score and display value
+    const option = scoreOptions.find(opt => opt.value === value);
+    const finalScore = score !== null ? score : (option ? option.score : 0);
+    const display = option ? option.value : '0';
+
+    // Update total for this shoot
+    const row = document.querySelector(`tr[data-shoot="${shootNum}"]`);
+    if (!row) return;
+
+    // Update button
+    const button = row.querySelector(`button[data-arrow="${arrowNum}"]`);
+    if (button) {
+      const displayValue = display === '0' ? '-' : display;
+      button.textContent = displayValue;
+      // Remove all color classes (background and text)
+      button.className = button.className.replace(/bg-\w+-\d+/g, '').replace(/text-\w+-\d+/g, '').replace(/dark:bg-\w+-\d+/g, '').replace(/dark:text-\w+-\d+/g, '').replace(/text-\w+/g, '');
+      // Add background white and new text color classes
+      button.className += ' bg-white dark:bg-gray-800';
+      button.className += ` ${getScoreColor(finalScore)}`;
+      // Remove inline styles
+      button.style.backgroundColor = '';
+      button.style.color = '';
+    }
+
+    // Calculate total for this shoot
+    let total = 0;
+    for (let i = 1; i <= 6; i++) {
+      const btn = row.querySelector(`button[data-arrow="${i}"]`);
+      if (btn) {
+        const btnText = btn.textContent.trim();
+        if (btnText !== '-') {
+          const btnOption = scoreOptions.find(opt => opt.display === btnText);
+          total += btnOption ? btnOption.score : 0;
+        }
+      }
+    }
+
+    // Update total display
+    const totalCell = document.getElementById(`total-${shootNum}`);
+    if (totalCell) {
+      totalCell.textContent = total;
+    }
+
+    // Update grand total
+    updateGrandTotal();
+  }
+
+  function updateGrandTotal() {
+    let grandTotal = 0;
+    for (let shootNum = 1; shootNum <= 6; shootNum++) {
+      const totalCell = document.getElementById(`total-${shootNum}`);
+      if (totalCell) {
+        grandTotal += parseInt(totalCell.textContent) || 0;
+      }
+    }
+    const grandTotalCell = document.getElementById('grandTotal');
+    if (grandTotalCell) {
+      grandTotalCell.textContent = grandTotal;
+    }
+  }
+
+  async function saveAllShoots() {
+    // Collect all shoot data dan cek yang kosong
+    const shoots = [];
+    const emptyCells = [];
+
+    for (let shootNum = 1; shootNum <= 6; shootNum++) {
+      const row = document.querySelector(`tr[data-shoot="${shootNum}"]`);
+      if (!row) continue;
+
+      const arrows = [];
+      for (let arrowNum = 1; arrowNum <= 6; arrowNum++) {
+        const button = row.querySelector(`button[data-arrow="${arrowNum}"]`);
+        if (button) {
+          const btnText = button.textContent.trim();
+          if (btnText !== '-') {
+            const option = scoreOptions.find(opt => opt.display === btnText);
+            arrows.push({
+              arrow_number: arrowNum,
+              score: option ? option.score : 0,
+              display_value: option ? option.value : '0'
+            });
+          } else {
+            arrows.push({
+              arrow_number: arrowNum,
+              score: 0,
+              display_value: '0'
+            });
+            emptyCells.push(`Shoot ${shootNum} - Anak Panah ${arrowNum}`);
+          }
+        }
+      }
+
+      if (arrows.length > 0) {
+        shoots.push({
+          shoot_number: shootNum,
+          arrows: arrows
+        });
+      }
+    }
+
+    // Cek apakah ada yang kosong
+    if (emptyCells.length > 0) {
+      const emptyCount = emptyCells.length;
+      const result = await Swal.fire({
+        icon: "warning",
+        title: "Masih Ada Data Kosong",
+        html: `Masih ada <strong>${emptyCount}</strong> cell yang belum diisi.<br><br>Apakah Anda ingin melanjutkan menyimpan data?`,
+        showCancelButton: true,
+        confirmButtonText: "Ya, Lanjutkan",
+        cancelButtonText: "Batal",
+        confirmButtonColor: "#10b981",
+        cancelButtonColor: "#ef4444",
+      });
+
+      if (!result.isConfirmed) {
+        return; // User membatalkan
+      }
+    } else {
+      // Semua terisi, konfirmasi apakah akan disimpan
+      const result = await Swal.fire({
+        icon: "question",
+        title: "Konfirmasi Simpan",
+        text: "Semua data sudah terisi. Apakah data akan disimpan?",
+        showCancelButton: true,
+        confirmButtonText: "Ya, Simpan",
+        cancelButtonText: "Batal",
+        confirmButtonColor: "#10b981",
+        cancelButtonColor: "#ef4444",
+      });
+
+      if (!result.isConfirmed) {
+        return; // User membatalkan
+      }
+    }
+
+    // Show loading
+    Swal.fire({
+      title: "Menyimpan scoring...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    // Save each shoot
+    let savedCount = 0;
+    let errors = [];
+
+    for (const shoot of shoots) {
+      try {
+        const requestData = {
+          session_number: sessionNumber,
+          shoot_number: shoot.shoot_number,
+          arrows: shoot.arrows,
+        };
+
+        console.log(`Saving shoot ${shoot.shoot_number}:`, requestData);
+
+        const response = await fetch(`/panahan/game/${game.id}/shoot`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        });
+
+        const data = await response.json();
+        console.log(`Response for shoot ${shoot.shoot_number}:`, data);
+
+        if (data.success) {
+          savedCount++;
+        } else {
+          errors.push(`Shoot ${shoot.shoot_number}: ${data.message || 'Error tidak diketahui'}`);
+        }
+      } catch (error) {
+        console.error(`Error saving shoot ${shoot.shoot_number}:`, error);
+        errors.push(`Shoot ${shoot.shoot_number}: ${error.message}`);
+      }
+    }
+
+    // Close loading
+    Swal.close();
+
+    if (savedCount === shoots.length) {
+      // Verifikasi data tersimpan dengan fetch ulang
+      try {
+        const verifyResponse = await fetch(`/panahan/${game.id}/shots`);
+        const verifyData = await verifyResponse.json();
+
+        if (verifyData.success && verifyData.data) {
+          console.log("Data tersimpan:", verifyData.data);
+
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            html: `Semua scoring berhasil disimpan (${savedCount} shoot).<br><br>Data telah tersimpan di database.`,
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(() => {
+            // Redirect ke halaman game (tabel sesi)
+            window.location.href = `/panahan/game/${game.id}`;
+          });
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: "Perhatian",
+            text: "Data mungkin belum tersimpan dengan benar. Silakan refresh halaman.",
+            confirmButtonText: "OK",
+          }).then(() => {
+            window.location.reload();
+          });
+        }
+      } catch (verifyError) {
+        console.error("Error verifying data:", verifyError);
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil",
+          text: `Semua scoring berhasil disimpan (${savedCount} shoot)`,
+          timer: 1500,
+          showConfirmButton: false,
+        }).then(() => {
+          window.location.href = `/panahan/game/${game.id}`;
+        });
+      }
+    } else if (savedCount > 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Perhatian",
+        html: `Berhasil menyimpan ${savedCount} dari ${shoots.length} shoot.<br><br>${errors.length > 0 ? 'Error: ' + errors.join('<br>') : ''}`,
+        confirmButtonText: "OK",
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal Menyimpan",
+        html: `Tidak ada data yang berhasil disimpan.<br><br>${errors.length > 0 ? 'Error: ' + errors.join('<br>') : 'Silakan coba lagi.'}`,
+        confirmButtonText: "OK",
+      });
+    }
+  }
+
+  loadShoots();
+</script>

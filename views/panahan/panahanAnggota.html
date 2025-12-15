@@ -1,0 +1,289 @@
+<div class="space-y-4 md:space-y-6">
+  <!-- Header dengan tombol kembali -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2 md:gap-3">
+      <a
+        href="/panahan"
+        class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+        title="Kembali"
+      >
+        <i class="bx bx-arrow-back text-xl md:text-2xl"></i>
+      </a>
+      <div>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
+          <i
+            class="bx bx-target-lock text-indigo-600 dark:text-indigo-400"
+          ></i>
+          History Scoring - {{anggota.nama}}
+        </h2>
+        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+          Daftar permainan dan scoring panahan
+        </p>
+      </div>
+    </div>
+    <button
+      onclick="showNewGameForm()"
+      class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all text-sm font-medium flex items-center gap-2"
+    >
+      <i class="bx bx-plus"></i>
+      Permainan Baru
+    </button>
+  </div>
+
+  <!-- Form Permainan Baru (Hidden by default) -->
+  <div
+    id="newGameForm"
+    class="hidden bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6"
+  >
+    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">
+      Buat Permainan Baru
+    </h3>
+    <form onsubmit="createNewGame(event)">
+      <div class="space-y-4">
+        <div>
+          <label
+            for="tanggal"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            Tanggal <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            id="tanggal"
+            name="tanggal"
+            required
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all"
+          />
+        </div>
+
+        <div>
+          <label
+            for="jumlah_sesi"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            Jumlah Sesi <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            id="jumlah_sesi"
+            name="jumlah_sesi"
+            min="1"
+            max="10"
+            value="2"
+            required
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all"
+          />
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            Masukkan jumlah sesi untuk permainan ini
+          </p>
+        </div>
+
+        <div>
+          <label
+            for="keterangan"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            Keterangan
+          </label>
+          <textarea
+            id="keterangan"
+            name="keterangan"
+            rows="3"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-all"
+            placeholder="Keterangan tambahan (opsional)"
+          ></textarea>
+        </div>
+
+        <div class="flex items-center gap-3 pt-4">
+          <button
+            type="submit"
+            class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all font-medium"
+          >
+            <i class="bx bx-save mr-2"></i>
+            Buat Permainan
+          </button>
+          <button
+            type="button"
+            onclick="hideNewGameForm()"
+            class="px-6 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg transition-all font-medium"
+          >
+            Batal
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- History Games -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              No
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Tanggal
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Jumlah Sesi
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Total Score
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="gamesTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Load data
+  const anggota = {{anggota}} || {};
+  const games = {{games}} || [];
+
+  function formatDate(dateString) {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("id-ID", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
+  function showNewGameForm() {
+    document.getElementById("newGameForm").classList.remove("hidden");
+    // Set default tanggal ke hari ini
+    document.getElementById("tanggal").value = new Date().toISOString().split("T")[0];
+  }
+
+  function hideNewGameForm() {
+    document.getElementById("newGameForm").classList.add("hidden");
+  }
+
+  function createNewGame(event) {
+    event.preventDefault();
+
+    const formData = {
+      anggota_id: anggota.id,
+      tanggal: document.getElementById("tanggal").value,
+      jumlah_sesi: parseInt(document.getElementById("jumlah_sesi").value),
+      keterangan: document.getElementById("keterangan").value,
+    };
+
+    // Show loading
+    Swal.fire({
+      title: "Membuat permainan...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    fetch("/panahan/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: data.message,
+            timer: 1500,
+            showConfirmButton: false,
+          }).then(() => {
+            window.location.href = `/panahan/game/${data.gameId}`;
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: data.message,
+          });
+        }
+      })
+      .catch((err) => {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Terjadi kesalahan saat membuat permainan",
+        });
+      });
+  }
+
+  function loadGames() {
+    const tbody = document.getElementById("gamesTableBody");
+
+    if (games.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+            Belum ada permainan. Klik "Permainan Baru" untuk membuat permainan pertama.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = games
+      .map((game, index) => {
+        return `
+          <tr class="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-medium">
+              ${index + 1}
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200">
+              ${formatDate(game.tanggal)}
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-center text-xs text-gray-800 dark:text-gray-200">
+              ${game.jumlah_sesi || 2}
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-center text-xs text-gray-800 dark:text-gray-200 font-semibold">
+              ${game.total_score || 0}
+            </td>
+            <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs">
+              <a href="/panahan/game/${game.id}" class="inline-flex items-center justify-center px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all text-xs font-medium" title="Lihat Detail">
+                <i class='bx bx-show mr-1'></i>
+                Lihat
+              </a>
+            </td>
+          </tr>
+        `;
+      })
+      .join("");
+  }
+
+  loadGames();
+</script>
+

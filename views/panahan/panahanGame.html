@@ -1,0 +1,125 @@
+<div class="space-y-4 md:space-y-6">
+  <!-- Header dengan tombol kembali -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2 md:gap-3">
+      <a
+        href="/panahan/anggota/{{game.anggota_id}}"
+        class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+        title="Kembali"
+      >
+        <i class="bx bx-arrow-back text-xl md:text-2xl"></i>
+      </a>
+      <div>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
+          <i
+            class="bx bx-target-lock text-indigo-600 dark:text-indigo-400"
+          ></i>
+          Permainan - {{game.nama_anggota}}
+        </h2>
+        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+          Tanggal: <span id="gameTanggal">-</span> | Total Score: <span id="gameTotalScore" class="font-bold">0</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabel Sesi -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead
+          class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800"
+        >
+          <tr>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Sesi
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Total Score
+            </th>
+            <th
+              class="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
+            >
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          id="sessionsTableBody"
+          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Load data
+  const game = {{game}} || {};
+  const sessionTotals = {{sessionTotals}} || [];
+  const jumlahSesi = {{jumlahSesi}} || 2;
+
+  function formatDate(dateString) {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("id-ID", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
+  function loadGameInfo() {
+    document.getElementById("gameTanggal").textContent = formatDate(game.tanggal);
+    document.getElementById("gameTotalScore").textContent = game.total_score || 0;
+  }
+
+  function loadSessions() {
+    const tbody = document.getElementById("sessionsTableBody");
+
+    // Create map for easy lookup
+    const sessionMap = {};
+    sessionTotals.forEach((s) => {
+      sessionMap[s.session_number] = s.total_score || 0;
+    });
+
+    let totalAllSessions = 0;
+    tbody.innerHTML = Array.from({ length: jumlahSesi }, (_, i) => {
+      const sessionNum = i + 1;
+      const total = sessionMap[sessionNum] || 0;
+      totalAllSessions += total;
+      
+      return `
+        <tr class="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
+          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold">
+            Sesi ${sessionNum}
+          </td>
+          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-center text-xs text-gray-800 dark:text-gray-200 font-semibold">
+            ${total}
+          </td>
+          <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs">
+            <a href="/panahan/game/${game.id}/sesi/${sessionNum}" class="inline-flex items-center justify-center px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all text-xs font-medium" title="Lihat Shoot">
+              <i class='bx bx-show mr-1'></i>
+              Lihat Shoot
+            </a>
+          </td>
+        </tr>
+      `;
+    }).join("");
+
+    // Update total score display
+    document.getElementById("gameTotalScore").textContent = totalAllSessions;
+  }
+
+  loadGameInfo();
+  loadSessions();
+</script>
+

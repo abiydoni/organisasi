@@ -212,11 +212,12 @@ function initializeDatabase() {
       () => {}
     );
 
-    // Tabel Panahan Game (1 kali main = 2 sesi)
+    // Tabel Panahan Game (1 kali main dengan jumlah sesi dinamis)
     db.run(`CREATE TABLE IF NOT EXISTS panahan_game (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       anggota_id INTEGER NOT NULL,
       tanggal DATE NOT NULL,
+      jumlah_sesi INTEGER NOT NULL DEFAULT 2,
       total_score INTEGER DEFAULT 0,
       keterangan TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -224,22 +225,69 @@ function initializeDatabase() {
       FOREIGN KEY (anggota_id) REFERENCES anggota(id) ON DELETE CASCADE
     )`);
 
-    // Tabel Panahan Shot (tembakan per game)
-    // Struktur: 1 game = 2 sesi, 1 sesi = 6 group, 1 group = 6 tembakan
-    // Total: 2 x 6 x 6 = 72 tembakan per game
+    // Migration: Add jumlah_sesi column if not exists
+    db.run(
+      `ALTER TABLE panahan_game ADD COLUMN jumlah_sesi INTEGER NOT NULL DEFAULT 2`,
+      () => {}
+    );
+
+    // Tabel Panahan Shoot (detail per shoot)
+    // Menyimpan summary/total score per shoot
+    db.run(`CREATE TABLE IF NOT EXISTS panahan_shoot (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      game_id INTEGER NOT NULL,
+      session_number INTEGER NOT NULL,
+      shoot_number INTEGER NOT NULL CHECK(shoot_number BETWEEN 1 AND 6),
+      total_score INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (game_id) REFERENCES panahan_game(id) ON DELETE CASCADE,
+      UNIQUE(game_id, session_number, shoot_number)
+    )`);
+
+    // Tabel Panahan Shot (anak panah per game)
+    // Struktur: 1 game = 2 sesi, 1 sesi = 6 shoot, 1 shoot = 6 anak panah
+    // Total: 2 x 6 x 6 = 72 anak panah per game
     db.run(`CREATE TABLE IF NOT EXISTS panahan_shot (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       game_id INTEGER NOT NULL,
       session_number INTEGER NOT NULL CHECK(session_number IN (1, 2)),
-      group_number INTEGER NOT NULL CHECK(group_number BETWEEN 1 AND 6),
-      shot_number INTEGER NOT NULL CHECK(shot_number BETWEEN 1 AND 6),
+      shoot_number INTEGER,
+      arrow_number INTEGER,
+      group_number INTEGER,
+      shot_number INTEGER,
       score INTEGER NOT NULL CHECK(score BETWEEN 0 AND 10),
       display_value TEXT DEFAULT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (game_id) REFERENCES panahan_game(id) ON DELETE CASCADE,
-      UNIQUE(game_id, session_number, group_number, shot_number)
+      FOREIGN KEY (game_id) REFERENCES panahan_game(id) ON DELETE CASCADE
     )`);
+
+    // Migration: Add new columns if not exists
+    db.run(
+      `ALTER TABLE panahan_shot ADD COLUMN shoot_number INTEGER`,
+      () => {}
+    );
+    db.run(
+      `ALTER TABLE panahan_shot ADD COLUMN arrow_number INTEGER`,
+      () => {}
+    );
+
+    // Copy data from old columns to new columns if new columns are NULL
+    db.run(
+      `UPDATE panahan_shot SET shoot_number = group_number WHERE shoot_number IS NULL AND group_number IS NOT NULL`,
+      () => {}
+    );
+    db.run(
+      `UPDATE panahan_shot SET arrow_number = shot_number WHERE arrow_number IS NULL AND shot_number IS NOT NULL`,
+      () => {}
+    );
+
+    // Create unique constraint with new column names
+    db.run(
+      `CREATE UNIQUE INDEX IF NOT EXISTS idx_panahan_shot_unique ON panahan_shot(game_id, session_number, COALESCE(shoot_number, group_number), COALESCE(arrow_number, shot_number))`,
+      () => {}
+    );
 
     // Migrate: Add display_value column if not exists
     db.run(
@@ -258,6 +306,14 @@ function initializeDatabase() {
     );
     db.run(
       `CREATE INDEX IF NOT EXISTS idx_panahan_shot_game_id ON panahan_shot(game_id)`,
+      () => {}
+    );
+    db.run(
+      `CREATE INDEX IF NOT EXISTS idx_panahan_shoot_game_id ON panahan_shoot(game_id)`,
+      () => {}
+    );
+    db.run(
+      `CREATE INDEX IF NOT EXISTS idx_panahan_shoot_session ON panahan_shoot(game_id, session_number)`,
       () => {}
     );
   });

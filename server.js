@@ -74,7 +74,7 @@ const arusKasRoutes = require("./routes/arusKas");
 const jenisPenilaianRoutes = require("./routes/jenisPenilaian");
 const penilaianRoutes = require("./routes/penilaian");
 const myPenilaianRoutes = require("./routes/myPenilaian");
-const panahanRoutes = require("./routes/panahan");
+const panahanRoutes = require("./routes/panahan/panahan");
 const logRoutes = require("./routes/log");
 
 // Routes
