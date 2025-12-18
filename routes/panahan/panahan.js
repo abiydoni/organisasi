@@ -9,12 +9,50 @@ const { renderHTML } = require("../../utils/render");
 const db = require("../../config/database");
 const { logInsert, logUpdate, logDelete } = require("../../utils/logger");
 
-// Admin, pengurus, dan tentor bisa akses route ini
+// Semua role yang sudah login bisa akses route ini
 router.use(requireAuth);
-router.use(requireAdminOrPengurusOrTentor);
 
 // Route untuk halaman utama - list anggota
 router.get("/", (req, res) => {
+  const userRole = req.session.user.role;
+  
+  // Jika user adalah role "user", langsung redirect ke history scoring mereka
+  if (userRole === "user") {
+    // Cari anggota berdasarkan nama user
+    db.get(
+      "SELECT * FROM anggota WHERE LOWER(TRIM(nama)) = LOWER(TRIM(?)) LIMIT 1",
+      [req.session.user.nama],
+      (err, anggota) => {
+        if (err) {
+          console.error("Error fetching anggota:", err);
+          return res.status(500).send("Error database: " + err.message);
+        }
+
+        if (!anggota) {
+          return res.send(
+            `<div style="padding: 20px; text-align: center;">
+              <h1 style="color: #dc2626; margin-bottom: 10px;">Anggota Tidak Ditemukan</h1>
+              <p style="color: #6b7280; margin-bottom: 20px;">
+                Data anggota dengan nama "<strong>${req.session.user.nama}</strong>" tidak ditemukan dalam sistem.
+              </p>
+              <p style="color: #6b7280;">
+                Silakan hubungi administrator untuk menghubungkan akun Anda dengan data anggota.
+              </p>
+              <a href="/auth/logout" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #dc2626; color: white; text-decoration: none; border-radius: 5px;">
+                Logout
+              </a>
+            </div>`
+          );
+        }
+
+        // Redirect ke halaman history scoring untuk anggota ini
+        return res.redirect(`/panahan/anggota/${anggota.id}`);
+      }
+    );
+    return;
+  }
+
+  // Untuk admin, pengurus, dan tentor: tampilkan list anggota
   // Get organisasi data first
   db.get(
     "SELECT * FROM organisasi ORDER BY id DESC LIMIT 1",
@@ -31,7 +69,6 @@ router.get("/", (req, res) => {
           }
 
           // Set active flags based on user role
-          const userRole = req.session.user.role;
           const active = {
             panahan: true,
             isAdmin: userRole === "admin",
@@ -71,6 +108,7 @@ router.get("/", (req, res) => {
 // Route untuk halaman detail anggota dengan history game
 router.get("/anggota/:id", (req, res) => {
   const { id } = req.params;
+  const userRole = req.session.user.role;
 
   // Validate ID
   if (!id || isNaN(parseInt(id))) {
@@ -91,6 +129,15 @@ router.get("/anggota/:id", (req, res) => {
 
         if (!anggota) {
           return res.status(404).send("Anggota tidak ditemukan");
+        }
+
+        // Jika user adalah role "user", pastikan mereka hanya bisa akses data mereka sendiri
+        if (userRole === "user") {
+          const anggotaNama = (anggota.nama || "").trim().toLowerCase();
+          const userNama = (req.session.user.nama || "").trim().toLowerCase();
+          if (anggotaNama !== userNama) {
+            return res.status(403).send("Akses ditolak. Anda hanya bisa melihat data scoring Anda sendiri.");
+          }
         }
 
         // Get semua game untuk anggota ini
@@ -328,6 +375,7 @@ router.get("/game/:id", (req, res) => {
 // Route untuk create game baru
 router.post("/create", (req, res) => {
   const { anggota_id, tanggal, jumlah_sesi, keterangan } = req.body;
+  const userRole = req.session.user.role;
 
   if (!anggota_id || !tanggal || !jumlah_sesi) {
     return res.json({
@@ -336,13 +384,42 @@ router.post("/create", (req, res) => {
     });
   }
 
-  const sesiCount = parseInt(jumlah_sesi) || 2;
-  if (sesiCount < 1 || sesiCount > 10) {
-    return res.json({
-      success: false,
-      message: "Jumlah sesi harus antara 1-10",
+  // Jika user adalah role "user", pastikan mereka hanya bisa membuat game untuk diri mereka sendiri
+  if (userRole === "user") {
+    db.get("SELECT * FROM anggota WHERE id=?", [anggota_id], (err, anggota) => {
+      if (err || !anggota) {
+        return res.json({
+          success: false,
+          message: "Anggota tidak ditemukan",
+        });
+      }
+
+      const anggotaNama = (anggota.nama || "").trim().toLowerCase();
+      const userNama = (req.session.user.nama || "").trim().toLowerCase();
+      if (anggotaNama !== userNama) {
+        return res.json({
+          success: false,
+          message: "Akses ditolak. Anda hanya bisa membuat game untuk diri Anda sendiri.",
+        });
+      }
+
+      // Lanjutkan dengan proses create
+      createGame();
     });
+    return;
   }
+
+  // Untuk admin, pengurus, dan tentor: langsung create
+  createGame();
+
+  function createGame() {
+    const sesiCount = parseInt(jumlah_sesi) || 2;
+    if (sesiCount < 1 || sesiCount > 10) {
+      return res.json({
+        success: false,
+        message: "Jumlah sesi harus antara 1-10",
+      });
+    }
 
   // Insert game baru
   db.run(
@@ -430,6 +507,7 @@ router.post("/create", (req, res) => {
       });
     }
   );
+  }
 });
 
 // Route untuk halaman sesi - tabel shoot dengan 6 kolom nilai + total
@@ -731,64 +809,65 @@ router.post("/game/:id/shoot", (req, res) => {
                 if (err) {
                   console.error("Error saving panahan_shoot:", err);
                 }
+
+                // Calculate total score for session
+                db.get(
+                  "SELECT SUM(score) as total FROM panahan_shot WHERE game_id = ? AND session_number = ?",
+                  [id, session_number],
+                  (err, sessionResult) => {
+                    const sessionTotal = sessionResult?.total || 0;
+
+                    // Calculate total score for game
+                    db.get(
+                      "SELECT SUM(score) as total FROM panahan_shot WHERE game_id = ?",
+                      [id],
+                      (err, gameResult) => {
+                        const gameTotal = gameResult?.total || 0;
+
+                        // Update total score di game
+                        db.run(
+                          "UPDATE panahan_game SET total_score = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+                          [gameTotal, id],
+                          (err) => {
+                            if (err) {
+                              console.error("Error updating total score:", err);
+                            }
+
+                            // Log update
+                            db.get(
+                              "SELECT nama FROM anggota WHERE id=?",
+                              [game.anggota_id],
+                              (err, anggota) => {
+                                const namaAnggota = anggota?.nama || "Unknown";
+                                logUpdate(
+                                  req,
+                                  "panahan_shot",
+                                  id,
+                                  `Mengupdate scoring shoot ${shoot_number} sesi ${session_number} untuk anggota: ${namaAnggota} (Game ID: ${id}, Shoot Total: ${shootTotal})`,
+                                  null,
+                                  { session_number, shoot_number, arrows, shootTotal }
+                                );
+                              }
+                            );
+
+                            res.json({
+                              success: true,
+                              message: "Scoring berhasil disimpan",
+                              shootTotal: shootTotal,
+                              sessionTotal: sessionTotal,
+                              gameTotal: gameTotal,
+                            });
+                          }
+                        );
+                      }
+                    );
+                  }
+                );
               }
             );
-
-          // Calculate total score for session
-          db.get(
-            "SELECT SUM(score) as total FROM panahan_shot WHERE game_id = ? AND session_number = ?",
-            [id, session_number],
-            (err, sessionResult) => {
-              const sessionTotal = sessionResult?.total || 0;
-
-              // Calculate total score for game
-              db.get(
-                "SELECT SUM(score) as total FROM panahan_shot WHERE game_id = ?",
-                [id],
-                (err, gameResult) => {
-                  const gameTotal = gameResult?.total || 0;
-
-                  // Update total score di game
-                  db.run(
-                    "UPDATE panahan_game SET total_score = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-                    [gameTotal, id],
-                    (err) => {
-                      if (err) {
-                        console.error("Error updating total score:", err);
-                      }
-
-                      // Log update
-                      db.get(
-                        "SELECT nama FROM anggota WHERE id=?",
-                        [game.anggota_id],
-                        (err, anggota) => {
-                          const namaAnggota = anggota?.nama || "Unknown";
-                          logUpdate(
-                            req,
-                            "panahan_shot",
-                            id,
-                            `Mengupdate scoring shoot ${shoot_number} sesi ${session_number} untuk anggota: ${namaAnggota} (Game ID: ${id}, Shoot Total: ${shootTotal})`,
-                            null,
-                            { session_number, shoot_number, arrows, shootTotal }
-                          );
-                        }
-                      );
-
-                      res.json({
-                        success: true,
-                        message: "Scoring berhasil disimpan",
-                        shootTotal: shootTotal,
-                        sessionTotal: sessionTotal,
-                        gameTotal: gameTotal,
-                      });
-                    }
-                  );
-                }
-              );
-            }
-          );
-        }
-      );
+          }
+        );
+      });
     });
   });
 });
