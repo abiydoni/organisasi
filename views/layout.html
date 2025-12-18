@@ -12,6 +12,7 @@
     />
     <meta name="theme-color" content="#3b82f6" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Organisasi" />
     <title>{{title}} - Aplikasi Organisasi</title>
@@ -81,6 +82,19 @@
         </div>
 
         <ul class="space-y-2">
+          {{#if active.isUser}}
+          <li>
+            <a
+              href="/dashboard/user"
+              onclick="closeMobileMenu()"
+              class="flex items-center px-3 py-2.5 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 {{#if active.dashboard}}bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 text-blue-600 dark:text-blue-400 font-semibold shadow-sm{{/if}}"
+            >
+              <i class="bx bx-home text-xl mr-3"></i>
+              Dashboard
+            </a>
+          </li>
+          {{/if}}
+          {{#if active.isAdminOrPengurusOrTentor}}
           <li>
             <a
               href="/dashboard"
@@ -91,7 +105,9 @@
               Dashboard
             </a>
           </li>
-          {{#if active.isAdminOrPengurus}} {{#if active.isAdmin}}
+          {{/if}}
+          {{#if active.isAdminOrPengurus}}
+          {{#if active.isAdmin}}
           <li>
             <a
               href="/organisasi"
@@ -135,7 +151,8 @@
               Data Anggota
             </a>
           </li>
-          {{/if}} {{#if active.isAdminOrPengurusOrTentor}}
+          {{/if}}
+          {{#if active.isAdminOrPengurusOrTentor}}
           <li>
             <a
               href="/iuran"
@@ -146,7 +163,8 @@
               Iuran Bulanan
             </a>
           </li>
-          {{/if}} {{#if active.isAdminOrPengurus}}
+          {{/if}}
+          {{#if active.isAdminOrPengurus}}
           <li>
             <a
               href="/buku-kas"
@@ -167,7 +185,8 @@
               Data Tarif
             </a>
           </li>
-          {{/if}} {{#if active.isAdminOrPengurusOrTentor}}
+          {{/if}}
+          {{#if active.isAdminOrPengurusOrTentor}}
           <li>
             <a
               href="/jenis-penilaian"
@@ -198,8 +217,8 @@
               Scoring Panahan
             </a>
           </li>
-          {{/if}} {{#if active.isTentor}}
-          {{/if}} {{#if active.isUser}}
+          {{/if}}
+          {{#if active.isUser}}
           <li>
             <a
               href="/tagihan"
@@ -262,7 +281,7 @@
             >
               <i
                 id="theme-icon"
-                class="bx bx-moon text-xl md:text-2xl text-gray-700 dark:text-gray-300"
+                class="bx bx-moon text-xl md:text-2xl text-gray-700 dark:text-yellow-300"
               ></i>
             </button>
             <div class="hidden md:flex items-center gap-2">

@@ -1,0 +1,872 @@
+<div class="space-y-4 md:space-y-6">
+  <!-- Welcome Section -->
+  <div
+    class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden"
+  >
+    <div
+      class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white opacity-10 rounded-full"
+    ></div>
+    <div
+      class="absolute bottom-0 left-0 -mb-4 -ml-4 w-24 h-24 bg-white opacity-10 rounded-full"
+    ></div>
+    <div class="relative z-10">
+      <h1
+        class="text-lg md:text-2xl font-bold mb-2 drop-shadow-lg text-white dark:text-gray-50"
+        id="organisasiNama"
+      >
+        Selamat Datang, {{user.nama}}! 👋
+      </h1>
+      <p
+        class="text-base md:text-lg text-blue-50 dark:text-blue-100 font-medium"
+        id="organisasiDeskripsi"
+      >
+        Dashboard pribadi Anda - Lihat statistik tagihan, penilaian, dan scoring
+        panahan
+      </p>
+    </div>
+  </div>
+
+  <!-- Statistics Cards - Tagihan -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+    <!-- Total Tagihan Card -->
+    <div
+      class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-600 dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1"
+            >
+              Total Tagihan
+            </p>
+            <p
+              id="stat-tagihan-total"
+              class="text-lg md:text-xl font-bold text-gray-800 dark:text-white leading-tight break-words"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-400 dark:to-blue-500 dark:ring-2 dark:ring-blue-400/50 p-2 rounded-lg shadow-md dark:shadow-lg dark:shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-receipt text-xl md:text-2xl text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tagihan Lunas Card -->
+    <div
+      class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 border border-gray-100 dark:border-gray-700 hover:border-green-200 dark:hover:border-green-800 relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-600 dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1"
+            >
+              Tagihan Lunas
+            </p>
+            <p
+              id="stat-tagihan-lunas"
+              class="text-lg md:text-xl font-bold text-gray-800 dark:text-white leading-tight break-words"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-green-500 to-green-600 dark:from-green-400 dark:to-green-500 dark:ring-2 dark:ring-green-400/50 p-2 rounded-lg shadow-md dark:shadow-lg dark:shadow-green-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-check-circle text-xl md:text-2xl text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tagihan Belum Lunas Card -->
+    <div
+      class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 border border-gray-100 dark:border-gray-700 hover:border-red-200 dark:hover:border-red-800 relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-600 dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1"
+            >
+              Belum Lunas
+            </p>
+            <p
+              id="stat-tagihan-belum-lunas"
+              class="text-lg md:text-xl font-bold text-gray-800 dark:text-white leading-tight break-words"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-red-500 to-red-600 dark:from-red-400 dark:to-red-500 dark:ring-2 dark:ring-red-400/50 p-2 rounded-lg shadow-md dark:shadow-lg dark:shadow-red-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-time-five text-xl md:text-2xl text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Pembayaran Card -->
+    <div
+      class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 border border-gray-100 dark:border-gray-700 hover:border-yellow-200 dark:hover:border-yellow-800 relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-16 h-16 bg-yellow-50 dark:bg-yellow-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-600 dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1"
+            >
+              Total Pembayaran
+            </p>
+            <p
+              id="stat-tagihan-total-bayar"
+              class="text-lg md:text-xl font-bold text-gray-800 dark:text-white leading-tight break-words"
+            >
+              Rp 0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-yellow-500 to-yellow-600 dark:from-yellow-400 dark:to-yellow-500 dark:ring-2 dark:ring-yellow-400/50 p-2 rounded-lg shadow-md dark:shadow-lg dark:shadow-yellow-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-money text-xl md:text-2xl text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Cards - Penilaian -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+    <!-- Total Penilaian Card -->
+    <div
+      class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 border border-gray-100 dark:border-gray-700 hover:border-purple-200 dark:hover:border-purple-800 relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-16 h-16 bg-purple-50 dark:bg-purple-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-600 dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1"
+            >
+              Total Penilaian
+            </p>
+            <p
+              id="stat-penilaian-total"
+              class="text-lg md:text-xl font-bold text-gray-800 dark:text-white leading-tight break-words"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-purple-500 to-purple-600 dark:from-purple-400 dark:to-purple-500 dark:ring-2 dark:ring-purple-400/50 p-2 rounded-lg shadow-md dark:shadow-lg dark:shadow-purple-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-check-square text-xl md:text-2xl text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rata-rata Nilai Card -->
+    <div
+      class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 border border-gray-100 dark:border-gray-700 hover:border-indigo-200 dark:hover:border-indigo-800 relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-600 dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1"
+            >
+              Rata-rata Nilai
+            </p>
+            <p
+              id="stat-penilaian-rata"
+              class="text-lg md:text-xl font-bold text-gray-800 dark:text-white leading-tight break-words"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-indigo-500 to-indigo-600 dark:from-indigo-400 dark:to-indigo-500 dark:ring-2 dark:ring-indigo-400/50 p-2 rounded-lg shadow-md dark:shadow-lg dark:shadow-indigo-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-bar-chart-alt-2 text-xl md:text-2xl text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nilai Tertinggi Card -->
+    <div
+      class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 border border-gray-100 dark:border-gray-700 hover:border-emerald-200 dark:hover:border-emerald-800 relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-600 dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1"
+            >
+              Nilai Tertinggi
+            </p>
+            <p
+              id="stat-penilaian-tertinggi"
+              class="text-lg md:text-xl font-bold text-gray-800 dark:text-white leading-tight break-words"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-emerald-500 to-emerald-600 dark:from-emerald-400 dark:to-emerald-500 dark:ring-2 dark:ring-emerald-400/50 p-2 rounded-lg shadow-md dark:shadow-lg dark:shadow-emerald-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-trophy text-xl md:text-2xl text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nilai Terendah Card -->
+    <div
+      class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 border border-gray-100 dark:border-gray-700 hover:border-orange-200 dark:hover:border-orange-800 relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-16 h-16 bg-orange-50 dark:bg-orange-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-600 dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1"
+            >
+              Nilai Terendah
+            </p>
+            <p
+              id="stat-penilaian-terendah"
+              class="text-lg md:text-xl font-bold text-gray-800 dark:text-white leading-tight break-words"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-orange-500 to-orange-600 dark:from-orange-400 dark:to-orange-500 dark:ring-2 dark:ring-orange-400/50 p-2 rounded-lg shadow-md dark:shadow-lg dark:shadow-orange-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-trending-down text-xl md:text-2xl text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Cards - Scoring Panahan -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+    <!-- Total Game Card -->
+    <div
+      class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 border border-gray-100 dark:border-gray-700 hover:border-cyan-200 dark:hover:border-cyan-800 relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-16 h-16 bg-cyan-50 dark:bg-cyan-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-600 dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1"
+            >
+              Total Game
+            </p>
+            <p
+              id="stat-scoring-total"
+              class="text-lg md:text-xl font-bold text-gray-800 dark:text-white leading-tight break-words"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-cyan-500 to-cyan-600 dark:from-cyan-400 dark:to-cyan-500 dark:ring-2 dark:ring-cyan-400/50 p-2 rounded-lg shadow-md dark:shadow-lg dark:shadow-cyan-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-target-lock text-xl md:text-2xl text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Score Card -->
+    <div
+      class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 border border-gray-100 dark:border-gray-700 hover:border-teal-200 dark:hover:border-teal-800 relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-16 h-16 bg-teal-50 dark:bg-teal-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-600 dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1"
+            >
+              Total Score
+            </p>
+            <p
+              id="stat-scoring-total-score"
+              class="text-lg md:text-xl font-bold text-gray-800 dark:text-white leading-tight break-words"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-teal-500 to-teal-600 dark:from-teal-400 dark:to-teal-500 dark:ring-2 dark:ring-teal-400/50 p-2 rounded-lg shadow-md dark:shadow-lg dark:shadow-teal-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-bar-chart text-xl md:text-2xl text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rata-rata Score Card -->
+    <div
+      class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 border border-gray-100 dark:border-gray-700 hover:border-pink-200 dark:hover:border-pink-800 relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-16 h-16 bg-pink-50 dark:bg-pink-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-600 dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1"
+            >
+              Rata-rata Score
+            </p>
+            <p
+              id="stat-scoring-rata"
+              class="text-lg md:text-xl font-bold text-gray-800 dark:text-white leading-tight break-words"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-pink-500 to-pink-600 dark:from-pink-400 dark:to-pink-500 dark:ring-2 dark:ring-pink-400/50 p-2 rounded-lg shadow-md dark:shadow-lg dark:shadow-pink-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-line-chart text-xl md:text-2xl text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Score Tertinggi Card -->
+    <div
+      class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 border border-gray-100 dark:border-gray-700 hover:border-rose-200 dark:hover:border-rose-800 relative overflow-hidden"
+    >
+      <div
+        class="absolute top-0 right-0 w-16 h-16 bg-rose-50 dark:bg-rose-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:opacity-70 transition-opacity"
+      ></div>
+      <div class="relative">
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex-1 min-w-0">
+            <p
+              class="text-gray-600 dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1"
+            >
+              Score Tertinggi
+            </p>
+            <p
+              id="stat-scoring-tertinggi"
+              class="text-lg md:text-xl font-bold text-gray-800 dark:text-white leading-tight break-words"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-gradient-to-br from-rose-500 to-rose-600 dark:from-rose-400 dark:to-rose-500 dark:ring-2 dark:ring-rose-400/50 p-2 rounded-lg shadow-md dark:shadow-lg dark:shadow-rose-500/30 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+          >
+            <i class="bx bx-medal text-xl md:text-2xl text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+    <!-- Chart Tagihan -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border border-gray-200 dark:border-gray-700"
+    >
+      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center gap-3">
+          <div
+            class="bg-blue-100 dark:bg-blue-900 p-2.5 rounded-lg flex-shrink-0"
+          >
+            <i
+              class="bx bx-receipt text-xl text-blue-600 dark:text-blue-400"
+            ></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3
+              class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-0.5 break-words"
+            >
+              Pembayaran Tagihan
+            </h3>
+            <p class="text-xs text-gray-600 dark:text-gray-400 leading-tight">
+              Total pembayaran per bulan (12 bulan terakhir)
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="relative h-48 md:h-56">
+        <canvas id="tagihanChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Chart Penilaian -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border border-gray-200 dark:border-gray-700"
+    >
+      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center gap-3">
+          <div
+            class="bg-purple-100 dark:bg-purple-900 p-2.5 rounded-lg flex-shrink-0"
+          >
+            <i
+              class="bx bx-check-square text-xl text-purple-600 dark:text-purple-400"
+            ></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3
+              class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-0.5 break-words"
+            >
+              Rata-rata Penilaian
+            </h3>
+            <p class="text-xs text-gray-600 dark:text-gray-400 leading-tight">
+              Rata-rata nilai per bulan (12 bulan terakhir)
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="relative h-48 md:h-56">
+        <canvas id="penilaianChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Chart Scoring -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-5 md:p-6 border border-gray-200 dark:border-gray-700"
+    >
+      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center gap-3">
+          <div
+            class="bg-cyan-100 dark:bg-cyan-900 p-2.5 rounded-lg flex-shrink-0"
+          >
+            <i
+              class="bx bx-target-lock text-xl text-cyan-600 dark:text-cyan-400"
+            ></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3
+              class="text-base md:text-lg font-bold text-gray-800 dark:text-white mb-0.5 break-words"
+            >
+              Rata-rata Score Panahan
+            </h3>
+            <p class="text-xs text-gray-600 dark:text-gray-400 leading-tight">
+              Rata-rata score per bulan (12 bulan terakhir)
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="relative h-48 md:h-56">
+        <canvas id="scoringChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Load statistics
+  const stats = {{stats}} || {};
+  // organisasi sudah dideklarasikan di layout.html, jadi tidak perlu dideklarasikan lagi
+
+  // Update organisasi info in welcome section
+  const userNama = "{{user.nama}}";
+  // Akses organisasi yang sudah dideklarasikan di layout.html
+  if (typeof organisasi !== 'undefined' && organisasi && organisasi.nama) {
+    const namaElement = document.getElementById("organisasiNama");
+    if (namaElement) {
+      namaElement.innerHTML = `Selamat Datang di <span class="text-yellow-200">${organisasi.nama}</span>, ${userNama}! 👋`;
+    }
+  }
+
+  if (typeof organisasi !== 'undefined' && organisasi && organisasi.deskripsi) {
+    const deskripsiElement = document.getElementById("organisasiDeskripsi");
+    if (deskripsiElement) {
+      deskripsiElement.textContent = organisasi.deskripsi;
+    }
+  }
+
+  // Update statistics - Tagihan
+  document.getElementById("stat-tagihan-total").textContent = stats.tagihan?.total || 0;
+  document.getElementById("stat-tagihan-lunas").textContent = stats.tagihan?.lunas || 0;
+  document.getElementById("stat-tagihan-belum-lunas").textContent = stats.tagihan?.belumLunas || 0;
+  document.getElementById("stat-tagihan-total-bayar").textContent = formatRupiah(stats.tagihan?.totalBayar || 0);
+
+  // Update statistics - Penilaian
+  document.getElementById("stat-penilaian-total").textContent = stats.penilaian?.total || 0;
+  document.getElementById("stat-penilaian-rata").textContent = stats.penilaian?.rataRata || 0;
+  document.getElementById("stat-penilaian-tertinggi").textContent = stats.penilaian?.nilaiTertinggi || 0;
+  document.getElementById("stat-penilaian-terendah").textContent = stats.penilaian?.nilaiTerendah || 0;
+
+  // Update statistics - Scoring
+  document.getElementById("stat-scoring-total").textContent = stats.scoring?.totalGame || 0;
+  document.getElementById("stat-scoring-total-score").textContent = stats.scoring?.totalScore || 0;
+  document.getElementById("stat-scoring-rata").textContent = stats.scoring?.rataRataScore || 0;
+  document.getElementById("stat-scoring-tertinggi").textContent = stats.scoring?.scoreTertinggi || 0;
+
+  function formatRupiah(angka) {
+    return "Rp " + new Intl.NumberFormat("id-ID").format(angka);
+  }
+
+  // Chart configuration dengan dark mode support
+  const isDarkMode = document.documentElement.classList.contains("dark");
+  const textColor = isDarkMode ? "rgba(243, 244, 246, 0.9)" : "rgba(31, 41, 55, 0.8)";
+  const gridColor = isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)";
+
+  // Chart colors based on theme
+  const getChartColors = (baseColor) => {
+    if (isDarkMode) {
+      // Brighter colors for dark mode
+      const colorMap = {
+        blue: {
+          bg: "rgba(96, 165, 250, 0.8)", // lighter blue
+          border: "rgb(147, 197, 253)", // even lighter blue
+        },
+        purple: {
+          bg: "rgba(196, 181, 253, 0.2)", // lighter purple
+          border: "rgb(196, 181, 253)", // lighter purple
+          point: "rgb(196, 181, 253)",
+          pointBorder: "rgba(17, 24, 39, 0.8)", // dark background
+        },
+        cyan: {
+          bg: "rgba(103, 232, 249, 0.2)", // lighter cyan
+          border: "rgb(103, 232, 249)", // lighter cyan
+          point: "rgb(103, 232, 249)",
+          pointBorder: "rgba(17, 24, 39, 0.8)", // dark background
+        },
+      };
+      return colorMap[baseColor] || colorMap.blue;
+    } else {
+      // Original colors for light mode
+      const colorMap = {
+        blue: {
+          bg: "rgba(59, 130, 246, 0.8)",
+          border: "rgb(59, 130, 246)",
+        },
+        purple: {
+          bg: "rgba(168, 85, 247, 0.1)",
+          border: "rgb(168, 85, 247)",
+          point: "rgb(168, 85, 247)",
+          pointBorder: "#fff",
+        },
+        cyan: {
+          bg: "rgba(6, 182, 212, 0.1)",
+          border: "rgb(6, 182, 212)",
+          point: "rgb(6, 182, 212)",
+          pointBorder: "#fff",
+        },
+      };
+      return colorMap[baseColor] || colorMap.blue;
+    }
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: "top",
+        labels: {
+          color: textColor,
+          font: {
+            size: 12,
+          },
+          padding: 15,
+        },
+      },
+      tooltip: {
+        backgroundColor: isDarkMode ? "rgba(17, 24, 39, 0.95)" : "rgba(255, 255, 255, 0.95)",
+        titleColor: textColor,
+        bodyColor: textColor,
+        borderColor: isDarkMode ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)",
+        borderWidth: 1,
+        padding: 12,
+        displayColors: true,
+        titleFont: {
+          size: 13,
+          weight: "bold",
+        },
+        bodyFont: {
+          size: 12,
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          color: textColor,
+          font: {
+            size: 11,
+          },
+        },
+        grid: {
+          color: gridColor,
+        },
+      },
+      x: {
+        ticks: {
+          color: textColor,
+          font: {
+            size: 11,
+          },
+        },
+        grid: {
+          display: false,
+        },
+      },
+    },
+  };
+
+  // Load chart data
+  let tagihanChart, penilaianChart, scoringChart;
+
+  async function loadCharts() {
+    try {
+      // Get current theme colors
+      const currentIsDarkMode = document.documentElement.classList.contains("dark");
+      const currentTextColor = currentIsDarkMode ? "rgba(243, 244, 246, 0.9)" : "rgba(31, 41, 55, 0.8)";
+      const currentGridColor = currentIsDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)";
+
+      // Get chart colors based on current theme
+      const getCurrentChartColors = (baseColor) => {
+        if (currentIsDarkMode) {
+          const colorMap = {
+            blue: {
+              bg: "rgba(96, 165, 250, 0.8)",
+              border: "rgb(147, 197, 253)",
+            },
+            purple: {
+              bg: "rgba(196, 181, 253, 0.2)",
+              border: "rgb(196, 181, 253)",
+              point: "rgb(196, 181, 253)",
+              pointBorder: "rgba(17, 24, 39, 0.8)",
+            },
+            cyan: {
+              bg: "rgba(103, 232, 249, 0.2)",
+              border: "rgb(103, 232, 249)",
+              point: "rgb(103, 232, 249)",
+              pointBorder: "rgba(17, 24, 39, 0.8)",
+            },
+          };
+          return colorMap[baseColor] || colorMap.blue;
+        } else {
+          const colorMap = {
+            blue: {
+              bg: "rgba(59, 130, 246, 0.8)",
+              border: "rgb(59, 130, 246)",
+            },
+            purple: {
+              bg: "rgba(168, 85, 247, 0.1)",
+              border: "rgb(168, 85, 247)",
+              point: "rgb(168, 85, 247)",
+              pointBorder: "#fff",
+            },
+            cyan: {
+              bg: "rgba(6, 182, 212, 0.1)",
+              border: "rgb(6, 182, 212)",
+              point: "rgb(6, 182, 212)",
+              pointBorder: "#fff",
+            },
+          };
+          return colorMap[baseColor] || colorMap.blue;
+        }
+      };
+
+      // Update chart options with current theme colors
+      const currentChartOptions = {
+        ...chartOptions,
+        plugins: {
+          ...chartOptions.plugins,
+          legend: {
+            ...chartOptions.plugins.legend,
+            labels: {
+              ...chartOptions.plugins.legend.labels,
+              color: currentTextColor,
+            },
+          },
+        },
+        scales: {
+          y: {
+            ...chartOptions.scales.y,
+            ticks: {
+              ...chartOptions.scales.y.ticks,
+              color: currentTextColor,
+            },
+            grid: {
+              ...chartOptions.scales.y.grid,
+              color: currentGridColor,
+            },
+          },
+          x: {
+            ...chartOptions.scales.x,
+            ticks: {
+              ...chartOptions.scales.x.ticks,
+              color: currentTextColor,
+            },
+          },
+        },
+      };
+
+      const response = await fetch("/dashboard/user/chart-data");
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        const { labels, tagihan, penilaian, scoring } = result.data;
+
+        // Chart Tagihan
+        const tagihanCtx = document.getElementById("tagihanChart");
+        if (tagihanCtx) {
+          if (tagihanChart) {
+            tagihanChart.destroy();
+          }
+          const blueColors = getCurrentChartColors("blue");
+          tagihanChart = new Chart(tagihanCtx, {
+            type: "bar",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: tagihan.label,
+                  data: tagihan.data,
+                  backgroundColor: blueColors.bg,
+                  borderColor: blueColors.border,
+                  borderWidth: 2,
+                  borderRadius: 6,
+                  borderSkipped: false,
+                },
+              ],
+            },
+            options: currentChartOptions,
+          });
+        }
+
+        // Chart Penilaian
+        const penilaianCtx = document.getElementById("penilaianChart");
+        if (penilaianCtx) {
+          if (penilaianChart) {
+            penilaianChart.destroy();
+          }
+          const purpleColors = getCurrentChartColors("purple");
+          penilaianChart = new Chart(penilaianCtx, {
+            type: "line",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: penilaian.label,
+                  data: penilaian.data,
+                  borderColor: purpleColors.border,
+                  backgroundColor: purpleColors.bg,
+                  borderWidth: 3,
+                  fill: true,
+                  tension: 0.4,
+                  pointRadius: 4,
+                  pointHoverRadius: 6,
+                  pointBackgroundColor: purpleColors.point,
+                  pointBorderColor: purpleColors.pointBorder,
+                  pointBorderWidth: 2,
+                },
+              ],
+            },
+            options: currentChartOptions,
+          });
+        }
+
+        // Chart Scoring
+        const scoringCtx = document.getElementById("scoringChart");
+        if (scoringCtx) {
+          if (scoringChart) {
+            scoringChart.destroy();
+          }
+          const cyanColors = getCurrentChartColors("cyan");
+          scoringChart = new Chart(scoringCtx, {
+            type: "line",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: scoring.label,
+                  data: scoring.data,
+                  borderColor: cyanColors.border,
+                  backgroundColor: cyanColors.bg,
+                  borderWidth: 3,
+                  fill: true,
+                  tension: 0.4,
+                  pointRadius: 4,
+                  pointHoverRadius: 6,
+                  pointBackgroundColor: cyanColors.point,
+                  pointBorderColor: cyanColors.pointBorder,
+                  pointBorderWidth: 2,
+                },
+              ],
+            },
+            options: currentChartOptions,
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error loading charts:", error);
+    }
+  }
+
+  // Function to update chart colors based on theme
+  function updateChartTheme() {
+    loadCharts();
+  }
+
+  // Load charts on page load
+  loadCharts();
+
+  // Listen for theme changes
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === "attributes" && mutation.attributeName === "class") {
+        updateChartTheme();
+      }
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+</script>

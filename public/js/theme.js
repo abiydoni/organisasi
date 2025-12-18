@@ -14,11 +14,16 @@
     const theme = html.classList.contains("dark") ? "dark" : "light";
     localStorage.setItem("theme", theme);
 
-    // Update icon
+    // Update icon dengan warna yang sesuai
     const themeIcon = document.getElementById("theme-icon");
     if (themeIcon) {
-      themeIcon.className =
-        theme === "dark" ? "bx bx-sun text-2xl" : "bx bx-moon text-2xl";
+      if (theme === "dark") {
+        // Dark mode aktif, tampilkan ikon matahari (untuk switch ke light)
+        themeIcon.className = "bx bx-sun text-xl md:text-2xl text-yellow-400 dark:text-yellow-300";
+      } else {
+        // Light mode aktif, tampilkan ikon bulan (untuk switch ke dark)
+        themeIcon.className = "bx bx-moon text-xl md:text-2xl text-gray-700 dark:text-gray-300";
+      }
     }
   };
 
@@ -26,8 +31,13 @@
   document.addEventListener("DOMContentLoaded", function () {
     const themeIcon = document.getElementById("theme-icon");
     if (themeIcon) {
-      themeIcon.className =
-        currentTheme === "dark" ? "bx bx-sun text-2xl" : "bx bx-moon text-2xl";
+      if (currentTheme === "dark") {
+        // Dark mode aktif, tampilkan ikon matahari (untuk switch ke light)
+        themeIcon.className = "bx bx-sun text-xl md:text-2xl text-yellow-400 dark:text-yellow-300";
+      } else {
+        // Light mode aktif, tampilkan ikon bulan (untuk switch ke dark)
+        themeIcon.className = "bx bx-moon text-xl md:text-2xl text-gray-700 dark:text-gray-300";
+      }
     }
   });
 })();

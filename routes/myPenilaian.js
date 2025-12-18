@@ -85,6 +85,8 @@ router.get("/", (req, res) => {
                       isAdminOrPengurus:
                         userRole === "admin" || userRole === "pengurus",
                       isUser: userRole === "user",
+                      isAdminOrPengurusOrTentor: false,
+                      isTentor: false,
                     };
 
                     const layout = renderHTML("myPenilaian.html", {
