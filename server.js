@@ -6,6 +6,10 @@ const db = require("./config/database");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || "0.0.0.0";
+
+// Trust proxy (untuk reverse proxy seperti nginx, cpanel, dll)
+app.set("trust proxy", 1);
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -48,12 +52,20 @@ app.get("/service-worker.js", (req, res) => {
 });
 
 // Session
+// Deteksi production: jika ada PORT dari environment (hosting) atau NODE_ENV=production
+const isProduction =
+  process.env.NODE_ENV === "production" || !!process.env.PORT;
 app.use(
   session({
     secret: "organisasi-secret-key-2024",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }, // 24 jam
+    cookie: {
+      secure: isProduction, // true untuk HTTPS di production
+      maxAge: 24 * 60 * 60 * 1000, // 24 jam
+      httpOnly: true,
+      sameSite: "lax",
+    },
   })
 );
 
@@ -107,6 +119,18 @@ app.use((req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+app
+  .listen(PORT, HOST, () => {
+    console.log(`Server running on http://${HOST}:${PORT}`);
+    console.log(`Environment: ${isProduction ? "Production" : "Development"}`);
+  })
+  .on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+      console.error(
+        `Port ${PORT} is already in use. Please use a different port.`
+      );
+    } else {
+      console.error("Server error:", err);
+    }
+    process.exit(1);
+  });
