@@ -111,8 +111,18 @@ self.addEventListener("fetch", (event) => {
             }
             return response;
           })
-          .catch(() => {
-            // Jika offline, coba return cached login page sebagai fallback
+          .catch((error) => {
+            // Jika offline atau network error, coba return cached login page sebagai fallback
+            // Don't log "Failed to fetch" as it's a common network error
+            const errorMessage = error?.message || error?.toString() || "";
+            if (
+              errorMessage &&
+              !errorMessage.includes("Failed to fetch") &&
+              !errorMessage.includes("NetworkError")
+            ) {
+              console.warn("HTML fetch error:", errorMessage);
+            }
+
             return caches.match("/auth/login").then((cachedResponse) => {
               if (cachedResponse) {
                 return cachedResponse;
@@ -149,12 +159,20 @@ self.addEventListener("fetch", (event) => {
           // Otherwise, fetch from network
           return fetch(event.request)
             .then((response) => {
-              // Don't cache if not a valid response
-              if (
-                !response ||
-                response.status !== 200 ||
-                response.type !== "basic"
-              ) {
+              // Check if response is valid
+              if (!response || !response.ok) {
+                // If response is not ok, try to return from cache again or return error
+                return (
+                  response ||
+                  new Response("Not Found", {
+                    status: 404,
+                    headers: { "Content-Type": "text/plain" },
+                  })
+                );
+              }
+
+              // Don't cache if not a valid response type
+              if (response.type !== "basic" && response.type !== "cors") {
                 return response;
               }
 
@@ -176,26 +194,46 @@ self.addEventListener("fetch", (event) => {
                 url.origin.includes("unpkg.com") ||
                 url.origin.includes("cdn.jsdelivr.net");
 
-              if (isStaticResource) {
+              if (isStaticResource && response.status === 200) {
                 // Clone the response for caching
-                const responseToCache = response.clone();
-                caches
-                  .open(CACHE_NAME)
-                  .then((cache) => {
-                    cache.put(event.request, responseToCache);
-                  })
-                  .catch((err) => {
-                    console.error("Cache put error:", err);
-                  });
+                try {
+                  const responseToCache = response.clone();
+                  caches
+                    .open(CACHE_NAME)
+                    .then((cache) => {
+                      cache.put(event.request, responseToCache);
+                    })
+                    .catch((err) => {
+                      // Silently fail cache put - not critical
+                      console.warn("Cache put error (non-critical):", err);
+                    });
+                } catch (cloneError) {
+                  // If clone fails, just return response without caching
+                  console.warn(
+                    "Response clone error (non-critical):",
+                    cloneError
+                  );
+                }
               }
 
               return response;
             })
             .catch((error) => {
-              // If network fetch fails, return error response
-              console.error("Fetch error:", error);
-              return new Response("Offline", {
+              // If network fetch fails (offline, CORS, etc), return error response
+              // "Failed to fetch" is a common network error, don't log it
+              const errorMessage = error?.message || error?.toString() || "";
+              if (
+                errorMessage &&
+                !errorMessage.includes("Failed to fetch") &&
+                !errorMessage.includes("NetworkError")
+              ) {
+                console.warn("Fetch error:", errorMessage);
+              }
+
+              // Return a valid error response
+              return new Response("Network error", {
                 status: 503,
+                statusText: "Service Unavailable",
                 headers: { "Content-Type": "text/plain" },
               });
             });
