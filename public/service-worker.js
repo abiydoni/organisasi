@@ -131,7 +131,7 @@ self.addEventListener("fetch", (event) => {
     }
   } catch (error) {
     // If URL parsing fails or any other error, skip handling
-    console.error("Service worker fetch error:", error);
+    // Silently handle - don't log
     return;
   }
 
@@ -207,7 +207,7 @@ self.addEventListener("fetch", (event) => {
 
               return response;
             })
-            .catch((error) => {
+            .catch(() => {
               // If network fetch fails (offline, CORS, etc), return error response
               // Silently handle "Failed to fetch" errors - they're common network errors
               // Don't log anything to avoid console noise
@@ -229,7 +229,7 @@ self.addEventListener("fetch", (event) => {
           });
         })
     );
-  } catch (error) {
+  } catch {
     // If URL parsing fails, skip handling
     // Silently handle - don't log
     return;
