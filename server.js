@@ -121,7 +121,13 @@ app.use((req, res) => {
 // Start server
 app
   .listen(PORT, HOST, () => {
-    console.log(`Server running on http://${HOST}:${PORT}`);
+    if (HOST === "0.0.0.0") {
+      console.log(`Server running on all network interfaces`);
+      console.log(`Access via: http://localhost:${PORT} (local)`);
+      console.log(`Or use your machine's IP address: http://<your-ip>:${PORT}`);
+    } else {
+      console.log(`Server running on http://${HOST}:${PORT}`);
+    }
     console.log(`Environment: ${isProduction ? "Production" : "Development"}`);
   })
   .on("error", (err) => {
