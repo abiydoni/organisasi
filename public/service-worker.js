@@ -71,12 +71,15 @@ self.addEventListener("fetch", (event) => {
   }
 
   // Cache-first strategy untuk static resources
+  // Hanya intercept jika ada di cache, jika tidak biarkan browser handle
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
         return cachedResponse;
       }
+      // Jika tidak ada cache, biarkan browser handle (fetch langsung)
       return fetch(event.request).then((response) => {
+        // Cache response yang berhasil untuk next time
         if (response && response.ok && response.status === 200) {
           const responseToCache = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
