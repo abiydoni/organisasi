@@ -111,17 +111,9 @@ self.addEventListener("fetch", (event) => {
             }
             return response;
           })
-          .catch((error) => {
+          .catch(() => {
             // Jika offline atau network error, coba return cached login page sebagai fallback
-            // Don't log "Failed to fetch" as it's a common network error
-            const errorMessage = error?.message || error?.toString() || "";
-            if (
-              errorMessage &&
-              !errorMessage.includes("Failed to fetch") &&
-              !errorMessage.includes("NetworkError")
-            ) {
-              console.warn("HTML fetch error:", errorMessage);
-            }
+            // Silently handle network errors - don't log them
 
             return caches.match("/auth/login").then((cachedResponse) => {
               if (cachedResponse) {
@@ -203,16 +195,13 @@ self.addEventListener("fetch", (event) => {
                     .then((cache) => {
                       cache.put(event.request, responseToCache);
                     })
-                    .catch((err) => {
+                    .catch(() => {
                       // Silently fail cache put - not critical
-                      console.warn("Cache put error (non-critical):", err);
+                      // Don't log errors
                     });
                 } catch (cloneError) {
                   // If clone fails, just return response without caching
-                  console.warn(
-                    "Response clone error (non-critical):",
-                    cloneError
-                  );
+                  // Silently handle - don't log
                 }
               }
 
@@ -220,15 +209,8 @@ self.addEventListener("fetch", (event) => {
             })
             .catch((error) => {
               // If network fetch fails (offline, CORS, etc), return error response
-              // "Failed to fetch" is a common network error, don't log it
-              const errorMessage = error?.message || error?.toString() || "";
-              if (
-                errorMessage &&
-                !errorMessage.includes("Failed to fetch") &&
-                !errorMessage.includes("NetworkError")
-              ) {
-                console.warn("Fetch error:", errorMessage);
-              }
+              // Silently handle "Failed to fetch" errors - they're common network errors
+              // Don't log anything to avoid console noise
 
               // Return a valid error response
               return new Response("Network error", {
@@ -238,9 +220,9 @@ self.addEventListener("fetch", (event) => {
               });
             });
         })
-        .catch((error) => {
+        .catch(() => {
           // If both cache and network fail, return error
-          console.error("Cache match error:", error);
+          // Silently handle errors - don't log them
           return new Response("Offline", {
             status: 503,
             headers: { "Content-Type": "text/plain" },
@@ -249,7 +231,7 @@ self.addEventListener("fetch", (event) => {
     );
   } catch (error) {
     // If URL parsing fails, skip handling
-    console.error("Service worker fetch error:", error);
+    // Silently handle - don't log
     return;
   }
 });
