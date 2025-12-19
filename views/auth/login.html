@@ -81,73 +81,105 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-      // Clear cache saat masuk ke halaman login (setelah logout)
-      if ("serviceWorker" in navigator && "caches" in window) {
-        // Clear all caches
-        caches.keys().then((cacheNames) => {
-          cacheNames.forEach((cacheName) => {
-            caches.delete(cacheName);
-          });
-        });
+      // Wait for DOM and SweetAlert2 to be ready
+      window.addEventListener("load", () => {
+        const loginForm = document.getElementById("loginForm");
+        if (!loginForm) {
+          console.error("Login form not found!");
+          return;
+        }
 
-        // Send message to service worker to clear cache
-        navigator.serviceWorker.ready.then((registration) => {
-          if (registration.active) {
-            const channel = new MessageChannel();
-            channel.port1.onmessage = (event) => {
-              if (event.data.success) {
-                console.log("Cache cleared successfully");
-              }
-            };
-            registration.active.postMessage({ type: "CLEAR_CACHE" }, [
-              channel.port2,
-            ]);
-          }
-        });
-      }
+        const submitButton = loginForm.querySelector('button[type="submit"]');
 
-      document
-        .getElementById("loginForm")
-        .addEventListener("submit", async (e) => {
+        loginForm.addEventListener("submit", async (e) => {
           e.preventDefault();
-          const formData = new FormData(e.target);
-          const data = Object.fromEntries(formData);
+          e.stopPropagation();
+
+          // Disable button dan show loading
+          if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.innerHTML =
+              '<i class="bx bx-loader-alt bx-spin"></i> Memproses...';
+          }
+
+          const formData = new FormData(loginForm);
+          const data = {
+            username: formData.get("username"),
+            password: formData.get("password"),
+          };
 
           try {
             const response = await fetch("/auth/login", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: {
+                "Content-Type": "application/json",
+              },
               body: JSON.stringify(data),
             });
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`HTTP ${response.status}: ${errorText}`);
+            }
 
             const result = await response.json();
 
             if (result.success) {
-              Swal.fire({
-                icon: "success",
-                title: "Berhasil!",
-                text: result.message,
-                timer: 1500,
-                showConfirmButton: false,
-              }).then(() => {
-                // Redirect semua role ke dashboard
+              if (typeof Swal !== "undefined") {
+                Swal.fire({
+                  icon: "success",
+                  title: "Berhasil!",
+                  text: result.message,
+                  timer: 1500,
+                  showConfirmButton: false,
+                }).then(() => {
+                  window.location.href = "/dashboard";
+                });
+              } else {
+                alert("Login berhasil!");
                 window.location.href = "/dashboard";
-              });
+              }
             } else {
-              Swal.fire({
-                icon: "error",
-                title: "Gagal!",
-                text: result.message,
-              });
+              // Re-enable button
+              if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i class="bx bx-log-in"></i> Login';
+              }
+
+              if (typeof Swal !== "undefined") {
+                Swal.fire({
+                  icon: "error",
+                  title: "Gagal!",
+                  text: result.message || "Username atau password salah",
+                });
+              } else {
+                alert(result.message || "Username atau password salah");
+              }
             }
           } catch (error) {
-            Swal.fire({
-              icon: "error",
-              title: "Error!",
-              text: "Terjadi kesalahan saat login",
-            });
+            // Re-enable button
+            if (submitButton) {
+              submitButton.disabled = false;
+              submitButton.innerHTML = '<i class="bx bx-log-in"></i> Login';
+            }
+
+            if (typeof Swal !== "undefined") {
+              Swal.fire({
+                icon: "error",
+                title: "Error!",
+                text:
+                  "Terjadi kesalahan saat login: " +
+                  (error.message || "Unknown error"),
+              });
+            } else {
+              alert(
+                "Terjadi kesalahan saat login: " +
+                  (error.message || "Unknown error")
+              );
+            }
           }
         });
+      });
     </script>
   </body>
 </html>
