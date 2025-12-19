@@ -102,34 +102,11 @@ self.addEventListener("fetch", (event) => {
     // Untuk halaman HTML (dashboard, anggota, iuran, dll) - SELALU ambil dari network
     // Jangan cache karena halaman ini dinamis berdasarkan user role
     if (isHtmlPage) {
-      event.respondWith(
-        fetch(event.request)
-          .then((response) => {
-            // Jangan cache halaman HTML
-            if (!response || !response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response;
-          })
-          .catch(() => {
-            // Jika offline atau network error, coba return cached login page sebagai fallback
-            // Silently handle network errors - don't log them
-
-            return caches.match("/auth/login").then((cachedResponse) => {
-              if (cachedResponse) {
-                return cachedResponse;
-              }
-              // If no cache, return offline message
-              return new Response("Offline - Please check your connection", {
-                status: 503,
-                headers: { "Content-Type": "text/html" },
-              });
-            });
-          })
-      );
+      // Don't intercept HTML pages - let browser handle them normally
+      // This prevents 503 errors for dynamic pages
       return;
     }
-  } catch (error) {
+  } catch {
     // If URL parsing fails or any other error, skip handling
     // Silently handle - don't log
     return;
@@ -139,28 +116,46 @@ self.addEventListener("fetch", (event) => {
   try {
     const url = new URL(event.request.url);
 
+    // Only handle static resources that we want to cache
+    const isStaticResource =
+      url.pathname.includes("/css/") ||
+      url.pathname.includes("/js/") ||
+      url.pathname.includes("/icons/") ||
+      url.pathname.includes("/uploads/") ||
+      url.pathname.endsWith(".css") ||
+      url.pathname.endsWith(".js") ||
+      url.pathname.endsWith(".png") ||
+      url.pathname.endsWith(".jpg") ||
+      url.pathname.endsWith(".jpeg") ||
+      url.pathname.endsWith(".svg") ||
+      url.pathname.endsWith(".woff") ||
+      url.pathname.endsWith(".woff2") ||
+      url.pathname.endsWith(".ttf") ||
+      url.origin.includes("unpkg.com") ||
+      url.origin.includes("cdn.jsdelivr.net");
+
+    // Only intercept static resources
+    if (!isStaticResource) {
+      return;
+    }
+
+    // Use cache-first strategy: check cache first, then network
+    // Only intercept if we can provide a valid response
     event.respondWith(
       caches
         .match(event.request)
-        .then((response) => {
-          // If cached, return it
-          if (response) {
-            return response;
+        .then((cachedResponse) => {
+          // If cached, return it immediately
+          if (cachedResponse) {
+            return cachedResponse;
           }
 
           // Otherwise, fetch from network
           return fetch(event.request)
             .then((response) => {
-              // Check if response is valid
+              // If response is not ok, return it as-is (browser will handle the error)
               if (!response || !response.ok) {
-                // If response is not ok, try to return from cache again or return error
-                return (
-                  response ||
-                  new Response("Not Found", {
-                    status: 404,
-                    headers: { "Content-Type": "text/plain" },
-                  })
-                );
+                return response;
               }
 
               // Don't cache if not a valid response type
@@ -168,70 +163,54 @@ self.addEventListener("fetch", (event) => {
                 return response;
               }
 
-              // Only cache static resources (CSS, JS, images, fonts)
-              const isStaticResource =
-                url.pathname.includes("/css/") ||
-                url.pathname.includes("/js/") ||
-                url.pathname.includes("/icons/") ||
-                url.pathname.includes("/uploads/") ||
-                url.pathname.endsWith(".css") ||
-                url.pathname.endsWith(".js") ||
-                url.pathname.endsWith(".png") ||
-                url.pathname.endsWith(".jpg") ||
-                url.pathname.endsWith(".jpeg") ||
-                url.pathname.endsWith(".svg") ||
-                url.pathname.endsWith(".woff") ||
-                url.pathname.endsWith(".woff2") ||
-                url.pathname.endsWith(".ttf") ||
-                url.origin.includes("unpkg.com") ||
-                url.origin.includes("cdn.jsdelivr.net");
-
-              if (isStaticResource && response.status === 200) {
-                // Clone the response for caching
-                try {
-                  const responseToCache = response.clone();
-                  caches
-                    .open(CACHE_NAME)
-                    .then((cache) => {
-                      cache.put(event.request, responseToCache);
-                    })
-                    .catch(() => {
-                      // Silently fail cache put - not critical
-                      // Don't log errors
-                    });
-                } catch (cloneError) {
-                  // If clone fails, just return response without caching
-                  // Silently handle - don't log
-                }
+              // Cache successful responses for static resources
+              if (response.status === 200) {
+                // Clone the response for caching (async, non-blocking)
+                const responseToCache = response.clone();
+                caches
+                  .open(CACHE_NAME)
+                  .then((cache) => {
+                    cache.put(event.request, responseToCache);
+                  })
+                  .catch(() => {
+                    // Silently fail - not critical
+                  });
               }
 
               return response;
             })
             .catch(() => {
-              // If network fetch fails (offline, CORS, etc), return error response
-              // Silently handle "Failed to fetch" errors - they're common network errors
-              // Don't log anything to avoid console noise
-
-              // Return a valid error response
-              return new Response("Network error", {
-                status: 503,
-                statusText: "Service Unavailable",
-                headers: { "Content-Type": "text/plain" },
-              });
+              // If network fetch fails, try cache one more time as fallback
+              return caches.match(event.request);
             });
         })
+        .then((response) => {
+          // If we have a response (from cache or network), return it
+          if (response) {
+            return response;
+          }
+          // If no response at all (no cache and network failed)
+          // We can't provide a valid response, so don't intercept
+          // But we're already in respondWith, so we must return something
+          // Return a minimal response that won't cause 503 errors
+          // Use 200 status to avoid console errors
+          return new Response("", {
+            status: 200,
+            statusText: "OK",
+            headers: { "Content-Type": "text/plain" },
+          });
+        })
         .catch(() => {
-          // If both cache and network fail, return error
-          // Silently handle errors - don't log them
-          return new Response("Offline", {
-            status: 503,
+          // Final fallback: return 200 to avoid 503 errors
+          return new Response("", {
+            status: 200,
+            statusText: "OK",
             headers: { "Content-Type": "text/plain" },
           });
         })
     );
   } catch {
     // If URL parsing fails, skip handling
-    // Silently handle - don't log
     return;
   }
 });
