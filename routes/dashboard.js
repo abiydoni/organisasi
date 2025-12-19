@@ -280,104 +280,344 @@ router.get("/user", (req, res) => {
           }
 
           const anggotaId = anggota.id;
+          const tahunSaatIni = new Date().getFullYear();
 
-          // Get statistics untuk tagihan
+          // Get total tarif bulanan untuk anggota ini
           db.get(
-            `SELECT 
-              COUNT(*) as total,
-              SUM(CASE WHEN status = 'lunas' THEN 1 ELSE 0 END) as lunas,
-              SUM(CASE WHEN status = 'belum lunas' THEN 1 ELSE 0 END) as belumLunas,
-              SUM(CASE WHEN status = 'lunas' THEN jumlah ELSE 0 END) as totalBayar
-            FROM iuran 
-            WHERE anggota_id = ?`,
+            `SELECT COALESCE(SUM(t.jumlah), 0) as totalTarifBulanan
+            FROM tarif t
+            INNER JOIN anggota_tarif at ON t.id = at.tarif_id
+            WHERE at.anggota_id = ? 
+              AND t.status = 'aktif'
+              AND (t.frekuensi = 'bulanan' OR t.frekuensi IS NULL OR t.frekuensi = '')`,
             [anggotaId],
-            (err, tagihanStats) => {
+            (err, tarifResult) => {
               if (err) {
-                console.error("Error fetching tagihan stats:", err);
-                tagihanStats = { total: 0, lunas: 0, belumLunas: 0, totalBayar: 0 };
+                console.error("Error fetching tarif:", err);
+                tarifResult = { totalTarifBulanan: 0 };
               }
 
-              // Get statistics untuk penilaian
+              const totalTarifBulanan = tarifResult?.totalTarifBulanan || 0;
+
+              // Get total pembayaran bulanan untuk tahun ini
               db.get(
-                `SELECT 
-                  COUNT(*) as total,
-                  AVG(nilai) as rataRata,
-                  MAX(nilai) as nilaiTertinggi,
-                  MIN(nilai) as nilaiTerendah
-                FROM penilaian 
-                WHERE anggota_id = ?`,
-                [anggotaId],
-                (err, penilaianStats) => {
+                `SELECT COALESCE(SUM(jumlah), 0) as totalBayarBulanan
+                FROM iuran 
+                WHERE anggota_id = ? 
+                  AND tahun = ?
+                  AND (frekuensi = 'bulanan' OR frekuensi IS NULL OR frekuensi = '')`,
+                [anggotaId, tahunSaatIni],
+                (err, pembayaranBulananResult) => {
                   if (err) {
-                    console.error("Error fetching penilaian stats:", err);
-                    penilaianStats = { total: 0, rataRata: 0, nilaiTertinggi: 0, nilaiTerendah: 0 };
+                    console.error("Error fetching pembayaran bulanan:", err);
+                    pembayaranBulananResult = { totalBayarBulanan: 0 };
                   }
 
-                  // Get statistics untuk scoring panahan
-                  db.get(
+                  const totalBayarBulanan =
+                    pembayaranBulananResult?.totalBayarBulanan || 0;
+
+                  // Get total pembayaran per bulan untuk perhitungan statistik
+                  db.all(
                     `SELECT 
-                      COUNT(*) as totalGame,
-                      SUM(total_score) as totalScore,
-                      AVG(total_score) as rataRataScore,
-                      MAX(total_score) as scoreTertinggi
-                    FROM panahan_game 
-                    WHERE anggota_id = ?`,
-                    [anggotaId],
-                    (err, scoringStats) => {
+                      bulan,
+                      SUM(jumlah) as totalBayar
+                    FROM iuran 
+                    WHERE anggota_id = ? 
+                      AND tahun = ?
+                      AND (frekuensi = 'bulanan' OR frekuensi IS NULL OR frekuensi = '')
+                    GROUP BY bulan`,
+                    [anggotaId, tahunSaatIni],
+                    (err, pembayaranPerBulan) => {
                       if (err) {
-                        console.error("Error fetching scoring stats:", err);
-                        scoringStats = { totalGame: 0, totalScore: 0, rataRataScore: 0, scoreTertinggi: 0 };
+                        console.error(
+                          "Error fetching pembayaran per bulan:",
+                          err
+                        );
+                        pembayaranPerBulan = [];
                       }
 
-                      const stats = {
-                        tagihan: {
-                          total: tagihanStats?.total || 0,
-                          lunas: tagihanStats?.lunas || 0,
-                          belumLunas: tagihanStats?.belumLunas || 0,
-                          totalBayar: tagihanStats?.totalBayar || 0,
-                        },
-                        penilaian: {
-                          total: penilaianStats?.total || 0,
-                          rataRata: parseFloat(penilaianStats?.rataRata || 0).toFixed(2),
-                          nilaiTertinggi: penilaianStats?.nilaiTertinggi || 0,
-                          nilaiTerendah: penilaianStats?.nilaiTerendah || 0,
-                        },
-                        scoring: {
-                          totalGame: scoringStats?.totalGame || 0,
-                          totalScore: scoringStats?.totalScore || 0,
-                          rataRataScore: parseFloat(scoringStats?.rataRataScore || 0).toFixed(2),
-                          scoreTertinggi: scoringStats?.scoreTertinggi || 0,
-                        },
-                      };
+                      // Hitung statistik berdasarkan sisa
+                      let totalTagihan = 0; // Semua tagihan yang belum lunas (sisa > 0) - termasuk yang belum bayar dan yang sudah bayar sebagian
+                      let tagihanLunas = 0; // Tagihan yang sisa = 0 (benar-benar lunas)
+                      let belumLunas = 0; // Sudah ada pembayaran tapi sisa belum nol (sisa > 0 dan totalBayar > 0)
 
-                      // Set active flags - pastikan semua flag admin/pengurus/tentor false untuk user
-                      const active = {
-                        dashboard: true,
-                        isUser: true,
-                        isAdmin: false,
-                        isAdminOrPengurus: false,
-                        isAdminOrPengurusOrTentor: false,
-                        isTentor: false,
-                      };
-
-                      const layout = renderHTML("dashboardUser.html", {
-                        title: "Dashboard Saya",
-                        user: req.session.user,
-                        active: active,
-                        content: "",
-                        organisasi: organisasi || {},
+                      // Buat map pembayaran per bulan
+                      const pembayaranMap = {};
+                      pembayaranPerBulan.forEach((p) => {
+                        pembayaranMap[p.bulan] = p.totalBayar || 0;
                       });
 
-                      // Replace template variables
-                      const statsJson = JSON.stringify(stats);
-                      const organisasiJson = JSON.stringify(organisasi || {});
-                      let html = layout.replace(/\{\{stats\}\}/g, statsJson);
-                      html = html.replace(/\{\{organisasi\}\}/g, organisasiJson);
-                      html = html.replace(
-                        /\{\{user\.nama\}\}/g,
-                        req.session.user.nama || ""
+                      // Hitung untuk setiap bulan (1-12)
+                      for (let bulan = 1; bulan <= 12; bulan++) {
+                        const totalBayarBulan = pembayaranMap[bulan] || 0;
+                        const sisa = Math.max(
+                          0,
+                          totalTarifBulanan - totalBayarBulan
+                        );
+
+                        if (sisa === 0) {
+                          // Lunas (sisa benar-benar nol)
+                          tagihanLunas++;
+                        } else if (sisa > 0) {
+                          // Belum lunas - masuk ke total tagihan
+                          totalTagihan++;
+                          if (totalBayarBulan > 0) {
+                            // Sudah ada pembayaran tapi sisa belum nol
+                            belumLunas++;
+                          }
+                        }
+                      }
+
+                      // Function untuk melanjutkan dengan stats
+                      function continueWithStats(tagihanStats) {
+                        // Get statistics untuk penilaian
+                        db.get(
+                          `SELECT 
+                            COUNT(*) as total,
+                            AVG(nilai) as rataRata,
+                            MAX(nilai) as nilaiTertinggi,
+                            MIN(nilai) as nilaiTerendah
+                          FROM penilaian 
+                          WHERE anggota_id = ?`,
+                          [anggotaId],
+                          (err, penilaianStats) => {
+                            if (err) {
+                              console.error(
+                                "Error fetching penilaian stats:",
+                                err
+                              );
+                              penilaianStats = {
+                                total: 0,
+                                rataRata: 0,
+                                nilaiTertinggi: 0,
+                                nilaiTerendah: 0,
+                              };
+                            }
+
+                            // Get statistics untuk scoring panahan
+                            db.get(
+                              `SELECT 
+                                COUNT(*) as totalGame,
+                                SUM(total_score) as totalScore,
+                                AVG(total_score) as rataRataScore,
+                                MAX(total_score) as scoreTertinggi
+                              FROM panahan_game 
+                              WHERE anggota_id = ?`,
+                              [anggotaId],
+                              (err, scoringStats) => {
+                                if (err) {
+                                  console.error(
+                                    "Error fetching scoring stats:",
+                                    err
+                                  );
+                                  scoringStats = {
+                                    totalGame: 0,
+                                    totalScore: 0,
+                                    rataRataScore: 0,
+                                    scoreTertinggi: 0,
+                                  };
+                                }
+
+                                const stats = {
+                                  tagihan: {
+                                    total: tagihanStats?.total || 0,
+                                    lunas: tagihanStats?.lunas || 0,
+                                    belumLunas: tagihanStats?.belumLunas || 0,
+                                    totalBayar: tagihanStats?.totalBayar || 0,
+                                  },
+                                  penilaian: {
+                                    total: penilaianStats?.total || 0,
+                                    rataRata: parseFloat(
+                                      penilaianStats?.rataRata || 0
+                                    ).toFixed(2),
+                                    nilaiTertinggi:
+                                      penilaianStats?.nilaiTertinggi || 0,
+                                    nilaiTerendah:
+                                      penilaianStats?.nilaiTerendah || 0,
+                                  },
+                                  scoring: {
+                                    totalGame: scoringStats?.totalGame || 0,
+                                    totalScore: scoringStats?.totalScore || 0,
+                                    rataRataScore: parseFloat(
+                                      scoringStats?.rataRataScore || 0
+                                    ).toFixed(2),
+                                    scoreTertinggi:
+                                      scoringStats?.scoreTertinggi || 0,
+                                  },
+                                };
+
+                                // Set active flags - pastikan semua flag admin/pengurus/tentor false untuk user
+                                const active = {
+                                  dashboard: true,
+                                  isUser: true,
+                                  isAdmin: false,
+                                  isAdminOrPengurus: false,
+                                  isAdminOrPengurusOrTentor: false,
+                                  isTentor: false,
+                                };
+
+                                const layout = renderHTML(
+                                  "dashboardUser.html",
+                                  {
+                                    title: "Dashboard Saya",
+                                    user: req.session.user,
+                                    active: active,
+                                    content: "",
+                                    organisasi: organisasi || {},
+                                  }
+                                );
+
+                                // Replace template variables
+                                const statsJson = JSON.stringify(stats);
+                                const organisasiJson = JSON.stringify(
+                                  organisasi || {}
+                                );
+                                let html = layout.replace(
+                                  /\{\{stats\}\}/g,
+                                  statsJson
+                                );
+                                html = html.replace(
+                                  /\{\{organisasi\}\}/g,
+                                  organisasiJson
+                                );
+                                html = html.replace(
+                                  /\{\{user\.nama\}\}/g,
+                                  req.session.user.nama || ""
+                                );
+                                res.send(html);
+                              }
+                            );
+                          }
+                        );
+                      }
+
+                      // Hitung untuk iuran lain (tahunan dan seumur_hidup)
+                      db.all(
+                        `SELECT t.id, t.nama, t.jumlah, t.frekuensi
+                        FROM tarif t
+                        INNER JOIN anggota_tarif at ON t.id = at.tarif_id
+                        WHERE at.anggota_id = ? 
+                          AND t.status = 'aktif'
+                          AND (t.frekuensi = 'tahunan' OR t.frekuensi = 'seumur_hidup')`,
+                        [anggotaId],
+                        (err, tarifLain) => {
+                          if (err) {
+                            console.error("Error fetching tarif lain:", err);
+                            tarifLain = [];
+                          }
+
+                          // Hitung total tarif lain
+                          let totalTarifLain = 0;
+                          tarifLain.forEach((tarif) => {
+                            totalTarifLain += tarif.jumlah || 0;
+                          });
+
+                          // Hitung total pembayaran iuran lain
+                          let totalBayarLain = 0;
+                          let processedCount = 0;
+                          const totalTarifLainCount = tarifLain.length;
+
+                          if (tarifLain.length === 0) {
+                            // Tidak ada iuran lain, langsung hitung total tagihan
+                            const totalSisaTagihan = Math.max(
+                              0,
+                              totalTarifBulanan * 12 +
+                                totalTarifLain -
+                                totalBayarBulanan -
+                                totalBayarLain
+                            );
+
+                            // Total Pembayaran = Total Pembayaran Bulanan + Total Pembayaran Lain
+                            const totalBayarSemua =
+                              totalBayarBulanan + totalBayarLain;
+
+                            const tagihanStats = {
+                              total: totalTagihan,
+                              lunas: tagihanLunas,
+                              belumLunas: totalSisaTagihan, // Total tagihan dalam rupiah
+                              totalBayar: totalBayarSemua,
+                            };
+                            continueWithStats(tagihanStats);
+                            return;
+                          }
+
+                          // Hitung pembayaran untuk setiap iuran lain
+                          tarifLain.forEach((tarif) => {
+                            let query = `SELECT COALESCE(SUM(jumlah), 0) as totalBayar
+                              FROM iuran 
+                              WHERE anggota_id = ? 
+                                AND tarif_id = ?
+                                AND frekuensi = ?`;
+                            let params = [anggotaId, tarif.id, tarif.frekuensi];
+
+                            // Jika tahunan, filter berdasarkan tahun
+                            if (tarif.frekuensi === "tahunan") {
+                              query += " AND tahun = ?";
+                              params.push(tahunSaatIni);
+                            }
+
+                            db.get(query, params, (err, result) => {
+                              if (err) {
+                                console.error(
+                                  "Error fetching pembayaran iuran lain:",
+                                  err
+                                );
+                                processedCount++;
+                                checkComplete();
+                                return;
+                              }
+
+                              const totalBayarTarif = result?.totalBayar || 0;
+                              totalBayarLain += totalBayarTarif;
+
+                              const sisa = Math.max(
+                                0,
+                                tarif.jumlah - totalBayarTarif
+                              );
+
+                              if (sisa === 0) {
+                                // Lunas
+                                tagihanLunas++;
+                              } else if (sisa > 0) {
+                                // Belum lunas - masuk ke total tagihan
+                                totalTagihan++;
+                                if (totalBayarTarif > 0) {
+                                  // Sudah ada pembayaran tapi sisa belum nol
+                                  belumLunas++;
+                                }
+                              }
+
+                              processedCount++;
+                              checkComplete();
+                            });
+                          });
+
+                          function checkComplete() {
+                            if (processedCount >= totalTarifLainCount) {
+                              // Total Tagihan = (Total Tarif Bulanan * 12) + Total Tarif Lain - Total Pembayaran Bulanan - Total Pembayaran Lain
+                              const totalSisaTagihan = Math.max(
+                                0,
+                                totalTarifBulanan * 12 +
+                                  totalTarifLain -
+                                  totalBayarBulanan -
+                                  totalBayarLain
+                              );
+
+                              // Total Pembayaran = Total Pembayaran Bulanan + Total Pembayaran Lain
+                              const totalBayarSemua =
+                                totalBayarBulanan + totalBayarLain;
+
+                              const tagihanStats = {
+                                total: totalTagihan,
+                                lunas: tagihanLunas,
+                                belumLunas: totalSisaTagihan, // Total tagihan dalam rupiah
+                                totalBayar: totalBayarSemua,
+                              };
+                              continueWithStats(tagihanStats);
+                            }
+                          }
+                        }
                       );
-                      res.send(html);
                     }
                   );
                 }
@@ -409,8 +649,18 @@ router.get("/user/chart-data", (req, res) => {
       const anggotaId = anggota.id;
       const currentYear = new Date().getFullYear();
       const months = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-        "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember",
       ];
 
       // Data tagihan per bulan (12 bulan terakhir)
@@ -469,7 +719,11 @@ router.get("/user/chart-data", (req, res) => {
                   const last12Months = [];
                   const now = new Date();
                   for (let i = 11; i >= 0; i--) {
-                    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                    const date = new Date(
+                      now.getFullYear(),
+                      now.getMonth() - i,
+                      1
+                    );
                     const monthKey = `${date.getFullYear()}-${String(
                       date.getMonth() + 1
                     ).padStart(2, "0")}`;
