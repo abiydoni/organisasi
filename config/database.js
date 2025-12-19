@@ -246,12 +246,11 @@ function initializeDatabase() {
     )`);
 
     // Tabel Panahan Shot (anak panah per game)
-    // Struktur: 1 game = 2 sesi, 1 sesi = 6 shoot, 1 shoot = 6 anak panah
-    // Total: 2 x 6 x 6 = 72 anak panah per game
+    // Struktur: 1 game = jumlah_sesi dinamis, 1 sesi = 6 shoot, 1 shoot = 6 anak panah
     db.run(`CREATE TABLE IF NOT EXISTS panahan_shot (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       game_id INTEGER NOT NULL,
-      session_number INTEGER NOT NULL CHECK(session_number IN (1, 2)),
+      session_number INTEGER NOT NULL CHECK(session_number >= 1 AND session_number <= 10),
       shoot_number INTEGER,
       arrow_number INTEGER,
       group_number INTEGER,
@@ -262,6 +261,11 @@ function initializeDatabase() {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (game_id) REFERENCES panahan_game(id) ON DELETE CASCADE
     )`);
+
+    // Migration: Try to update constraint if table exists with old constraint
+    // Note: SQLite doesn't support ALTER TABLE to modify CHECK constraints
+    // This is a workaround - if the table exists, we'll handle it in application code
+    // The constraint will be enforced for new tables
 
     // Migration: Add new columns if not exists
     db.run(

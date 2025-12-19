@@ -15,7 +15,7 @@ router.use(requireAuth);
 // Route untuk halaman utama - list anggota
 router.get("/", (req, res) => {
   const userRole = req.session.user.role;
-  
+
   // Jika user adalah role "user", langsung redirect ke history scoring mereka
   if (userRole === "user") {
     // Cari anggota berdasarkan nama user
@@ -136,7 +136,11 @@ router.get("/anggota/:id", (req, res) => {
           const anggotaNama = (anggota.nama || "").trim().toLowerCase();
           const userNama = (req.session.user.nama || "").trim().toLowerCase();
           if (anggotaNama !== userNama) {
-            return res.status(403).send("Akses ditolak. Anda hanya bisa melihat data scoring Anda sendiri.");
+            return res
+              .status(403)
+              .send(
+                "Akses ditolak. Anda hanya bisa melihat data scoring Anda sendiri."
+              );
           }
         }
 
@@ -157,7 +161,8 @@ router.get("/anggota/:id", (req, res) => {
             const active = {
               panahan: true,
               isAdmin: userRole === "admin",
-              isAdminOrPengurus: userRole === "admin" || userRole === "pengurus",
+              isAdminOrPengurus:
+                userRole === "admin" || userRole === "pengurus",
               isUser: userRole === "user",
               isTentor: userRole === "tentor",
               isAdminOrPengurusOrTentor:
@@ -180,22 +185,23 @@ router.get("/anggota/:id", (req, res) => {
             const gamesJson = JSON.stringify(games || []);
             const organisasiJson = JSON.stringify(organisasi || {});
             let html = layout;
-            
+
             // Replace specific properties first (before replacing whole object)
-            const namaAnggota = (anggota && anggota.nama) ? String(anggota.nama) : "";
+            const namaAnggota =
+              anggota && anggota.nama ? String(anggota.nama) : "";
             // Replace all variations of the template variable
             while (html.includes("{{anggota.nama}}")) {
               html = html.replace("{{anggota.nama}}", namaAnggota);
             }
             // Also handle with spaces
             html = html.replace(/\{\{\s*anggota\.nama\s*\}\}/g, namaAnggota);
-            
-            const idAnggota = (anggota && anggota.id) ? String(anggota.id) : "";
+
+            const idAnggota = anggota && anggota.id ? String(anggota.id) : "";
             while (html.includes("{{anggota.id}}")) {
               html = html.replace("{{anggota.id}}", idAnggota);
             }
             html = html.replace(/\{\{\s*anggota\.id\s*\}\}/g, idAnggota);
-            
+
             // Then replace the whole object
             html = html.replace(/\{\{anggota\}\}/g, anggotaJson);
             html = html.replace(/\{\{games\}\}/g, gamesJson);
@@ -204,7 +210,7 @@ router.get("/anggota/:id", (req, res) => {
               /\{\{user\.nama\}\}/g,
               req.session.user.nama || ""
             );
-            
+
             res.send(html);
           }
         );
@@ -307,7 +313,7 @@ router.get("/game/:id", (req, res) => {
           db.all(
             `SELECT 
               session_number,
-              SUM(score) as total_score
+              COALESCE(SUM(score), 0) as total_score
             FROM panahan_shot 
             WHERE game_id = ? 
             GROUP BY session_number
@@ -319,8 +325,13 @@ router.get("/game/:id", (req, res) => {
                 sessionTotals = [];
               }
 
-              // Create map for easy lookup
+              // Create map for easy lookup - ensure all sessions have entries
               const sessionMap = {};
+              // Initialize all sessions with 0
+              for (let i = 1; i <= jumlahSesi; i++) {
+                sessionMap[i] = 0;
+              }
+              // Update with actual totals from database
               sessionTotals.forEach((s) => {
                 sessionMap[s.session_number] = s.total_score || 0;
               });
@@ -354,8 +365,14 @@ router.get("/game/:id", (req, res) => {
               const organisasiJson = JSON.stringify(organisasi || {});
               let html = layout.replace(/\{\{game\}\}/g, gameJson);
               html = html.replace(/\{\{game\.id\}\}/g, game?.id || "");
-              html = html.replace(/\{\{game\.nama_anggota\}\}/g, game?.nama_anggota || "");
-              html = html.replace(/\{\{game\.anggota_id\}\}/g, game?.anggota_id || "");
+              html = html.replace(
+                /\{\{game\.nama_anggota\}\}/g,
+                game?.nama_anggota || ""
+              );
+              html = html.replace(
+                /\{\{game\.anggota_id\}\}/g,
+                game?.anggota_id || ""
+              );
               html = html.replace(/\{\{sessionTotals\}\}/g, sessionTotalsJson);
               html = html.replace(/\{\{jumlahSesi\}\}/g, jumlahSesi);
               html = html.replace(/\{\{organisasi\}\}/g, organisasiJson);
@@ -399,7 +416,8 @@ router.post("/create", (req, res) => {
       if (anggotaNama !== userNama) {
         return res.json({
           success: false,
-          message: "Akses ditolak. Anda hanya bisa membuat game untuk diri Anda sendiri.",
+          message:
+            "Akses ditolak. Anda hanya bisa membuat game untuk diri Anda sendiri.",
         });
       }
 
@@ -421,92 +439,113 @@ router.post("/create", (req, res) => {
       });
     }
 
-  // Insert game baru
-  db.run(
-    "INSERT INTO panahan_game (anggota_id, tanggal, jumlah_sesi, keterangan) VALUES (?, ?, ?, ?)",
-    [anggota_id, tanggal, sesiCount, keterangan || ""],
-    function (err) {
-      if (err) {
-        return res.json({
-          success: false,
-          message: "Error simpan data: " + err.message,
-        });
-      }
+    // Insert game baru
+    db.run(
+      "INSERT INTO panahan_game (anggota_id, tanggal, jumlah_sesi, keterangan) VALUES (?, ?, ?, ?)",
+      [anggota_id, tanggal, sesiCount, keterangan || ""],
+      function (err) {
+        if (err) {
+          return res.json({
+            success: false,
+            message: "Error simpan data: " + err.message,
+          });
+        }
 
-      const gameId = this.lastID;
+        const gameId = this.lastID;
 
-      // Buat anak panah kosong (jumlah_sesi x 6 shoot x 6 anak panah)
-      const shots = [];
-      for (let session = 1; session <= sesiCount; session++) {
-        for (let shoot = 1; shoot <= 6; shoot++) {
-          for (let arrow = 1; arrow <= 6; arrow++) {
-            shots.push([gameId, session, shoot, arrow, 0, '0']);
+        // Buat anak panah kosong (jumlah_sesi x 6 shoot x 6 anak panah)
+        const shots = [];
+        for (let session = 1; session <= sesiCount; session++) {
+          for (let shoot = 1; shoot <= 6; shoot++) {
+            for (let arrow = 1; arrow <= 6; arrow++) {
+              shots.push([gameId, session, shoot, arrow, 0, "0"]);
+            }
           }
         }
-      }
 
-      // Insert semua shots sekaligus dan buat record di panahan_shoot
-      db.serialize(() => {
-        const stmt = db.prepare(
-          "INSERT INTO panahan_shot (game_id, session_number, shoot_number, arrow_number, score, display_value) VALUES (?, ?, ?, ?, ?, ?)"
-        );
-
-        shots.forEach((shot) => {
-          stmt.run(shot);
-        });
-
-        stmt.finalize((err) => {
-          if (err) {
-            console.error("Error inserting shots:", err);
-            return res.json({
-              success: false,
-              message: "Error membuat tembakan: " + err.message,
-            });
-          }
-
-          // Buat record di panahan_shoot untuk setiap shoot (total_score = 0)
-          const shootStmt = db.prepare(
-            "INSERT INTO panahan_shoot (game_id, session_number, shoot_number, total_score) VALUES (?, ?, ?, 0)"
+        // Insert semua shots sekaligus dan buat record di panahan_shoot
+        db.serialize(() => {
+          const stmt = db.prepare(
+            "INSERT INTO panahan_shot (game_id, session_number, shoot_number, arrow_number, group_number, shot_number, score, display_value) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
           );
 
-          for (let session = 1; session <= sesiCount; session++) {
-            for (let shoot = 1; shoot <= 6; shoot++) {
-              shootStmt.run([gameId, session, shoot]);
-            }
-          }
+          // Update shots array to include group_number and shot_number for backward compatibility
+          const shotsWithOldColumns = [];
+          shots.forEach((shot) => {
+            // shot format: [gameId, session, shoot, arrow, score, display_value]
+            // Add group_number = shoot_number, shot_number = arrow_number
+            shotsWithOldColumns.push([
+              shot[0],
+              shot[1],
+              shot[2],
+              shot[3],
+              shot[2],
+              shot[3],
+              shot[4],
+              shot[5],
+            ]);
+          });
 
-          shootStmt.finalize((err) => {
+          shotsWithOldColumns.forEach((shot) => {
+            stmt.run(shot);
+          });
+
+          stmt.finalize((err) => {
             if (err) {
-              console.error("Error inserting shoots:", err);
-              // Tidak return error, karena shots sudah berhasil
+              console.error("Error inserting shots:", err);
+              return res.json({
+                success: false,
+                message: "Error membuat tembakan: " + err.message,
+              });
             }
 
-            // Log insert
-            db.get("SELECT nama FROM anggota WHERE id=?", [anggota_id], (err, anggota) => {
-              const namaAnggota = anggota?.nama || "Unknown";
-              logInsert(
-                req,
-                "panahan_game",
-                gameId,
-                `Membuat game panahan baru untuk anggota: ${namaAnggota} (Tanggal: ${tanggal})`,
-                {
-                  anggota_id,
-                  tanggal,
-                  keterangan,
+            // Buat record di panahan_shoot untuk setiap shoot (total_score = 0)
+            const shootStmt = db.prepare(
+              "INSERT INTO panahan_shoot (game_id, session_number, shoot_number, total_score) VALUES (?, ?, ?, 0)"
+            );
+
+            for (let session = 1; session <= sesiCount; session++) {
+              for (let shoot = 1; shoot <= 6; shoot++) {
+                shootStmt.run([gameId, session, shoot]);
+              }
+            }
+
+            shootStmt.finalize((err) => {
+              if (err) {
+                console.error("Error inserting shoots:", err);
+                // Tidak return error, karena shots sudah berhasil
+              }
+
+              // Log insert
+              db.get(
+                "SELECT nama FROM anggota WHERE id=?",
+                [anggota_id],
+                (err, anggota) => {
+                  const namaAnggota = anggota?.nama || "Unknown";
+                  logInsert(
+                    req,
+                    "panahan_game",
+                    gameId,
+                    `Membuat game panahan baru untuk anggota: ${namaAnggota} (Tanggal: ${tanggal})`,
+                    {
+                      anggota_id,
+                      tanggal,
+                      keterangan,
+                    }
+                  );
                 }
               );
-            });
 
-            res.json({
-              success: true,
-              message: "Game berhasil dibuat",
-              gameId: gameId,
+              res.json({
+                success: true,
+                message: "Game berhasil dibuat",
+                gameId: gameId,
+              });
             });
           });
         });
-      });
-    }
-  );
+      }
+    );
   }
 });
 
@@ -543,7 +582,7 @@ router.get("/game/:id/sesi/:session_number", (req, res) => {
           db.all(
             `SELECT 
               shoot_number,
-              SUM(score) as total_score
+              COALESCE(SUM(score), 0) as total_score
             FROM panahan_shot 
             WHERE game_id = ? AND session_number = ?
             GROUP BY shoot_number
@@ -611,8 +650,14 @@ router.get("/game/:id/sesi/:session_number", (req, res) => {
                   const organisasiJson = JSON.stringify(organisasi || {});
                   let html = layout.replace(/\{\{game\}\}/g, gameJson);
                   html = html.replace(/\{\{game\.id\}\}/g, game?.id || "");
-                  html = html.replace(/\{\{game\.nama_anggota\}\}/g, game?.nama_anggota || "");
-                  html = html.replace(/\{\{game\.anggota_id\}\}/g, game?.anggota_id || "");
+                  html = html.replace(
+                    /\{\{game\.nama_anggota\}\}/g,
+                    game?.nama_anggota || ""
+                  );
+                  html = html.replace(
+                    /\{\{game\.anggota_id\}\}/g,
+                    game?.anggota_id || ""
+                  );
                   html = html.replace(/\{\{sessionNumber\}\}/g, sessionNum);
                   html = html.replace(/\{\{shootTotals\}\}/g, shootTotalsJson);
                   html = html.replace(/\{\{shootData\}\}/g, shootDataJson);
@@ -639,7 +684,14 @@ router.get("/game/:id/sesi/:session_number/shoot/:shoot_number", (req, res) => {
   const shootNum = parseInt(shoot_number);
 
   // Validate
-  if (!id || isNaN(parseInt(id)) || !session_number || isNaN(sessionNum) || !shoot_number || isNaN(shootNum)) {
+  if (
+    !id ||
+    isNaN(parseInt(id)) ||
+    !session_number ||
+    isNaN(sessionNum) ||
+    !shoot_number ||
+    isNaN(shootNum)
+  ) {
     return res.status(400).send("Parameter tidak valid");
   }
 
@@ -703,8 +755,14 @@ router.get("/game/:id/sesi/:session_number/shoot/:shoot_number", (req, res) => {
               const organisasiJson = JSON.stringify(organisasi || {});
               let html = layout.replace(/\{\{game\}\}/g, gameJson);
               html = html.replace(/\{\{game\.id\}\}/g, game?.id || "");
-              html = html.replace(/\{\{game\.nama_anggota\}\}/g, game?.nama_anggota || "");
-              html = html.replace(/\{\{game\.anggota_id\}\}/g, game?.anggota_id || "");
+              html = html.replace(
+                /\{\{game\.nama_anggota\}\}/g,
+                game?.nama_anggota || ""
+              );
+              html = html.replace(
+                /\{\{game\.anggota_id\}\}/g,
+                game?.anggota_id || ""
+              );
               html = html.replace(/\{\{sessionNumber\}\}/g, sessionNum);
               html = html.replace(/\{\{shootNumber\}\}/g, shootNum);
               html = html.replace(/\{\{arrows\}\}/g, arrowsJson);
@@ -727,147 +785,177 @@ router.post("/game/:id/shoot", (req, res) => {
   const { id } = req.params;
   const { session_number, shoot_number, arrows } = req.body; // arrows: [{arrow_number, score, display_value}]
 
-  console.log("Received save request:", { id, session_number, shoot_number, arrowsCount: arrows?.length, arrows });
-
-  if (!session_number || !shoot_number || !arrows || !Array.isArray(arrows)) {
-    console.error("Invalid data:", { session_number, shoot_number, arrows });
+  // Validate input
+  if (!id || isNaN(parseInt(id))) {
     return res.json({
       success: false,
-      message: "Data tidak valid",
+      message: "Game ID tidak valid",
+    });
+  }
+
+  if (!session_number || isNaN(parseInt(session_number))) {
+    return res.json({
+      success: false,
+      message: "Session number tidak valid",
+    });
+  }
+
+  if (!shoot_number || isNaN(parseInt(shoot_number))) {
+    return res.json({
+      success: false,
+      message: "Shoot number tidak valid",
+    });
+  }
+
+  if (!arrows || !Array.isArray(arrows) || arrows.length === 0) {
+    return res.json({
+      success: false,
+      message: "Data arrows tidak valid atau kosong",
     });
   }
 
   // Validate game exists
   db.get("SELECT * FROM panahan_game WHERE id=?", [id], (err, game) => {
-    if (err || !game) {
+    if (err) {
+      return res.json({
+        success: false,
+        message: "Error database: " + err.message,
+      });
+    }
+
+    if (!game) {
       return res.json({
         success: false,
         message: "Game tidak ditemukan",
       });
     }
 
-    // Update atau insert arrows
-    db.serialize(() => {
-      const stmt = db.prepare(
-        `INSERT OR REPLACE INTO panahan_shot 
-        (game_id, session_number, shoot_number, arrow_number, score, display_value, updated_at) 
-        VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
-      );
+    // Update atau insert arrows - optimized for speed (no serialize needed)
+    const stmt = db.prepare(
+      `INSERT OR REPLACE INTO panahan_shot 
+      (game_id, session_number, shoot_number, arrow_number, group_number, shot_number, score, display_value, updated_at) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
+    );
 
-      let updateCount = 0;
-      let errorCount = 0;
-      
-      arrows.forEach((arrow) => {
-        const { arrow_number, score, display_value } = arrow;
-        
-        // Validate score range
-        if (score < 0 || score > 10) {
-          errorCount++;
-          return;
-        }
+    const gameId = parseInt(id);
+    const sessionNum = parseInt(session_number);
+    const shootNum = parseInt(shoot_number);
+    let errorCount = 0;
+    const errorMessages = [];
 
-        // Set display_value default jika tidak ada
-        const displayValue = display_value || (score === 10 ? '10' : score.toString());
+    // Process all arrows quickly
+    arrows.forEach((arrow) => {
+      const { arrow_number, score, display_value } = arrow;
+      const arrowNum = parseInt(arrow_number);
+      const scoreNum = parseInt(score);
 
-        stmt.run([id, session_number, shoot_number, arrow_number, score, displayValue], (err) => {
+      // Quick validation
+      if (scoreNum < 0 || scoreNum > 10 || arrowNum < 1 || arrowNum > 6) {
+        errorCount++;
+        errorMessages.push(`Arrow ${arrowNum}: invalid data`);
+        return;
+      }
+
+      const displayValue =
+        display_value || (scoreNum === 10 ? "10" : scoreNum.toString());
+
+      stmt.run(
+        [
+          gameId,
+          sessionNum,
+          shootNum,
+          arrowNum,
+          shootNum,
+          arrowNum,
+          scoreNum,
+          displayValue,
+        ],
+        (err) => {
           if (err) {
-            console.error(`Error inserting arrow ${arrow_number}:`, err);
             errorCount++;
-          } else {
-            updateCount++;
+            errorMessages.push(`Arrow ${arrowNum}: ${err.message}`);
           }
-        });
+        }
+      );
+    });
+
+    // Define continueAfterSave function
+    function continueAfterSave() {
+      // Send response immediately for faster user experience
+      res.json({
+        success: true,
+        message: "Scoring berhasil disimpan",
       });
 
-      stmt.finalize((err) => {
-        if (err) {
-          console.error("Error finalizing statement:", err);
-          return res.json({
-            success: false,
-            message: "Error update arrows: " + err.message,
-          });
-        }
-        
-        if (errorCount > 0) {
-          console.warn(`${errorCount} arrows failed to save`);
-        }
+      // Update totals in background (non-blocking)
+      db.get(
+        "SELECT COALESCE(SUM(score), 0) as total FROM panahan_shot WHERE game_id = ? AND session_number = ? AND shoot_number = ?",
+        [id, session_number, shoot_number],
+        (err, result) => {
+          const shootTotal = result?.total || 0;
 
-        // Calculate total score for this shoot
-        db.get(
-          "SELECT SUM(score) as total FROM panahan_shot WHERE game_id = ? AND session_number = ? AND shoot_number = ?",
-          [id, session_number, shoot_number],
-          (err, result) => {
-            const shootTotal = result?.total || 0;
+          // Update panahan_shoot table
+          db.run(
+            `INSERT OR REPLACE INTO panahan_shoot 
+            (game_id, session_number, shoot_number, total_score, updated_at) 
+            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+            [id, session_number, shoot_number, shootTotal],
+            () => {
+              // Calculate and update session and game totals in background
+              db.get(
+                "SELECT COALESCE(SUM(score), 0) as total FROM panahan_shot WHERE game_id = ? AND session_number = ?",
+                [id, session_number],
+                (err, sessionResult) => {
+                  const sessionTotal = sessionResult?.total || 0;
 
-            // Insert or update panahan_shoot table
-            db.run(
-              `INSERT OR REPLACE INTO panahan_shoot 
-              (game_id, session_number, shoot_number, total_score, updated_at) 
-              VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)`,
-              [id, session_number, shoot_number, shootTotal],
-              (err) => {
-                if (err) {
-                  console.error("Error saving panahan_shoot:", err);
+                  db.get(
+                    "SELECT COALESCE(SUM(score), 0) as total FROM panahan_shot WHERE game_id = ?",
+                    [id],
+                    (err, gameResult) => {
+                      const gameTotal = gameResult?.total || 0;
+
+                      // Update game total
+                      db.run(
+                        "UPDATE panahan_game SET total_score = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+                        [gameTotal, id],
+                        () => {}
+                      );
+                    }
+                  );
                 }
+              );
+            }
+          );
+        }
+      );
+    }
 
-                // Calculate total score for session
-                db.get(
-                  "SELECT SUM(score) as total FROM panahan_shot WHERE game_id = ? AND session_number = ?",
-                  [id, session_number],
-                  (err, sessionResult) => {
-                    const sessionTotal = sessionResult?.total || 0;
+    // Finalize - SQLite handles queuing internally
+    stmt.finalize((finalizeErr) => {
+      if (finalizeErr && !res.headersSent) {
+        return res.json({
+          success: false,
+          message: "Error finalizing statement: " + finalizeErr.message,
+          errors: errorMessages,
+        });
+      }
 
-                    // Calculate total score for game
-                    db.get(
-                      "SELECT SUM(score) as total FROM panahan_shot WHERE game_id = ?",
-                      [id],
-                      (err, gameResult) => {
-                        const gameTotal = gameResult?.total || 0;
+      if (errorCount > 0 && !res.headersSent) {
+        const errorDetail =
+          errorMessages.length > 0
+            ? errorMessages.join("; ")
+            : `${errorCount} arrows failed to save`;
 
-                        // Update total score di game
-                        db.run(
-                          "UPDATE panahan_game SET total_score = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-                          [gameTotal, id],
-                          (err) => {
-                            if (err) {
-                              console.error("Error updating total score:", err);
-                            }
+        return res.json({
+          success: false,
+          message: `${errorCount} arrows gagal disimpan. ${errorDetail}`,
+          errors: errorMessages,
+        });
+      }
 
-                            // Log update
-                            db.get(
-                              "SELECT nama FROM anggota WHERE id=?",
-                              [game.anggota_id],
-                              (err, anggota) => {
-                                const namaAnggota = anggota?.nama || "Unknown";
-                                logUpdate(
-                                  req,
-                                  "panahan_shot",
-                                  id,
-                                  `Mengupdate scoring shoot ${shoot_number} sesi ${session_number} untuk anggota: ${namaAnggota} (Game ID: ${id}, Shoot Total: ${shootTotal})`,
-                                  null,
-                                  { session_number, shoot_number, arrows, shootTotal }
-                                );
-                              }
-                            );
-
-                            res.json({
-                              success: true,
-                              message: "Scoring berhasil disimpan",
-                              shootTotal: shootTotal,
-                              sessionTotal: sessionTotal,
-                              gameTotal: gameTotal,
-                            });
-                          }
-                        );
-                      }
-                    );
-                  }
-                );
-              }
-            );
-          }
-        );
-      });
+      if (!res.headersSent) {
+        continueAfterSave();
+      }
     });
   });
 });
@@ -896,8 +984,8 @@ router.post("/:id/shots", (req, res) => {
     // Update atau insert shots
     const stmt = db.prepare(
       `INSERT OR REPLACE INTO panahan_shot 
-      (game_id, session_number, shoot_number, arrow_number, score, display_value, updated_at) 
-      VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
+      (game_id, session_number, shoot_number, arrow_number, group_number, shot_number, score, display_value, updated_at) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
     );
 
     let updateCount = 0;
@@ -908,18 +996,33 @@ router.post("/:id/shots", (req, res) => {
       const arrow_number = shot.arrow_number || shot.shot_number;
       const score = shot.score;
       const display_value = shot.display_value;
-      
+
       // Validate score range
       if (score < 0 || score > 10) {
         return;
       }
 
       // Set display_value default jika tidak ada
-      const displayValue = display_value || (score === 10 ? '10' : score.toString());
+      const displayValue =
+        display_value || (score === 10 ? "10" : score.toString());
 
-      stmt.run([id, session_number, shoot_number, arrow_number, score, displayValue], (err) => {
-        if (!err) updateCount++;
-      });
+      // Include group_number and shot_number for backward compatibility
+      // group_number = shoot_number, shot_number = arrow_number
+      stmt.run(
+        [
+          id,
+          session_number,
+          shoot_number,
+          arrow_number,
+          shoot_number,
+          arrow_number,
+          score,
+          displayValue,
+        ],
+        (err) => {
+          if (!err) updateCount++;
+        }
+      );
     });
 
     stmt.finalize((err) => {
@@ -932,7 +1035,7 @@ router.post("/:id/shots", (req, res) => {
 
       // Calculate total score
       db.all(
-        "SELECT SUM(score) as total FROM panahan_shot WHERE game_id = ?",
+        "SELECT COALESCE(SUM(score), 0) as total FROM panahan_shot WHERE game_id = ?",
         [id],
         (err, result) => {
           const totalScore = result[0]?.total || 0;
@@ -942,9 +1045,7 @@ router.post("/:id/shots", (req, res) => {
             "UPDATE panahan_game SET total_score = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
             [totalScore, id],
             (err) => {
-              if (err) {
-                console.error("Error updating total score:", err);
-              }
+              // Silently continue even if there's an error
 
               // Log update
               db.get(
@@ -1032,4 +1133,3 @@ router.delete("/:id", (req, res) => {
 });
 
 module.exports = router;
-

@@ -211,12 +211,14 @@
       const arrowData = [];
       for (let arrow = 1; arrow <= 6; arrow++) {
         const arrowInfo = arrows.find((a) => a.arrow_number === arrow);
-        if (arrowInfo && arrowInfo.score > 0) {
+        if (arrowInfo) {
+          // Display saved data, even if score is 0
           arrowData.push({
-            score: arrowInfo.score,
-            display: arrowInfo.display_value || arrowInfo.score.toString()
+            score: arrowInfo.score || 0,
+            display: arrowInfo.display_value || (arrowInfo.score === 10 ? '10' : (arrowInfo.score || 0).toString())
           });
         } else {
+          // No data found in database, default to 0
           arrowData.push({ score: 0, display: '0' });
         }
       }
@@ -451,11 +453,22 @@
           const btnText = button.textContent.trim();
           if (btnText !== '-') {
             const option = scoreOptions.find(opt => opt.display === btnText);
-            arrows.push({
-              arrow_number: arrowNum,
-              score: option ? option.score : 0,
-              display_value: option ? option.value : '0'
-            });
+            if (option) {
+              arrows.push({
+                arrow_number: arrowNum,
+                score: option.score,
+                display_value: option.value
+              });
+            } else {
+              // Option not found, default to 0
+              console.warn(`Option not found for button text: "${btnText}" in shoot ${shootNum}, arrow ${arrowNum}`);
+              arrows.push({
+                arrow_number: arrowNum,
+                score: 0,
+                display_value: '0'
+              });
+              emptyCells.push(`Shoot ${shootNum} - Anak Panah ${arrowNum}`);
+            }
           } else {
             arrows.push({
               arrow_number: arrowNum,
@@ -464,14 +477,26 @@
             });
             emptyCells.push(`Shoot ${shootNum} - Anak Panah ${arrowNum}`);
           }
+        } else {
+          // Button not found, still add arrow with 0
+          console.warn(`Button not found for shoot ${shootNum}, arrow ${arrowNum}`);
+          arrows.push({
+            arrow_number: arrowNum,
+            score: 0,
+            display_value: '0'
+          });
+          emptyCells.push(`Shoot ${shootNum} - Anak Panah ${arrowNum}`);
         }
       }
 
-      if (arrows.length > 0) {
+      // Always add shoot, even if all arrows are 0
+      if (arrows.length === 6) {
         shoots.push({
           shoot_number: shootNum,
           arrows: arrows
         });
+      } else {
+        console.error(`Shoot ${shootNum} has ${arrows.length} arrows instead of 6`);
       }
     }
 
@@ -519,19 +544,14 @@
       },
     });
 
-    // Save each shoot
-    let savedCount = 0;
-    let errors = [];
-
-    for (const shoot of shoots) {
+    // Save all shoots in parallel for faster processing
+    const savePromises = shoots.map(async (shoot) => {
       try {
         const requestData = {
           session_number: sessionNumber,
           shoot_number: shoot.shoot_number,
           arrows: shoot.arrows,
         };
-
-        console.log(`Saving shoot ${shoot.shoot_number}:`, requestData);
 
         const response = await fetch(`/panahan/game/${game.id}/shoot`, {
           method: "POST",
@@ -542,63 +562,46 @@
         });
 
         const data = await response.json();
-        console.log(`Response for shoot ${shoot.shoot_number}:`, data);
 
         if (data.success) {
-          savedCount++;
+          return { success: true, shoot: shoot.shoot_number };
         } else {
-          errors.push(`Shoot ${shoot.shoot_number}: ${data.message || 'Error tidak diketahui'}`);
+          const errorMsg = data.message || 'Error tidak diketahui';
+          const errorDetails = data.errors || [];
+          return {
+            success: false,
+            shoot: shoot.shoot_number,
+            error: `${errorMsg}${errorDetails.length > 0 ? ' - ' + errorDetails.join(', ') : ''}`
+          };
         }
       } catch (error) {
-        console.error(`Error saving shoot ${shoot.shoot_number}:`, error);
-        errors.push(`Shoot ${shoot.shoot_number}: ${error.message}`);
+        return {
+          success: false,
+          shoot: shoot.shoot_number,
+          error: error.message
+        };
       }
-    }
+    });
+
+    // Wait for all saves to complete
+    const results = await Promise.all(savePromises);
+    const savedCount = results.filter(r => r.success).length;
+    const errors = results.filter(r => !r.success).map(r => `Shoot ${r.shoot}: ${r.error}`);
 
     // Close loading
     Swal.close();
 
     if (savedCount === shoots.length) {
-      // Verifikasi data tersimpan dengan fetch ulang
-      try {
-        const verifyResponse = await fetch(`/panahan/${game.id}/shots`);
-        const verifyData = await verifyResponse.json();
-
-        if (verifyData.success && verifyData.data) {
-          console.log("Data tersimpan:", verifyData.data);
-
-          Swal.fire({
-            icon: "success",
-            title: "Berhasil",
-            html: `Semua scoring berhasil disimpan (${savedCount} shoot).<br><br>Data telah tersimpan di database.`,
-            timer: 2000,
-            showConfirmButton: false,
-          }).then(() => {
-            // Redirect ke halaman game (tabel sesi)
-            window.location.href = `/panahan/game/${game.id}`;
-          });
-        } else {
-          Swal.fire({
-            icon: "warning",
-            title: "Perhatian",
-            text: "Data mungkin belum tersimpan dengan benar. Silakan refresh halaman.",
-            confirmButtonText: "OK",
-          }).then(() => {
-            window.location.reload();
-          });
-        }
-      } catch (verifyError) {
-        console.error("Error verifying data:", verifyError);
-        Swal.fire({
-          icon: "success",
-          title: "Berhasil",
-          text: `Semua scoring berhasil disimpan (${savedCount} shoot)`,
-          timer: 1500,
-          showConfirmButton: false,
-        }).then(() => {
-          window.location.href = `/panahan/game/${game.id}`;
-        });
-      }
+      // All shoots saved successfully
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        html: `Semua scoring berhasil disimpan (${savedCount} shoot).<br><br>Data telah tersimpan di database.`,
+        timer: 1500,
+        showConfirmButton: false,
+      }).then(() => {
+        window.location.href = `/panahan/game/${game.id}`;
+      });
     } else if (savedCount > 0) {
       Swal.fire({
         icon: "warning",

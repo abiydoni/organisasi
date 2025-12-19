@@ -11,13 +11,12 @@
       </a>
       <div>
         <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
-          <i
-            class="bx bx-target-lock text-indigo-600 dark:text-indigo-400"
-          ></i>
+          <i class="bx bx-target-lock text-indigo-600 dark:text-indigo-400"></i>
           Permainan - {{game.nama_anggota}}
         </h2>
         <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-          Tanggal: <span id="gameTanggal">-</span> | Total Score: <span id="gameTotalScore" class="font-bold">0</span>
+          Tanggal: <span id="gameTanggal">-</span> | Total Score:
+          <span id="gameTotalScore" class="font-bold">0</span>
         </p>
       </div>
     </div>
@@ -91,12 +90,10 @@
       sessionMap[s.session_number] = s.total_score || 0;
     });
 
-    let totalAllSessions = 0;
     tbody.innerHTML = Array.from({ length: jumlahSesi }, (_, i) => {
       const sessionNum = i + 1;
       const total = sessionMap[sessionNum] || 0;
-      totalAllSessions += total;
-      
+
       return `
         <tr class="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700">
           <td class="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 font-semibold">
@@ -115,11 +112,10 @@
       `;
     }).join("");
 
-    // Update total score display
-    document.getElementById("gameTotalScore").textContent = totalAllSessions;
+    // Total score is already set from database in loadGameInfo(), don't override it
+    // The game.total_score from database is the source of truth
   }
 
   loadGameInfo();
   loadSessions();
 </script>
-
